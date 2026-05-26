@@ -152,8 +152,10 @@ jobs:
           # shellcheck disable=SC1091
           source .env
           set +a
-          if [[ -n "\${GHCR_READ_TOKEN:-}" ]]; then
+          if [[ -n "\${GHCR_READ_TOKEN:-}" && "\${GHCR_READ_TOKEN}" != REPLACE_WITH_* ]]; then
             echo "\${GHCR_READ_TOKEN}" | docker login ghcr.io -u "\${GHCR_USERNAME:-boro-tech-dev}" --password-stdin
+          else
+            echo "Skipping ghcr.io login (public packages or GHCR_READ_TOKEN unset)"
           fi
           export IMAGE_TAG='${IMAGE_TAG}'
           export COMPOSE_FILE=docker-compose.vps.yml:docker-compose.traefik.yml:docker-compose.registry.yml

@@ -27,7 +27,8 @@ VPS_SSH_PORT=22
 VPS_DEPLOY_PATH=/opt/agent-x
 VPS_PUBLIC_URL=https://idea-impact.com
 GHCR_USERNAME=boro-tech-dev
-GHCR_READ_TOKEN=REPLACE_WITH_GITHUB_PAT_read_packages
+# Leave empty when GHCR packages are public (default). Set a PAT with read:packages only if pulls return 401.
+GHCR_READ_TOKEN=
 
 # --- App ---
 APP_ENV=production
@@ -100,7 +101,7 @@ chmod 600 "$OUT"
 echo "Wrote $OUT (mode 600)"
 echo ""
 echo "Before pasting into GitHub:"
-echo "  1. Edit GHCR_READ_TOKEN=REPLACE_WITH_GITHUB_PAT_read_packages"
+echo "  1. Set GHCR_READ_TOKEN only if GHCR packages are private (read:packages PAT)"
 echo "     (GitHub → Settings → Developer settings → PAT → read:packages)"
 echo ""
 echo "Copy into GitHub secret VPS_DOTENV:"
