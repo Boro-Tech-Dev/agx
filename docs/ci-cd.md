@@ -32,10 +32,22 @@ Same pattern as LandScraper — add under **Settings → Secrets and variables �
 
 | Secret | Purpose |
 |--------|---------|
-| `VPS_SSH_PRIVATE_KEY` | Private key for SSH; matching public key in `~/.ssh/authorized_keys` on the VPS |
+| `VPS_SSH_PRIVATE_KEY` | Full private key (`-----BEGIN … KEY-----` through `END …`). Public half in `~/.ssh/authorized_keys` on the VPS for `VPS_USER`. |
 | `VPS_DOTENV` | Full production `.env` (generated below; written to the VPS on each deploy) |
 
+**Important:** GitHub secrets are **per repository**. If LandScraper deploy works but **agx** fails with `Permission denied (publickey)`, you must add `VPS_SSH_PRIVATE_KEY` again under **Boro-Tech-Dev/agx → Settings → Secrets**, not only on the LandScraper repo.
+
 **Repo settings:** Actions → General → Workflow permissions → **Read and write** (so `GITHUB_TOKEN` can push images to GHCR).
+
+### SSH troubleshooting
+
+Test from your Mac (same key you paste into GitHub):
+
+```bash
+ssh -i ~/.ssh/your_deploy_key -o StrictHostKeyChecking=accept-new root@srv1139701.hstgr.cloud 'echo OK'
+```
+
+`VPS_USER` and `VPS_HOST` in `VPS_DOTENV` must match that login. If you use a non-root user, put that user in `VPS_DOTENV` and authorize the key for them.
 
 ### Generate `VPS_DOTENV`
 

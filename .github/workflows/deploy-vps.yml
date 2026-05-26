@@ -77,18 +77,16 @@ jobs:
     env:
       IMAGE_TAG: ${{ needs.resolve.outputs.image_tag }}
     steps:
-      - name: Setup SSH agent
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
-
-      - name: Configure deploy target from VPS_DOTENV
-        id: dotenv
+      - name: Materialize VPS_DOTENV
         env:
           VPS_DOTENV: ${{ secrets.VPS_DOTENV }}
         run: |
           if [[ -z "${VPS_DOTENV//[[:space:]]/}" ]]; then
             echo "::error::VPS_DOTENV secret is required" >&2
+            exit 1
+          fi
+          if [[ -z "${{ secrets.VPS_SSH_PRIVATE_KEY }}" ]]; then
+            echo "::error::VPS_SSH_PRIVATE_KEY secret is required on THIS repo (Boro-Tech-Dev/agx). Org/repo secrets are not shared with LandScraper automatically." >&2
             exit 1
           fi
           printf '%s\n' "$VPS_DOTENV" > .env.vps
@@ -98,25 +96,36 @@ jobs:
           set +a
           : "${VPS_HOST:?VPS_HOST missing in VPS_DOTENV}"
           : "${VPS_USER:?VPS_USER missing in VPS_DOTENV}"
-          DEPLOY_PATH="${VPS_DEPLOY_PATH:-/opt/agent-x}"
-          PUBLIC_URL="${VPS_PUBLIC_URL:-https://idea-impact.com}"
           {
             echo "VPS_HOST=${VPS_HOST}"
             echo "VPS_USER=${VPS_USER}"
             echo "VPS_SSH_PORT=${VPS_SSH_PORT:-22}"
-            echo "VPS_DEPLOY_PATH=${DEPLOY_PATH}"
-            echo "VPS_PUBLIC_URL=${PUBLIC_URL}"
+            echo "VPS_DEPLOY_PATH=${VPS_DEPLOY_PATH:-/opt/agent-x}"
+            echo "VPS_PUBLIC_URL=${VPS_PUBLIC_URL:-https://idea-impact.com}"
           } >> "$GITHUB_ENV"
-          mkdir -p ~/.ssh
-          ssh-keyscan -p "${VPS_SSH_PORT:-22}" -H "${VPS_HOST}" >> ~/.ssh/known_hosts 2>/dev/null || true
 
-      - name: Write production .env on VPS
-        env:
-          VPS_DOTENV: ${{ secrets.VPS_DOTENV }}
-        run: |
-          printf '%s\n' "$VPS_DOTENV" | ssh -o StrictHostKeyChecking=yes -p "${VPS_SSH_PORT}" \
-            "${VPS_USER}@${VPS_HOST}" \
-            "mkdir -p '${VPS_DEPLOY_PATH}' && umask 077 && cat > '${VPS_DEPLOY_PATH}/.env' && chmod 600 '${VPS_DEPLOY_PATH}/.env'"
+      - name: Verify SSH to VPS
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ env.VPS_HOST }}
+          username: ${{ env.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          port: ${{ env.VPS_SSH_PORT }}
+          script_stop: true
+          script: |
+            echo "SSH OK as $(whoami)@$(hostname)"
+            mkdir -p ${{ env.VPS_DEPLOY_PATH }}
+
+      - name: Copy production .env to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.VPS_HOST }}
+          username: ${{ env.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          port: ${{ env.VPS_SSH_PORT }}
+          source: .env.vps
+          target: ${{ env.VPS_DEPLOY_PATH }}
+          overwrite: true
 
       - name: Pull images and restart stack on VPS
         uses: appleboy/ssh-action@v1.2.0
@@ -128,9 +137,17 @@ jobs:
           key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
           port: ${{ env.VPS_SSH_PORT }}
           envs: IMAGE_TAG
+          script_stop: true
           script: |
             set -euo pipefail
             cd ${{ env.VPS_DEPLOY_PATH }}
+            if [[ -f .env.vps ]]; then
+              mv -f .env.vps .env
+            elif [[ ! -f .env ]]; then
+              echo "ERROR: .env missing after scp" >&2
+              exit 1
+            fi
+            chmod 600 .env
             if [[ -d .git ]]; then
               git fetch origin main
               git checkout main
