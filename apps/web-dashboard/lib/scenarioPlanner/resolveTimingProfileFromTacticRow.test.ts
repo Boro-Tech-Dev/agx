@@ -20,11 +20,12 @@ describe('resolveTimingProfileFromTacticLibraryRow', () => {
     expect(resolveTimingProfileFromTacticLibraryRow({ key: 'hcp_email', metadata: {} }, null)).toBe('generic_tactic');
   });
 
-  it('infers from project when metadata and catalog miss', () => {
+  it('uses project resolved_timing_profile when metadata and catalog miss', () => {
     expect(
       resolveTimingProfileFromTacticLibraryRow({ key: 'unknown_xyz_no_catalog', metadata: {} }, {
         workspace_key: 'happyguy-1',
         client_key: 'happyguy',
+        resolved_timing_profile: 'happyguy_submit_thursday',
       }),
     ).toBe('happyguy_submit_thursday');
   });
@@ -38,8 +39,13 @@ describe('resolveTimingProfileFromTacticLibraryRow', () => {
     ).toBeNull();
   });
 
-  it('with no row, infers from project only', () => {
-    expect(resolveTimingProfileFromTacticLibraryRow(null, { client_key: 'skillarts' })).toBe('skillarts_generic');
+  it('with no row, uses project resolved_timing_profile only', () => {
+    expect(
+      resolveTimingProfileFromTacticLibraryRow(null, {
+        client_key: 'skillarts',
+        resolved_timing_profile: 'skillarts_generic',
+      }),
+    ).toBe('skillarts_generic');
   });
 });
 

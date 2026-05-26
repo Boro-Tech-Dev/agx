@@ -1,6 +1,7 @@
 """PM/KITT workflows: router error visibility and parse-recovery behavior."""
 
 import unittest
+from contextlib import contextmanager
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -10,9 +11,18 @@ pytest.importorskip('psycopg')
 from worker.workflows import kitt_breakdown, pm_breakdown
 
 
+@contextmanager
+def _patch_no_db():
+    """Workflow unit tests must not reach Postgres (no host `postgres` in CI)."""
+    with (
+        patch('worker.workflows.common.event'),
+        patch('worker.workflows.pm_breakdown.project_pm_kind', return_value='business'),
+    ):
+        yield
+
+
 class TestPmRouterErrorVisibility(unittest.IsolatedAsyncioTestCase):
     async def test_error_survives_with_parsed_dict(self):
-
         routed = {
             'parsed': {'summary': 'Still here', 'tasks': [], 'risks': []},
             'parse_failed': False,
@@ -20,7 +30,7 @@ class TestPmRouterErrorVisibility(unittest.IsolatedAsyncioTestCase):
             'error': 'should_not_be_cleared',
             'model_used': 'test-model',
         }
-        with patch.object(pm_breakdown, 'route_model', new_callable=AsyncMock, return_value=routed):
+        with _patch_no_db(), patch.object(pm_breakdown, 'route_model', new_callable=AsyncMock, return_value=routed):
             out, r = await pm_breakdown.run(
                 '00000000-0000-4000-8000-000000000001',
                 'general',
@@ -46,7 +56,7 @@ class TestParseRecoveryLooseShell(unittest.IsolatedAsyncioTestCase):
             'warning': 'Ollama HTTP 500: runner stopped',
             'model_used': 'llama3.1:8b',
         }
-        with patch.object(kitt_breakdown, 'route_model', new_callable=AsyncMock, return_value=routed):
+        with _patch_no_db(), patch.object(kitt_breakdown, 'route_model', new_callable=AsyncMock, return_value=routed):
             out, r = await kitt_breakdown.run(
                 '00000000-0000-4000-8000-000000000002',
                 'general',
@@ -67,7 +77,7 @@ class TestParseRecoveryLooseShell(unittest.IsolatedAsyncioTestCase):
             'error': 'schema_parse_failed_after_fallback',
             'model_used': 'test',
         }
-        with patch.object(pm_breakdown, 'route_model', new_callable=AsyncMock, return_value=routed):
+        with _patch_no_db(), patch.object(pm_breakdown, 'route_model', new_callable=AsyncMock, return_value=routed):
             _out, r = await pm_breakdown.run(
                 '00000000-0000-4000-8000-000000000003',
                 'general',
@@ -100,7 +110,7 @@ class TestKittSparseListsWarning(unittest.IsolatedAsyncioTestCase):
             'model_used': 'gemma3:270m',
             'kitt_grammar_mode': 'never',
         }
-        with patch.object(kitt_breakdown, 'route_model', new_callable=AsyncMock, return_value=routed):
+        with _patch_no_db(), patch.object(kitt_breakdown, 'route_model', new_callable=AsyncMock, return_value=routed):
             out, r = await kitt_breakdown.run(
                 '00000000-0000-4000-8000-000000000010',
                 'breakdown',

@@ -105,14 +105,30 @@ const RERANKER_ENTRIES: Record<string, RetrievalCatalogEntry> = {
   tei_bge: {
     summary:
       'BGE TEI cross-encoder (optional). Not deployed in the default Compose stack — catalog entry disabled on ColBERT-only hosts.',
-    strengths: ['High cross-encoder quality when TEI sidecars are run manually'],
-    weaknesses: ['Not in default compose', 'High RAM on CPU hosts', 'Requires optional TEI setup'],
+    strengths: [
+      'High cross-encoder quality when TEI sidecars are run manually',
+      'Strong passage ranking on English corpora',
+      'TEI-compatible /rerank wire format',
+    ],
+    weaknesses: [
+      'Not in default compose',
+      'High RAM on CPU hosts',
+      'Requires optional TEI setup',
+    ],
   },
   tei_jina: {
     summary:
       'Fast TEI cross-encoder slot (optional). Not deployed in the default Compose stack.',
-    strengths: ['Lower latency than BGE v2 M3 when TEI is enabled'],
-    weaknesses: ['Not in default compose', 'Requires optional TEI setup'],
+    strengths: [
+      'Lower latency than BGE v2 M3 when TEI is enabled',
+      'Good multilingual cross-encoder baseline',
+      'TEI-compatible /rerank wire format',
+    ],
+    weaknesses: [
+      'Not in default compose',
+      'Requires optional TEI setup',
+      'Superseded by ColBERT default on VPS hosts',
+    ],
   },
   colbert_gte_modern: {
     summary:

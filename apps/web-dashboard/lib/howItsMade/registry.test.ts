@@ -7,7 +7,12 @@ import { allHowItsMadeDocs, collectSourceRefPaths, TOOL_CATALOG_IDS } from './re
 
 const REPO_ROOT = join(__dirname, '../../../..');
 
-const EXPECTED_LLM_TOOLS: ToolCatalogId[] = ['ask_clarifier', 'reply_coach', 'brief_generator'];
+const EXPECTED_LLM_TOOLS: ToolCatalogId[] = [
+  'ask_clarifier',
+  'reply_coach',
+  'brief_generator',
+  'learning',
+];
 
 describe('howItsMade registry', () => {
   it('has a doc for every ToolCatalogId', () => {

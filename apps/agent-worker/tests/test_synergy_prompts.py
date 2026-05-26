@@ -10,7 +10,8 @@ class TestSynergyAgent(unittest.TestCase):
     def test_synergy_system_is_personal(self):
         self.assertIs(SYSTEMS['synergy'], SYSTEM_PM_PERSONAL)
         self.assertIn('personal mode', SYSTEMS['synergy'].lower())
-        self.assertIn('project_registry_facts', SYSTEMS['synergy'].lower())
+        # Personal-mode Synergy omits ## Project_registry_facts (business/clinic prompts include it).
+        self.assertNotIn('project_registry_facts', SYSTEMS['synergy'].lower())
 
     def test_synergy_schema_is_personal_pm_schema(self):
         self.assertIs(SCHEMAS['synergy'], PM_SCHEMA_PERSONAL)
