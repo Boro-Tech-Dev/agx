@@ -11,6 +11,10 @@ Thumbs.db
 .env.*
 !.env.example
 
+# --- Local-only docs (not for GitHub) ---
+/README.md
+README.local.md
+
 # --- Local docker / runtime data ---
 .docker/
 uploads/*
