@@ -32,7 +32,12 @@ for app in "${apps[@]}"; do
       # Optional dev extras (pytest-asyncio, etc.)
       "${PYTHON}" -m pip install -q '.[dev]' 2>/dev/null || true
     fi
-    "${PYTHON}" -m "${PYTEST}" tests -q
+    if [[ "${app}" == "browser-runner" ]]; then
+      # DOM integration test needs `playwright install`; unit imports only need pip deps.
+      "${PYTHON}" -m "${PYTEST}" tests -q -m "not integration"
+    else
+      "${PYTHON}" -m "${PYTEST}" tests -q
+    fi
   )
 done
 
