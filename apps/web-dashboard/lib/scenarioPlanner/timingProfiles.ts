@@ -165,6 +165,10 @@ export type ProjectHierarchyKeys = {
   workspace_key?: string | null;
   client_key?: string | null;
   brand_key?: string | null;
+  /** API-enriched cadence (brand/project); preferred over client-key heuristics. */
+  resolved_timing_profile?: string | null;
+  timing_profile_id?: string | null;
+  brand_timing_profile_id?: string | null;
 };
 
 function normPlannerKey(s: string | null | undefined): string {
