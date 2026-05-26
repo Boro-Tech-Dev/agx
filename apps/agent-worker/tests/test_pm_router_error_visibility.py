@@ -14,8 +14,10 @@ from worker.workflows import kitt_breakdown, pm_breakdown
 @contextmanager
 def _patch_no_db():
     """Workflow unit tests must not reach Postgres (no host `postgres` in CI)."""
+    # Patch `event` on each workflow module (they import it from .common, not common.event).
     with (
-        patch('worker.workflows.common.event'),
+        patch('worker.workflows.pm_breakdown.event'),
+        patch('worker.workflows.kitt_breakdown.event'),
         patch('worker.workflows.pm_breakdown.project_pm_kind', return_value='business'),
     ):
         yield
