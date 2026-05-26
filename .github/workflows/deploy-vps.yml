@@ -77,16 +77,18 @@ jobs:
     env:
       IMAGE_TAG: ${{ needs.resolve.outputs.image_tag }}
     steps:
-      - name: Materialize VPS_DOTENV
+      - name: Configure SSH and deploy target
         env:
           VPS_DOTENV: ${{ secrets.VPS_DOTENV }}
+          VPS_SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
         run: |
+          set -euo pipefail
           if [[ -z "${VPS_DOTENV//[[:space:]]/}" ]]; then
             echo "::error::VPS_DOTENV secret is required" >&2
             exit 1
           fi
-          if [[ -z "${{ secrets.VPS_SSH_PRIVATE_KEY }}" ]]; then
-            echo "::error::VPS_SSH_PRIVATE_KEY secret is required on THIS repo (Boro-Tech-Dev/agx). Org/repo secrets are not shared with LandScraper automatically." >&2
+          if [[ -z "${VPS_SSH_PRIVATE_KEY//[[:space:]]/}" ]]; then
+            echo "::error::VPS_SSH_PRIVATE_KEY secret is required" >&2
             exit 1
           fi
           printf '%s\n' "$VPS_DOTENV" > .env.vps
@@ -96,73 +98,67 @@ jobs:
           set +a
           : "${VPS_HOST:?VPS_HOST missing in VPS_DOTENV}"
           : "${VPS_USER:?VPS_USER missing in VPS_DOTENV}"
+          DEPLOY_PATH="${VPS_DEPLOY_PATH:-/opt/agent-x}"
+          PUBLIC_URL="${VPS_PUBLIC_URL:-https://idea-impact.com}"
+          SSH_PORT="${VPS_SSH_PORT:-22}"
           {
             echo "VPS_HOST=${VPS_HOST}"
             echo "VPS_USER=${VPS_USER}"
-            echo "VPS_SSH_PORT=${VPS_SSH_PORT:-22}"
-            echo "VPS_DEPLOY_PATH=${VPS_DEPLOY_PATH:-/opt/agent-x}"
-            echo "VPS_PUBLIC_URL=${VPS_PUBLIC_URL:-https://idea-impact.com}"
+            echo "VPS_SSH_PORT=${SSH_PORT}"
+            echo "VPS_DEPLOY_PATH=${DEPLOY_PATH}"
+            echo "VPS_PUBLIC_URL=${PUBLIC_URL}"
           } >> "$GITHUB_ENV"
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$VPS_SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keygen -y -f ~/.ssh/deploy_key >/dev/null
+          echo "Deploy key fingerprint: $(ssh-keygen -lf ~/.ssh/deploy_key | awk '{print $2}')"
+          ssh-keyscan -p "${SSH_PORT}" -H "${VPS_HOST}" >> ~/.ssh/known_hosts 2>/dev/null || true
+          {
+            echo 'Host vps-deploy'
+            echo "  HostName ${VPS_HOST}"
+            echo "  User ${VPS_USER}"
+            echo "  Port ${SSH_PORT}"
+            echo '  IdentityFile ~/.ssh/deploy_key'
+            echo '  IdentitiesOnly yes'
+            echo '  StrictHostKeyChecking yes'
+          } > ~/.ssh/config
+          chmod 600 ~/.ssh/config
 
       - name: Verify SSH to VPS
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ env.VPS_HOST }}
-          username: ${{ env.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
-          port: ${{ env.VPS_SSH_PORT }}
-          script_stop: true
-          script: |
-            echo "SSH OK as $(whoami)@$(hostname)"
-            mkdir -p ${{ env.VPS_DEPLOY_PATH }}
+        run: ssh vps-deploy 'echo "SSH OK as $(whoami)@$(hostname)"'
 
-      - name: Copy production .env to VPS
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ env.VPS_HOST }}
-          username: ${{ env.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
-          port: ${{ env.VPS_SSH_PORT }}
-          source: .env.vps
-          target: ${{ env.VPS_DEPLOY_PATH }}
-          overwrite: true
+      - name: Write production .env on VPS
+        env:
+          VPS_DOTENV: ${{ secrets.VPS_DOTENV }}
+        run: |
+          printf '%s\n' "$VPS_DOTENV" | ssh vps-deploy \
+            "umask 077 && mkdir -p '${VPS_DEPLOY_PATH}' && cat > '${VPS_DEPLOY_PATH}/.env' && chmod 600 '${VPS_DEPLOY_PATH}/.env'"
 
       - name: Pull images and restart stack on VPS
-        uses: appleboy/ssh-action@v1.2.0
         env:
           IMAGE_TAG: ${{ needs.resolve.outputs.image_tag }}
-        with:
-          host: ${{ env.VPS_HOST }}
-          username: ${{ env.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
-          port: ${{ env.VPS_SSH_PORT }}
-          envs: IMAGE_TAG
-          script_stop: true
-          script: |
-            set -euo pipefail
-            cd ${{ env.VPS_DEPLOY_PATH }}
-            if [[ -f .env.vps ]]; then
-              mv -f .env.vps .env
-            elif [[ ! -f .env ]]; then
-              echo "ERROR: .env missing after scp" >&2
-              exit 1
-            fi
-            chmod 600 .env
-            if [[ -d .git ]]; then
-              git fetch origin main
-              git checkout main
-              git pull --ff-only origin main
-            fi
-            set -a
-            # shellcheck disable=SC1091
-            source .env
-            set +a
-            if [[ -n "${GHCR_READ_TOKEN:-}" ]]; then
-              echo "${GHCR_READ_TOKEN}" | docker login ghcr.io -u "${GHCR_USERNAME:-boro-tech-dev}" --password-stdin
-            fi
-            export IMAGE_TAG
-            export COMPOSE_FILE=docker-compose.vps.yml:docker-compose.traefik.yml:docker-compose.registry.yml
-            ./scripts/vps-deploy-registry.sh
+        run: |
+          ssh vps-deploy "bash -s" <<REMOTE
+          set -euo pipefail
+          cd '${VPS_DEPLOY_PATH}'
+          if [[ -d .git ]]; then
+            git fetch origin main
+            git checkout main
+            git pull --ff-only origin main
+          fi
+          set -a
+          # shellcheck disable=SC1091
+          source .env
+          set +a
+          if [[ -n "\${GHCR_READ_TOKEN:-}" ]]; then
+            echo "\${GHCR_READ_TOKEN}" | docker login ghcr.io -u "\${GHCR_USERNAME:-boro-tech-dev}" --password-stdin
+          fi
+          export IMAGE_TAG='${IMAGE_TAG}'
+          export COMPOSE_FILE=docker-compose.vps.yml:docker-compose.traefik.yml:docker-compose.registry.yml
+          ./scripts/vps-deploy-registry.sh
+          REMOTE
 
       - name: Public health check
         run: |
