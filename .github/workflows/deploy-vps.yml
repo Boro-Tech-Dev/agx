@@ -1,0 +1,145 @@
+name: Deploy VPS
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Deploy existing GHCR tag (e.g. sha-abc...). Leave empty to build and deploy current commit."
+        required: false
+        type: string
+      skip_build:
+        description: "Skip image build (requires image_tag)"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: vps-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    outputs:
+      image_tag: ${{ steps.out.outputs.image_tag }}
+      deploy_sha: ${{ steps.out.outputs.deploy_sha }}
+      should_build: ${{ steps.out.outputs.should_build }}
+    steps:
+      - id: out
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            if [[ "${{ inputs.skip_build }}" == "true" && -z "${{ inputs.image_tag }}" ]]; then
+              echo "::error::skip_build requires image_tag" >&2
+              exit 1
+            fi
+            if [[ -n "${{ inputs.image_tag }}" ]]; then
+              echo "image_tag=${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
+              echo "should_build=false" >> "$GITHUB_OUTPUT"
+            else
+              echo "image_tag=sha-${{ github.sha }}" >> "$GITHUB_OUTPUT"
+              echo "should_build=true" >> "$GITHUB_OUTPUT"
+            fi
+            echo "deploy_sha=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          else
+            sha="${{ github.event.workflow_run.head_sha }}"
+            echo "image_tag=sha-${sha}" >> "$GITHUB_OUTPUT"
+            echo "should_build=true" >> "$GITHUB_OUTPUT"
+            echo "deploy_sha=${sha}" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    needs: resolve
+    if: needs.resolve.outputs.should_build == 'true'
+    uses: ./.github/workflows/build-images.yml
+    with:
+      image_tag: ${{ needs.resolve.outputs.image_tag }}
+      push_floating_main: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+
+  deploy:
+    needs: [resolve, build]
+    if: always() && needs.resolve.result == 'success' && (needs.build.result == 'success' || needs.build.result == 'skipped')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Materialize VPS_DOTENV
+        id: dotenv
+        env:
+          VPS_DOTENV: ${{ secrets.VPS_DOTENV }}
+        run: |
+          if [[ -z "${VPS_DOTENV:-}" ]]; then
+            echo "::error::VPS_DOTENV secret is required (SSH host/user, GHCR token, production compose .env)" >&2
+            exit 1
+          fi
+          printf '%s\n' "$VPS_DOTENV" > .env.vps
+          set -a
+          # shellcheck disable=SC1091
+          source .env.vps
+          set +a
+          : "${VPS_HOST:?VPS_HOST missing in VPS_DOTENV}"
+          : "${VPS_USER:?VPS_USER missing in VPS_DOTENV}"
+          {
+            echo "vps_host=${VPS_HOST}"
+            echo "vps_user=${VPS_USER}"
+            echo "vps_port=${VPS_SSH_PORT:-22}"
+            echo "vps_deploy_path=${VPS_DEPLOY_PATH:-/opt/agent-x}"
+            echo "vps_public_url=${VPS_PUBLIC_URL:-https://idea-impact.com}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Copy production .env to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ steps.dotenv.outputs.vps_host }}
+          username: ${{ steps.dotenv.outputs.vps_user }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          port: ${{ steps.dotenv.outputs.vps_port }}
+          source: .env.vps
+          target: ${{ steps.dotenv.outputs.vps_deploy_path }}
+
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          IMAGE_TAG: ${{ needs.resolve.outputs.image_tag }}
+          VPS_DEPLOY_PATH: ${{ steps.dotenv.outputs.vps_deploy_path }}
+        with:
+          host: ${{ steps.dotenv.outputs.vps_host }}
+          username: ${{ steps.dotenv.outputs.vps_user }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          port: ${{ steps.dotenv.outputs.vps_port }}
+          envs: IMAGE_TAG,VPS_DEPLOY_PATH
+          script: |
+            set -euo pipefail
+            cd "${VPS_DEPLOY_PATH}"
+            if [[ -f .env.vps ]]; then
+              mv -f .env.vps .env
+            fi
+            set -a
+            # shellcheck disable=SC1091
+            source .env
+            set +a
+            if [[ -n "${GHCR_READ_TOKEN:-}" ]]; then
+              GHCR_USER="${GHCR_USERNAME:-boro-tech-dev}"
+              echo "${GHCR_READ_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
+            fi
+            export IMAGE_TAG
+            export COMPOSE_FILE=docker-compose.vps.yml:docker-compose.traefik.yml:docker-compose.registry.yml
+            ./scripts/vps-deploy-registry.sh
+
+      - name: Public health check
+        run: |
+          base="${{ steps.dotenv.outputs.vps_public_url }}"
+          base="${base%/}"
+          curl -fsS --retry 5 --retry-delay 10 --retry-all-errors "${base}/health"

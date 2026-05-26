@@ -1,0 +1,40 @@
+# GHCR image pins for CI/CD deploys. Use as the last COMPOSE_FILE overlay.
+# Requires IMAGE_TAG (e.g. sha-abc1234). Optional REGISTRY_PREFIX (default ghcr.io/boro-tech-dev).
+#
+#   export IMAGE_TAG=sha-$(git rev-parse HEAD)
+#   export COMPOSE_FILE=docker-compose.vps.yml:docker-compose.traefik.yml:docker-compose.registry.yml
+#   docker compose pull && ./scripts/compose-up.sh -d
+
+services:
+  reranker-colbert:
+    image: ${REGISTRY_PREFIX:-ghcr.io/boro-tech-dev}/agent-x-reranker-colbert:${IMAGE_TAG:?IMAGE_TAG is required}
+
+  search-runner:
+    image: ${REGISTRY_PREFIX:-ghcr.io/boro-tech-dev}/agent-x-search-runner:${IMAGE_TAG:?IMAGE_TAG is required}
+
+  model-router:
+    image: ${REGISTRY_PREFIX:-ghcr.io/boro-tech-dev}/agent-x-model-router:${IMAGE_TAG:?IMAGE_TAG is required}
+
+  agent-api:
+    image: ${REGISTRY_PREFIX:-ghcr.io/boro-tech-dev}/agent-x-agent-api:${IMAGE_TAG:?IMAGE_TAG is required}
+
+  scenario-worker:
+    image: ${REGISTRY_PREFIX:-ghcr.io/boro-tech-dev}/agent-x-scenario-worker:${IMAGE_TAG:?IMAGE_TAG is required}
+
+  browser-runner:
+    image: ${REGISTRY_PREFIX:-ghcr.io/boro-tech-dev}/agent-x-browser-runner:${IMAGE_TAG:?IMAGE_TAG is required}
+
+  agent-worker:
+    image: ${REGISTRY_PREFIX:-ghcr.io/boro-tech-dev}/agent-x-agent-worker:${IMAGE_TAG:?IMAGE_TAG is required}
+
+  ingestion-worker:
+    image: ${REGISTRY_PREFIX:-ghcr.io/boro-tech-dev}/agent-x-ingestion-worker:${IMAGE_TAG:?IMAGE_TAG is required}
+
+  tool-runner:
+    image: ${REGISTRY_PREFIX:-ghcr.io/boro-tech-dev}/agent-x-tool-runner:${IMAGE_TAG:?IMAGE_TAG is required}
+
+  veeva-suite-worker:
+    image: ${REGISTRY_PREFIX:-ghcr.io/boro-tech-dev}/agent-x-veeva-suite-worker:${IMAGE_TAG:?IMAGE_TAG is required}
+
+  web-dashboard:
+    image: ${REGISTRY_PREFIX:-ghcr.io/boro-tech-dev}/agent-x-web-dashboard:${IMAGE_TAG:?IMAGE_TAG is required}

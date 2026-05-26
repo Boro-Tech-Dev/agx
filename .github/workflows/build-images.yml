@@ -1,0 +1,77 @@
+name: Build images
+
+on:
+  workflow_call:
+    inputs:
+      image_tag:
+        description: "GHCR tag (e.g. sha-<full-commit-sha>)"
+        required: true
+        type: string
+      push_floating_main:
+        description: "Also tag images as :main"
+        required: false
+        type: boolean
+        default: true
+    outputs:
+      image_tag:
+        description: "Tag pushed to GHCR"
+        value: ${{ jobs.build.outputs.image_tag }}
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "GHCR tag (default sha-<current-commit>)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.meta.outputs.image_tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve image tag
+        id: meta
+        run: |
+          if [[ -n "${{ inputs.image_tag }}" ]]; then
+            tag="${{ inputs.image_tag }}"
+          else
+            tag="sha-${{ github.sha }}"
+          fi
+          echo "image_tag=${tag}" >> "$GITHUB_OUTPUT"
+          echo "IMAGE_TAG=${tag}" >> "$GITHUB_ENV"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push (docker bake)
+        env:
+          REGISTRY: ghcr.io/boro-tech-dev
+        run: docker buildx bake --file docker-bake.hcl --push
+
+      - name: Tag floating main
+        if: inputs.push_floating_main != false
+        env:
+          REGISTRY: ghcr.io/boro-tech-dev
+          SHA_TAG: ${{ steps.meta.outputs.image_tag }}
+        run: |
+          images=(
+            agent-api agent-worker browser-runner ingestion-worker
+            model-router reranker-colbert scenario-worker search-runner
+            tool-runner veeva-suite-worker web-dashboard
+          )
+          for img in "${images[@]}"; do
+            docker buildx imagetools create \
+              -t "${REGISTRY}/agent-x-${img}:main" \
+              "${REGISTRY}/agent-x-${img}:${SHA_TAG}"
+          done
