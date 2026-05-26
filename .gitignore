@@ -67,6 +67,8 @@ htmlcov/
 # --- Stale setuptools / legacy package copies ---
 apps/agent-api/build/
 apps/agent-worker/build/
+apps/agent-worker/config/
+apps/browser-runner/build/
 
 # --- Playwright / browser caches ---
 playwright-report/

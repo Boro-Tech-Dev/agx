@@ -18,26 +18,37 @@ def test_health():
     assert r.json()['ok'] is True
 
 
-@pytest.mark.asyncio
-async def test_search_happy_path():
-    mock_response = type(
-        'R',
-        (),
-        {
-            'status_code': 200,
-            'json': lambda: {
+def test_search_happy_path():
+    class _MockSearxResponse:
+        status_code = 200
+        text = '{}'
+
+        def json(self):
+            return {
                 'results': [
                     {'title': 'A', 'url': 'https://example.com/a', 'content': 'snippet', 'score': 1.0}
                 ]
-            },
-            'text': '{}',
-            'raise_for_status': lambda: None,
-        },
-    )()
+            }
 
-    with patch('tools.main.httpx.AsyncClient') as mock_client:
-        inst = mock_client.return_value.__aenter__.return_value
-        inst.get = AsyncMock(return_value=mock_response)
+        def raise_for_status(self):
+            return None
+
+    mock_response = _MockSearxResponse()
+
+    class _FakeAsyncClient:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *args):
+            return None
+
+        async def get(self, url, params=None):
+            return mock_response
+
+    with patch('tools.main.httpx.AsyncClient', _FakeAsyncClient):
         r = client.post('/tools/web/search', json={'query': 'hello'})
     assert r.status_code == 200
     body = r.json()

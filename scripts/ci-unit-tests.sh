@@ -3,9 +3,11 @@
 # Used locally and in GitHub Actions (see .github/workflows/ci.yml).
 set -euo pipefail
 cd "$(dirname "$0")/.."
+REPO_ROOT="$(pwd)"
 
 PYTHON="${PYTHON:-python3}"
 PYTEST="${PYTEST:-pytest}"
+INSTALL_DEPS="${REPO_ROOT}/scripts/ci_install_pyproject_deps.py"
 
 apps=(
   agent-api
@@ -18,22 +20,21 @@ apps=(
 )
 
 for app in "${apps[@]}"; do
-  dir="apps/${app}"
+  dir="${REPO_ROOT}/apps/${app}"
   if [[ ! -d "${dir}/tests" ]]; then
     continue
   fi
   echo "==> ${app}"
   (
     cd "${dir}"
+    export PYTHONPATH="${dir}${PYTHONPATH:+:${PYTHONPATH}}"
     "${PYTHON}" -m pip install -q --upgrade pip
-    "${PYTHON}" -m pip install -q "${PYTEST}" httpx
-    if [[ -f pyproject.toml ]]; then
-      "${PYTHON}" -m pip install -q .
-      # Optional dev extras (pytest-asyncio, etc.)
-      "${PYTHON}" -m pip install -q '.[dev]' 2>/dev/null || true
+    "${PYTHON}" -m pip install -q "${PYTEST}" httpx pytest-asyncio
+    "${PYTHON}" "${INSTALL_DEPS}" "${dir}"
+    if [[ "${app}" == "reranker-colbert" ]]; then
+      "${PYTHON}" "${INSTALL_DEPS}" "${dir}" dev
     fi
     if [[ "${app}" == "browser-runner" ]]; then
-      # DOM integration test needs `playwright install`; unit imports only need pip deps.
       "${PYTHON}" -m "${PYTEST}" tests -q -m "not integration"
     else
       "${PYTHON}" -m "${PYTEST}" tests -q

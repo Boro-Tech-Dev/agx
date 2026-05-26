@@ -92,7 +92,11 @@ class InteractionPlanStep(BaseModel):
             if ext not in _UPLOAD_EXT_ALLOW:
                 raise ValueError(f'filename extension not allowed: {ext or "(none)"}')
             try:
-                raw = base64.standard_b64decode(fb.strip(), validate=True)
+                # validate= requires Python 3.13+; CI/VPS use 3.11.
+                try:
+                    raw = base64.standard_b64decode(fb.strip(), validate=True)
+                except TypeError:
+                    raw = base64.standard_b64decode(fb.strip())
             except Exception as e:
                 raise ValueError(f'invalid file_base64: {e!s}') from e
             if len(raw) > UPLOAD_MAX_BYTES:
