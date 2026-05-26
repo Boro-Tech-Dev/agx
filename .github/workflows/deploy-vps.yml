@@ -74,14 +74,21 @@ jobs:
     needs: [resolve, build]
     if: always() && needs.resolve.result == 'success' && (needs.build.result == 'success' || needs.build.result == 'skipped')
     runs-on: ubuntu-latest
+    env:
+      IMAGE_TAG: ${{ needs.resolve.outputs.image_tag }}
     steps:
-      - name: Materialize VPS_DOTENV
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+
+      - name: Configure deploy target from VPS_DOTENV
         id: dotenv
         env:
           VPS_DOTENV: ${{ secrets.VPS_DOTENV }}
         run: |
-          if [[ -z "${VPS_DOTENV:-}" ]]; then
-            echo "::error::VPS_DOTENV secret is required (SSH host/user, GHCR token, production compose .env)" >&2
+          if [[ -z "${VPS_DOTENV//[[:space:]]/}" ]]; then
+            echo "::error::VPS_DOTENV secret is required" >&2
             exit 1
           fi
           printf '%s\n' "$VPS_DOTENV" > .env.vps
@@ -91,48 +98,50 @@ jobs:
           set +a
           : "${VPS_HOST:?VPS_HOST missing in VPS_DOTENV}"
           : "${VPS_USER:?VPS_USER missing in VPS_DOTENV}"
+          DEPLOY_PATH="${VPS_DEPLOY_PATH:-/opt/agent-x}"
+          PUBLIC_URL="${VPS_PUBLIC_URL:-https://idea-impact.com}"
           {
-            echo "vps_host=${VPS_HOST}"
-            echo "vps_user=${VPS_USER}"
-            echo "vps_port=${VPS_SSH_PORT:-22}"
-            echo "vps_deploy_path=${VPS_DEPLOY_PATH:-/opt/agent-x}"
-            echo "vps_public_url=${VPS_PUBLIC_URL:-https://idea-impact.com}"
-          } >> "$GITHUB_OUTPUT"
+            echo "VPS_HOST=${VPS_HOST}"
+            echo "VPS_USER=${VPS_USER}"
+            echo "VPS_SSH_PORT=${VPS_SSH_PORT:-22}"
+            echo "VPS_DEPLOY_PATH=${DEPLOY_PATH}"
+            echo "VPS_PUBLIC_URL=${PUBLIC_URL}"
+          } >> "$GITHUB_ENV"
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${VPS_SSH_PORT:-22}" -H "${VPS_HOST}" >> ~/.ssh/known_hosts 2>/dev/null || true
 
-      - name: Copy production .env to VPS
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ steps.dotenv.outputs.vps_host }}
-          username: ${{ steps.dotenv.outputs.vps_user }}
-          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
-          port: ${{ steps.dotenv.outputs.vps_port }}
-          source: .env.vps
-          target: ${{ steps.dotenv.outputs.vps_deploy_path }}
+      - name: Write production .env on VPS
+        env:
+          VPS_DOTENV: ${{ secrets.VPS_DOTENV }}
+        run: |
+          printf '%s\n' "$VPS_DOTENV" | ssh -o StrictHostKeyChecking=yes -p "${VPS_SSH_PORT}" \
+            "${VPS_USER}@${VPS_HOST}" \
+            "mkdir -p '${VPS_DEPLOY_PATH}' && umask 077 && cat > '${VPS_DEPLOY_PATH}/.env' && chmod 600 '${VPS_DEPLOY_PATH}/.env'"
 
-      - name: Deploy over SSH
+      - name: Pull images and restart stack on VPS
         uses: appleboy/ssh-action@v1.2.0
         env:
           IMAGE_TAG: ${{ needs.resolve.outputs.image_tag }}
-          VPS_DEPLOY_PATH: ${{ steps.dotenv.outputs.vps_deploy_path }}
         with:
-          host: ${{ steps.dotenv.outputs.vps_host }}
-          username: ${{ steps.dotenv.outputs.vps_user }}
+          host: ${{ env.VPS_HOST }}
+          username: ${{ env.VPS_USER }}
           key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
-          port: ${{ steps.dotenv.outputs.vps_port }}
-          envs: IMAGE_TAG,VPS_DEPLOY_PATH
+          port: ${{ env.VPS_SSH_PORT }}
+          envs: IMAGE_TAG
           script: |
             set -euo pipefail
-            cd "${VPS_DEPLOY_PATH}"
-            if [[ -f .env.vps ]]; then
-              mv -f .env.vps .env
+            cd ${{ env.VPS_DEPLOY_PATH }}
+            if [[ -d .git ]]; then
+              git fetch origin main
+              git checkout main
+              git pull --ff-only origin main
             fi
             set -a
             # shellcheck disable=SC1091
             source .env
             set +a
             if [[ -n "${GHCR_READ_TOKEN:-}" ]]; then
-              GHCR_USER="${GHCR_USERNAME:-boro-tech-dev}"
-              echo "${GHCR_READ_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
+              echo "${GHCR_READ_TOKEN}" | docker login ghcr.io -u "${GHCR_USERNAME:-boro-tech-dev}" --password-stdin
             fi
             export IMAGE_TAG
             export COMPOSE_FILE=docker-compose.vps.yml:docker-compose.traefik.yml:docker-compose.registry.yml
@@ -140,6 +149,5 @@ jobs:
 
       - name: Public health check
         run: |
-          base="${{ steps.dotenv.outputs.vps_public_url }}"
-          base="${base%/}"
+          base="${VPS_PUBLIC_URL%/}"
           curl -fsS --retry 5 --retry-delay 10 --retry-all-errors "${base}/health"
