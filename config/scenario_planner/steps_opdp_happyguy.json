@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "label": "HappyGuy OPDP binder (parallel track; 22 business days total)",
+  "steps": [
+    {
+      "id": "opdp_binder_copy_back_annos",
+      "label": "Copy to create back annos",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder Day 1 — copy to create back annos."
+    },
+    {
+      "id": "opdp_binder_handoff_art",
+      "label": "Handoff to Art; Art creates the Binder File",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder Day 2."
+    },
+    {
+      "id": "opdp_binder_pm_routes_cross_check",
+      "label": "PM routes Front/Back annos (cross-check & binder ref)",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "OPDP binder Days 3–4 — PM routes; Front annos cross-checked against Fact Check Route; Back annos reviewed in Binder Reference Folder."
+    },
+    {
+      "id": "opdp_binder_onscreen",
+      "label": "Onscreen",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder Day 5."
+    },
+    {
+      "id": "opdp_binder_submit_coordinator",
+      "label": "Submit to OPDP coordinator",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder Day 6."
+    },
+    {
+      "id": "opdp_binder_submission_review",
+      "label": "Submission Review",
+      "baseline_days": 6,
+      "min_days": 1,
+      "note": "OPDP binder Days 7–12."
+    },
+    {
+      "id": "opdp_binder_final_review",
+      "label": "OPDP Binder Review",
+      "baseline_days": 10,
+      "min_days": 1,
+      "note": "Final OPDP binder review phase (remaining duration to complete 22 business days total from anchor)."
+    }
+  ]
+}

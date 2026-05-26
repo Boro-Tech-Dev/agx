@@ -1,0 +1,16 @@
+{
+  "summary": "Brief sections that matter for pharma promos.",
+  "sections": [
+    {
+      "bullets": [
+        "Objectives tied to on-label claims.",
+        "Deliverables with MLR notes and reference expectations.",
+        "In-market date vs MLR submission date."
+      ]
+    }
+  ],
+  "tool_cta": {
+    "label": "Brief Generator",
+    "href": "/tools/brief-generator?tab=how"
+  }
+}

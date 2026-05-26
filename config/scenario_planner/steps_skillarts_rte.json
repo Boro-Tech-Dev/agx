@@ -1,0 +1,490 @@
+{
+  "version": 1,
+  "profile": "skillarts_generic",
+  "source": "12464812 IV RTE export",
+  "steps": [
+    {
+      "id": "skillarts_rte_001",
+      "label": "Status Update",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 0 Days."
+    },
+    {
+      "id": "skillarts_rte_002",
+      "label": "Project Kick-off",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_003",
+      "label": "Open FUSE Code",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_004",
+      "label": "Manuscript Development",
+      "baseline_days": 9,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 9 Days."
+    },
+    {
+      "id": "skillarts_rte_005",
+      "label": "Copy to work on Word Doc of MS/cover sheet drop downs",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 3 Days."
+    },
+    {
+      "id": "skillarts_rte_006",
+      "label": "Copy sup review + Update + Any art packaging (header/footer/basic animations)",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_007",
+      "label": "Internal Review",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_008",
+      "label": "Art to work on/package creative components",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 0 Days."
+    },
+    {
+      "id": "skillarts_rte_009",
+      "label": "Copy to update MS",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 2 Days."
+    },
+    {
+      "id": "skillarts_rte_010",
+      "label": "Account to share Word Doc of MS with client for review",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_011",
+      "label": "Routing",
+      "baseline_days": 9,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 9 Days."
+    },
+    {
+      "id": "skillarts_rte_012",
+      "label": "Copy to apply legacy annos (if any)",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_013",
+      "label": "Copy updating based on the latest markups from Acct",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_014",
+      "label": "Route the MS word Doc for a Cold Read/legacy read",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_015",
+      "label": "Acct to share with Client as an FYI",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 0 Days."
+    },
+    {
+      "id": "skillarts_rte_016",
+      "label": "Incorporate client feedback/add annos",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_017",
+      "label": "Send WIP to Subs / annos to strat for UTM matrix",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 0 Days."
+    },
+    {
+      "id": "skillarts_rte_018",
+      "label": "Route clean",
+      "baseline_days": 6,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 6 Days."
+    },
+    {
+      "id": "skillarts_rte_019",
+      "label": "Development",
+      "baseline_days": 38,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 38 Days."
+    },
+    {
+      "id": "skillarts_rte_020",
+      "label": "Asset hand off prep",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_021",
+      "label": "MS TEMPLATE: Copy to drop MS Word into template / Art to package creative components",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_022",
+      "label": "CREATIVE COMPONENTS: Art to share package with PM/Acct > Subs to upload in FUSE and gather FUSE IDs",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_023",
+      "label": "MANUSCRIPT TEMPLATE: Acct updates with FUSE IDs",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_024",
+      "label": "KNOWLEDGE HUB: PM to upload Creative Components + MS",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_025",
+      "label": "CHECKLIST: PM complete checklist in TP + upload Knowledge Hub Link",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_026",
+      "label": "Asset Handoff (in FUSE + confirm via TactPlan)",
+      "baseline_days": 5,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 5 Days."
+    },
+    {
+      "id": "skillarts_rte_027",
+      "label": "Asset hand off in Fuse (MS template & packaged creative components) > PM shares handoff via Tactplan: Link to Markup tool, along with packaged files via Knowledge Hub link",
+      "baseline_days": 5,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 5 Days."
+    },
+    {
+      "id": "skillarts_rte_028",
+      "label": "Development: Studio Operations/CAST",
+      "baseline_days": 32,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 32 Days."
+    },
+    {
+      "id": "skillarts_rte_029",
+      "label": "Development of emails (Tentative 4 days for Development)",
+      "baseline_days": 20,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 20 Days."
+    },
+    {
+      "id": "skillarts_rte_030",
+      "label": "UTM Tags (in parallel of asset handoff)",
+      "baseline_days": 4,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 4 Days."
+    },
+    {
+      "id": "skillarts_rte_031",
+      "label": "UTM Needed? Strat to develop UTM matrix",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_032",
+      "label": "Handoff UTM tagging and intake form to Accenture for .cvs creation",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 0 Days."
+    },
+    {
+      "id": "skillarts_rte_033",
+      "label": "Accenture to create .csv",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 3 Days."
+    },
+    {
+      "id": "skillarts_rte_034",
+      "label": "In parallel to dev, PM to send .csv to GBS",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 0 Days."
+    },
+    {
+      "id": "skillarts_rte_035",
+      "label": "Route dev1 + screenshots for a w4w against the word doc MS + share feedback with dev",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 2 Days."
+    },
+    {
+      "id": "skillarts_rte_036",
+      "label": "Dev updates > Dev2 Test",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 3 Days."
+    },
+    {
+      "id": "skillarts_rte_037",
+      "label": "Internal Review / QA",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 2 Days."
+    },
+    {
+      "id": "skillarts_rte_038",
+      "label": "Dev updates > Dev3 Test",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 3 Days."
+    },
+    {
+      "id": "skillarts_rte_039",
+      "label": "Route Clean + Account to share with Client for final approval ahead of FUSE Submission",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 2 Days."
+    },
+    {
+      "id": "share_client_approval_prb1",
+      "label": "Share with client for Approval to PRB1",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Send clean version/layout for client approval to submit to PRB1 (SkillArts MLR window)."
+    },
+    {
+      "id": "submit_prb1",
+      "label": "Submit for PRB1 / FUSE submission anchor",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Submit for PRB1; Thursday EOD cadence when using SkillArts tiered profile."
+    },
+    {
+      "id": "development_prb1",
+      "label": "Development (PRB1)",
+      "baseline_days": 5,
+      "min_days": 1,
+      "note": "Development between PRB1 submit and PRB1 review (tier span controls review date)."
+    },
+    {
+      "id": "prb1_review",
+      "label": "PRB1 Review",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRB1 review (MLR); inclusive working-day span from submit set by page tier."
+    },
+    {
+      "id": "skillarts_rte_040",
+      "label": "FUSE Review",
+      "baseline_days": 14,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 14 Days."
+    },
+    {
+      "id": "skillarts_rte_041",
+      "label": "Hand off to Subs",
+      "baseline_days": 14,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 14 Days."
+    },
+    {
+      "id": "skillarts_rte_042",
+      "label": "Handoff: Screenshot of dev file, copy to add annos -- don't need to hand off redbox file, latest file lives in FUSE",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 3 Days."
+    },
+    {
+      "id": "skillarts_rte_043",
+      "label": "FUSE review",
+      "baseline_days": 10,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 10 Days."
+    },
+    {
+      "id": "skillarts_rte_044",
+      "label": "Consolidate Raw Comments + markups",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_045",
+      "label": "Updates Post FUSE Review",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 3 Days."
+    },
+    {
+      "id": "skillarts_rte_046",
+      "label": "GBS to update per raw comments (Dev4)",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 2 Days."
+    },
+    {
+      "id": "skillarts_rte_047",
+      "label": "Neon reviews and confirm updates + approve",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_048",
+      "label": "Verification Review",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 3 Days."
+    },
+    {
+      "id": "skillarts_rte_049",
+      "label": "Submit for Verification",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_050",
+      "label": "Verification Review",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 2 Days."
+    },
+    {
+      "id": "skillarts_rte_051",
+      "label": "UTM Tags Added (in parallel of Verification)",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 3 Days."
+    },
+    {
+      "id": "skillarts_rte_052",
+      "label": "CAST/Studio Operations updates Dev files with UTM tags (in parallel of verification)",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_053",
+      "label": "Neon/Claravine Team reviews and approves proof with links with tags",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 2 Days."
+    },
+    {
+      "id": "skillarts_rte_054",
+      "label": "Verification Approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 0 Days."
+    },
+    {
+      "id": "skillarts_rte_055",
+      "label": "CAST to send Test Blast (after Neon sends Perform Prod Proof notification)",
+      "baseline_days": 8,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 8 Days."
+    },
+    {
+      "id": "skillarts_rte_056",
+      "label": "Send CAST \"Perform Production Proof\" email notification > CAST finalizes RTE Template and sends test blast",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_057",
+      "label": "Screenshot and route test blast for final approval",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 2 Days."
+    },
+    {
+      "id": "skillarts_rte_058",
+      "label": "CAST then sends test blast to MAP Pooled Inbox",
+      "baseline_days": 5,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 5 Days."
+    },
+    {
+      "id": "skillarts_rte_059",
+      "label": "Neon prep for PPA Submission: Submission file: PDF version of the test blast with a cover sheet (slide 53 shows what we need to include in the cover sheet - maybe we ask derm for an example RTE cover sheet)",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 0 Days."
+    },
+    {
+      "id": "skillarts_rte_060",
+      "label": "Once we have PPA, the RTE will go into QC and then 2253",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 0 Days."
+    },
+    {
+      "id": "skillarts_rte_061",
+      "label": "In parallel to QC, Neon sends the NVS Librarians the creative component metadata sheet so they can make all CCs “active”",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 0 Days."
+    },
+    {
+      "id": "skillarts_rte_062",
+      "label": "Finally, once the CCs are active and the RTE is fully approved in FUSE, we’ll send CAST the FUSE approval screenshot and they can push the RTE live in Veeva",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 0 Days."
+    },
+    {
+      "id": "skillarts_rte_063",
+      "label": "Email ready for deployment",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_064",
+      "label": "GBS pushes updates to QA Environment",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 1 Day."
+    },
+    {
+      "id": "skillarts_rte_065",
+      "label": "Live",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "IV RTE export row; duration from schedule: 0 Days."
+    }
+  ]
+}

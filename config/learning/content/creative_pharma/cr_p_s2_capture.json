@@ -1,0 +1,15 @@
+{
+  "tool_cta": {
+    "label": "Web Capture",
+    "href": "/tools/web-capture"
+  },
+  "summary": "Capture HCP reference pages for MLR packages.",
+  "sections": [
+    {
+      "bullets": [
+        "Dismiss HCP and cookie gates for clean captures.",
+        "Save captures as reference documents in sandbox."
+      ]
+    }
+  ]
+}

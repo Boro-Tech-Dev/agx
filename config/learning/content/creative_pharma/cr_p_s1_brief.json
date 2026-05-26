@@ -1,0 +1,15 @@
+{
+  "tool_cta": {
+    "label": "Brief Generator",
+    "href": "/tools/brief-generator?tab=how"
+  },
+  "summary": "Brief Generator for promo tactics.",
+  "sections": [
+    {
+      "bullets": [
+        "Use tactic presets for HCP email or scientific decks.",
+        "Capture MLR notes in brief fields."
+      ]
+    }
+  ]
+}

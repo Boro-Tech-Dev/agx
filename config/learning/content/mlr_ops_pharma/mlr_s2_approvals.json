@@ -1,0 +1,15 @@
+{
+  "summary": "Approvals queue walkthrough.",
+  "tool_cta": {
+    "label": "Approvals",
+    "href": "/approvals"
+  },
+  "sections": [
+    {
+      "bullets": [
+        "Track pending items and ownership.",
+        "Use queue for platform access requests."
+      ]
+    }
+  ]
+}

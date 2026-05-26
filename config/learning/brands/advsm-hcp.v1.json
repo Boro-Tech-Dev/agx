@@ -1,0 +1,19 @@
+{
+  "brand_key": "advsm-hcp",
+  "version": 1,
+  "append_missions": [
+    {
+      "id": "brand_m1",
+      "title": "AdvSm HCP brand context",
+      "steps": [
+        {
+          "id": "brand_s1",
+          "kind": "read",
+          "title": "Brand channel norms (HCP)",
+          "validation": { "type": "manual" }
+        }
+      ]
+    }
+  ],
+  "step_patches": []
+}

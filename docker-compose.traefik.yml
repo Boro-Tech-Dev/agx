@@ -1,0 +1,26 @@
+# Traefik (Hostinger /docker/traefik-isda) reverse proxy labels.
+# Requires Traefik on host network with docker provider; stop Caddy first.
+# Usage on VPS:
+#   COMPOSE_FILE=docker-compose.vps.yml:docker-compose.traefik.yml docker compose up -d web-dashboard
+services:
+  web-dashboard:
+    ports: []
+    expose:
+      - "3000"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ragtag.rule=Host(`idea-impact.com`) || Host(`www.idea-impact.com`)
+      - traefik.http.routers.ragtag.entrypoints=websecure
+      - traefik.http.routers.ragtag.tls=true
+      - traefik.http.routers.ragtag.tls.certresolver=letsencrypt
+      - traefik.http.routers.ragtag.service=ragtag
+      - traefik.http.services.ragtag.loadbalancer.server.port=3000
+      # Hostinger panel opens the VPS hostname — redirect to canonical domain
+      - traefik.http.routers.ragtag-hstgr.rule=Host(`srv1139701.hstgr.cloud`)
+      - traefik.http.routers.ragtag-hstgr.entrypoints=websecure
+      - traefik.http.routers.ragtag-hstgr.tls=true
+      - traefik.http.routers.ragtag-hstgr.tls.certresolver=letsencrypt
+      - traefik.http.routers.ragtag-hstgr.middlewares=ragtag-hstgr-redirect
+      - traefik.http.middlewares.ragtag-hstgr-redirect.redirectregex.regex=^https://srv1139701\.hstgr\.cloud/(.*)
+      - traefik.http.middlewares.ragtag-hstgr-redirect.redirectregex.replacement=https://idea-impact.com/$${1}
+      - traefik.http.middlewares.ragtag-hstgr-redirect.redirectregex.permanent=true

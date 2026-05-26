@@ -1,0 +1,527 @@
+{
+  "version": 1,
+  "profiles": [
+    {
+      "id": "generic_tactic",
+      "prb_cadence": "email_ml_r",
+      "client_family": "schematic",
+      "non_prb_multipliers": {}
+    },
+    {
+      "id": "website",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 1.2,
+        "internal_review_manuscript": 1.15,
+        "internal_review_layout": 1.15,
+        "revisions_post_internal_manuscript": 1.1,
+        "revisions_post_internal_layout": 1.1,
+        "client_review_1_manuscript": 1.1,
+        "manuscript_revisions_start_layout": 1.1,
+        "client_review_2_layout": 1.1,
+        "revisions_post_cr2_layout": 1.1,
+        "client_review_3_submission_prep": 1.1,
+        "complete_initial_edit_start_fact_check": 1.1,
+        "complete_fact_check": 1.1,
+        "route_to_clean": 1.05,
+        "share_client_approval_prb1": 1.05,
+        "prb1_updates": 1.1,
+        "client_share_prb1_revisions": 1.05,
+        "revisions_post_prb1_client": 1.1,
+        "share_client_approval_prb2": 1.05,
+        "revisions_post_prb2": 1.1,
+        "share_client_approval_prb3": 1.05,
+        "revisions_post_prb3": 1.1,
+        "client_approval_final_submit": 1.05,
+        "submit_final_approval": 1,
+        "receive_final_approval": 1,
+        "upload_final_package": 1,
+        "final_package_approved": 1,
+        "prep_assets_release": 1.1,
+        "release_assets_vendors": 1
+      }
+    },
+    {
+      "id": "banner",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.85,
+        "internal_review_manuscript": 0.9,
+        "internal_review_layout": 0.9,
+        "prb1_updates": 0.95,
+        "revisions_post_prb2": 0.9,
+        "revisions_post_prb3": 0.9
+      }
+    },
+    {
+      "id": "clm",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 1.1,
+        "internal_review_manuscript": 1.05,
+        "internal_review_layout": 1.05
+      }
+    },
+    {
+      "id": "brochure_4pg",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.75,
+        "internal_review_manuscript": 0.85,
+        "internal_review_layout": 0.85,
+        "complete_fact_check": 0.9
+      }
+    },
+    {
+      "id": "brochure_12pg",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 1,
+        "internal_review_manuscript": 1,
+        "internal_review_layout": 1,
+        "route_to_clean": 1.05
+      }
+    },
+    {
+      "id": "brochure_24pg",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 1.35,
+        "internal_review_manuscript": 1.2,
+        "internal_review_layout": 1.2,
+        "complete_initial_edit_start_fact_check": 1.15,
+        "prb1_updates": 1.15,
+        "revisions_post_prb2": 1.2,
+        "revisions_post_prb3": 1.2
+      }
+    },
+    {
+      "id": "tradeshow_digital",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.8,
+        "internal_review_manuscript": 0.85,
+        "internal_review_layout": 0.85,
+        "client_review_1_manuscript": 0.9,
+        "client_review_2_layout": 0.9
+      }
+    },
+    {
+      "id": "tradeshow_panel",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {}
+    },
+    {
+      "id": "video_production",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {}
+    },
+    {
+      "id": "animation",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {}
+    },
+    {
+      "id": "display_standard",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.85,
+        "internal_review_manuscript": 0.9,
+        "internal_review_layout": 0.9,
+        "prb1_updates": 0.95,
+        "revisions_post_prb2": 0.9,
+        "revisions_post_prb3": 0.9
+      }
+    },
+    {
+      "id": "social_paid",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 1.2,
+        "internal_review_manuscript": 1.15,
+        "internal_review_layout": 1.15,
+        "revisions_post_internal_manuscript": 1.1,
+        "revisions_post_internal_layout": 1.1,
+        "client_review_1_manuscript": 1.1,
+        "manuscript_revisions_start_layout": 1.1,
+        "client_review_2_layout": 1.1,
+        "revisions_post_cr2_layout": 1.1,
+        "client_review_3_submission_prep": 1.1,
+        "complete_initial_edit_start_fact_check": 1.1,
+        "complete_fact_check": 1.1,
+        "route_to_clean": 1.05,
+        "share_client_approval_prb1": 1.05,
+        "prb1_updates": 1.1,
+        "client_share_prb1_revisions": 1.05,
+        "revisions_post_prb1_client": 1.1,
+        "share_client_approval_prb2": 1.05,
+        "revisions_post_prb2": 1.1,
+        "share_client_approval_prb3": 1.05,
+        "revisions_post_prb3": 1.1,
+        "client_approval_final_submit": 1.05,
+        "submit_final_approval": 1,
+        "receive_final_approval": 1,
+        "upload_final_package": 1,
+        "final_package_approved": 1,
+        "prep_assets_release": 1.1,
+        "release_assets_vendors": 1
+      }
+    },
+    {
+      "id": "sem_seo",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.85,
+        "internal_review_manuscript": 0.9,
+        "internal_review_layout": 0.9,
+        "prb1_updates": 0.95,
+        "revisions_post_prb2": 0.9,
+        "revisions_post_prb3": 0.9
+      }
+    },
+    {
+      "id": "ctv_streaming",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.8,
+        "internal_review_manuscript": 0.85,
+        "internal_review_layout": 0.85,
+        "client_review_1_manuscript": 0.9,
+        "client_review_2_layout": 0.9
+      }
+    },
+    {
+      "id": "retail_media",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.85,
+        "internal_review_manuscript": 0.9,
+        "internal_review_layout": 0.9,
+        "prb1_updates": 0.95,
+        "revisions_post_prb2": 0.9,
+        "revisions_post_prb3": 0.9
+      }
+    },
+    {
+      "id": "endemic_publisher",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 1.2,
+        "internal_review_manuscript": 1.15,
+        "internal_review_layout": 1.15,
+        "revisions_post_internal_manuscript": 1.1,
+        "revisions_post_internal_layout": 1.1,
+        "client_review_1_manuscript": 1.1,
+        "manuscript_revisions_start_layout": 1.1,
+        "client_review_2_layout": 1.1,
+        "revisions_post_cr2_layout": 1.1,
+        "client_review_3_submission_prep": 1.1,
+        "complete_initial_edit_start_fact_check": 1.1,
+        "complete_fact_check": 1.1,
+        "route_to_clean": 1.05,
+        "share_client_approval_prb1": 1.05,
+        "prb1_updates": 1.1,
+        "client_share_prb1_revisions": 1.05,
+        "revisions_post_prb1_client": 1.1,
+        "share_client_approval_prb2": 1.05,
+        "revisions_post_prb2": 1.1,
+        "share_client_approval_prb3": 1.05,
+        "revisions_post_prb3": 1.1,
+        "client_approval_final_submit": 1.05,
+        "submit_final_approval": 1,
+        "receive_final_approval": 1,
+        "upload_final_package": 1,
+        "final_package_approved": 1,
+        "prep_assets_release": 1.1,
+        "release_assets_vendors": 1
+      }
+    },
+    {
+      "id": "generic_tactic_linear",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {}
+    },
+    {
+      "id": "sms_push",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.85,
+        "internal_review_manuscript": 0.9,
+        "internal_review_layout": 0.9,
+        "prb1_updates": 0.95,
+        "revisions_post_prb2": 0.9,
+        "revisions_post_prb3": 0.9
+      }
+    },
+    {
+      "id": "influencer_creator",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 1.2,
+        "internal_review_manuscript": 1.15,
+        "internal_review_layout": 1.15,
+        "revisions_post_internal_manuscript": 1.1,
+        "revisions_post_internal_layout": 1.1,
+        "client_review_1_manuscript": 1.1,
+        "manuscript_revisions_start_layout": 1.1,
+        "client_review_2_layout": 1.1,
+        "revisions_post_cr2_layout": 1.1,
+        "client_review_3_submission_prep": 1.1,
+        "complete_initial_edit_start_fact_check": 1.1,
+        "complete_fact_check": 1.1,
+        "route_to_clean": 1.05,
+        "share_client_approval_prb1": 1.05,
+        "prb1_updates": 1.1,
+        "client_share_prb1_revisions": 1.05,
+        "revisions_post_prb1_client": 1.1,
+        "share_client_approval_prb2": 1.05,
+        "revisions_post_prb2": 1.1,
+        "share_client_approval_prb3": 1.05,
+        "revisions_post_prb3": 1.1,
+        "client_approval_final_submit": 1.05,
+        "submit_final_approval": 1,
+        "receive_final_approval": 1,
+        "upload_final_package": 1,
+        "final_package_approved": 1,
+        "prep_assets_release": 1.1,
+        "release_assets_vendors": 1
+      }
+    },
+    {
+      "id": "audio_podcast_streaming",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.85,
+        "internal_review_manuscript": 0.9,
+        "internal_review_layout": 0.9,
+        "prb1_updates": 0.95,
+        "revisions_post_prb2": 0.9,
+        "revisions_post_prb3": 0.9
+      }
+    },
+    {
+      "id": "webinar_virtual_event",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 1.2,
+        "internal_review_manuscript": 1.15,
+        "internal_review_layout": 1.15,
+        "revisions_post_internal_manuscript": 1.1,
+        "revisions_post_internal_layout": 1.1,
+        "client_review_1_manuscript": 1.1,
+        "manuscript_revisions_start_layout": 1.1,
+        "client_review_2_layout": 1.1,
+        "revisions_post_cr2_layout": 1.1,
+        "client_review_3_submission_prep": 1.1,
+        "complete_initial_edit_start_fact_check": 1.1,
+        "complete_fact_check": 1.1,
+        "route_to_clean": 1.05,
+        "share_client_approval_prb1": 1.05,
+        "prb1_updates": 1.1,
+        "client_share_prb1_revisions": 1.05,
+        "revisions_post_prb1_client": 1.1,
+        "share_client_approval_prb2": 1.05,
+        "revisions_post_prb2": 1.1,
+        "share_client_approval_prb3": 1.05,
+        "revisions_post_prb3": 1.1,
+        "client_approval_final_submit": 1.05,
+        "submit_final_approval": 1,
+        "receive_final_approval": 1,
+        "upload_final_package": 1,
+        "final_package_approved": 1,
+        "prep_assets_release": 1.1,
+        "release_assets_vendors": 1
+      }
+    },
+    {
+      "id": "mobile_app_web",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 1.2,
+        "internal_review_manuscript": 1.15,
+        "internal_review_layout": 1.15,
+        "revisions_post_internal_manuscript": 1.1,
+        "revisions_post_internal_layout": 1.1,
+        "client_review_1_manuscript": 1.1,
+        "manuscript_revisions_start_layout": 1.1,
+        "client_review_2_layout": 1.1,
+        "revisions_post_cr2_layout": 1.1,
+        "client_review_3_submission_prep": 1.1,
+        "complete_initial_edit_start_fact_check": 1.1,
+        "complete_fact_check": 1.1,
+        "route_to_clean": 1.05,
+        "share_client_approval_prb1": 1.05,
+        "prb1_updates": 1.1,
+        "client_share_prb1_revisions": 1.05,
+        "revisions_post_prb1_client": 1.1,
+        "share_client_approval_prb2": 1.05,
+        "revisions_post_prb2": 1.1,
+        "share_client_approval_prb3": 1.05,
+        "revisions_post_prb3": 1.1,
+        "client_approval_final_submit": 1.05,
+        "submit_final_approval": 1,
+        "receive_final_approval": 1,
+        "upload_final_package": 1,
+        "final_package_approved": 1,
+        "prep_assets_release": 1.1,
+        "release_assets_vendors": 1
+      }
+    },
+    {
+      "id": "dooh_digital",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.8,
+        "internal_review_manuscript": 0.85,
+        "internal_review_layout": 0.85,
+        "client_review_1_manuscript": 0.9,
+        "client_review_2_layout": 0.9
+      }
+    },
+    {
+      "id": "print_magazine_newspaper",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 1,
+        "internal_review_manuscript": 1,
+        "internal_review_layout": 1,
+        "route_to_clean": 1.05
+      }
+    },
+    {
+      "id": "print_insert_fsi",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.75,
+        "internal_review_manuscript": 0.85,
+        "internal_review_layout": 0.85,
+        "complete_fact_check": 0.9
+      }
+    },
+    {
+      "id": "direct_mail",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 1,
+        "internal_review_manuscript": 1,
+        "internal_review_layout": 1,
+        "route_to_clean": 1.05
+      }
+    },
+    {
+      "id": "ooh_static",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.8,
+        "internal_review_manuscript": 0.85,
+        "internal_review_layout": 0.85,
+        "client_review_1_manuscript": 0.9,
+        "client_review_2_layout": 0.9
+      }
+    },
+    {
+      "id": "poc_print",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.75,
+        "internal_review_manuscript": 0.85,
+        "internal_review_layout": 0.85,
+        "complete_fact_check": 0.9
+      }
+    },
+    {
+      "id": "congress_exhibit_print",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {}
+    },
+    {
+      "id": "collateral_leave_behind",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {
+        "manuscript_development": 0.75,
+        "internal_review_manuscript": 0.85,
+        "internal_review_layout": 0.85,
+        "complete_fact_check": 0.9
+      }
+    },
+    {
+      "id": "skillarts_generic",
+      "prb_cadence": "skillarts_tiered",
+      "non_prb_multipliers": {}
+    },
+    {
+      "id": "happyguy_submit_thursday",
+      "prb_cadence": "happyguy_week_aligned",
+      "non_prb_multipliers": {},
+      "client_family": "happyguy",
+      "include_opdp_binder": true,
+      "submit_anchor_weekday": "thursday"
+    },
+    {
+      "id": "happyguy_submit_tuesday",
+      "prb_cadence": "happyguy_week_aligned",
+      "non_prb_multipliers": {},
+      "client_family": "happyguy",
+      "include_opdp_binder": true,
+      "submit_anchor_weekday": "tuesday"
+    },
+    {
+      "id": "happyguy_mad_healthgrades_360_email",
+      "prb_cadence": "happyguy_week_aligned",
+      "non_prb_multipliers": {
+        "route_to_clean": 1.15,
+        "complete_fact_check": 1.1,
+        "prb1_updates": 1.55,
+        "client_share_prb1_revisions": 1.5,
+        "revisions_post_prb1_client": 1.55,
+        "share_client_approval_prb2": 1.2,
+        "revisions_post_prb2": 1.5,
+        "prep_assets_release": 1.65,
+        "release_assets_vendors": 1.5
+      },
+      "client_family": "happyguy",
+      "include_opdp_binder": true,
+      "happyguy_spine": "thursday"
+    },
+    {
+      "id": "happyguy_mad_patient_profiles_tll",
+      "prb_cadence": "happyguy_week_aligned",
+      "non_prb_multipliers": {
+        "manuscript_development": 1.35,
+        "client_review_1_manuscript": 1.3,
+        "client_review_2_layout": 1.3,
+        "revisions_post_cr2_layout": 1.25,
+        "client_review_3_submission_prep": 1.25,
+        "complete_initial_edit_start_fact_check": 1.2,
+        "complete_fact_check": 1.35,
+        "route_to_clean": 1.15,
+        "prb1_updates": 1.4,
+        "client_share_prb1_revisions": 1.35,
+        "revisions_post_prb1_client": 1.4
+      },
+      "client_family": "happyguy",
+      "include_opdp_binder": false,
+      "happyguy_spine": "thursday"
+    },
+    {
+      "id": "happyguy_mad_liver_brochure_training_blueprint",
+      "prb_cadence": "happyguy_week_aligned",
+      "non_prb_multipliers": {
+        "kickoff": 0.9,
+        "manuscript_development": 0.9,
+        "internal_review_manuscript": 0.95,
+        "complete_initial_edit_start_fact_check": 1.35,
+        "complete_fact_check": 1.4,
+        "client_review_2_layout": 1.25,
+        "revisions_post_cr2_layout": 1.2
+      },
+      "client_family": "happyguy",
+      "include_opdp_binder": false,
+      "happyguy_spine": "thursday"
+    }
+  ],
+  "aliases": {
+    "email": "generic_tactic",
+    "email_linear": "generic_tactic_linear"
+  }
+}

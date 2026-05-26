@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "overrides": {
+    "hcp_email": {
+      "fieldHints": {
+        "copy_requirements": "Rep-triggered or permissions email: Veeva / ET template, salutations, rep customizable blocks, footer/legal.",
+        "tech_dev_deployment": "Typical: ESP build, test sends, UTM matrix to deployment partner."
+      }
+    },
+    "crm_email": {
+      "fieldHints": {
+        "tech_dev_deployment": "Calendar/trigger programs: note ESP (e.g. SFMC), partner building sends, BRD/FRD handoff.",
+        "deliverables": "State initial vs triggered send and versioning vs existing approved creative."
+      }
+    },
+    "paid_social_feed": {
+      "fieldHints": {
+        "specs_reference": "Placement (in-feed, stories), ratios, max copy lengths, CTA options.",
+        "submission_files": "Mockups for desktop/mobile; storyboards where applicable."
+      }
+    },
+    "paid_social_video": {
+      "fieldHints": {
+        "specs_reference": "Video duration, aspect ratios (e.g. 1:1, 4:5, 9:16), sound on/off, file format (MP4), hook timing.",
+        "tech_dev_deployment": "Broadcast resize/repurpose notes; media agency trafficking handoff."
+      }
+    },
+    "organic_social": {
+      "fieldHints": {
+        "deliverables": "Clarify organic posting vs ads-only page; profile/cover specs; engagement settings.",
+        "mandatories": "Pharma page templates, HCP-only labeling on cover, disclaimer language."
+      }
+    },
+    "slide_deck_scientific": {
+      "fieldHints": {
+        "scope_roles_deliverables": "Training or MLR decks: slide-by-slide objectives, disclaimers, end matter; roles across copy/art/submissions.",
+        "submission_files": "PPT + PDF; speaker notes; internal-only labeling."
+      }
+    },
+    "brand_site": {
+      "fieldHints": {
+        "tech_dev_deployment": "CMS, hosting, analytics, redirect/URL strategy.",
+        "deliverables": "Wireframes, responsive breakpoints, component library ties."
+      }
+    }
+  }
+}

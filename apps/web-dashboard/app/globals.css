@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+@source '../components/**/*.{ts,tsx}';
+@source '../app/**/*.{ts,tsx}';
+@source '../lib/**/*.{ts,tsx}';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --breakpoint-xs: 400px;
+  --breakpoint-tablet: 800px;
+  --breakpoint-desktop: 1200px;
+
+  --font-sans: var(--font-app-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-app-mono), ui-monospace, monospace;
+  --font-display: var(--font-app-display), ui-sans-serif, system-ui, sans-serif;
+
+  --spacing-density-page: var(--density-page-pad);
+  --spacing-density-gap: var(--density-gap);
+  --radius-density: var(--density-radius);
+
+  --color-app-canvas: rgb(var(--app-canvas));
+  --color-app-surface: rgb(var(--app-surface));
+  --color-app-elevated: rgb(var(--app-elevated));
+  --color-app-border: rgb(var(--app-border));
+  --color-app-text: rgb(var(--app-text));
+  --color-app-muted: rgb(var(--app-muted));
+  --color-app-fill: rgb(var(--app-fill));
+  --color-app-fill-hover: rgb(var(--app-fill-hover));
+
+  --color-nav-active-border: rgb(var(--nav-active-border));
+  --color-nav-active-bg: rgb(var(--nav-active-bg));
+  --color-nav-active-fg: rgb(var(--nav-active-fg));
+  --color-nav-tab-line: rgb(var(--nav-tab-line));
+
+  --color-shell-header: rgb(var(--shell-header));
+  --color-shell-ops: rgb(var(--shell-ops));
+  --color-shell-agents: rgb(var(--shell-agents));
+  --color-shell-work: rgb(var(--shell-work));
+  --color-shell-edge-ops: rgb(var(--shell-edge-ops));
+  --color-shell-edge-agents: rgb(var(--shell-edge-agents));
+  --color-shell-edge-work: rgb(var(--shell-edge-work));
+
+  --color-rt-black: #0d1114;
+  --color-rt-charcoal: #1a1f24;
+  --color-rt-panel: #2b3137;
+  --color-rt-cyan: #00bbd3;
+  --color-rt-yellow: #ffd23e;
+  --color-rt-orange: #ff8a00;
+  --color-rt-green: #7ed957;
+  --color-rt-purple: #a06cff;
+  --color-rt-ice: #f2f4f7;
+  --color-rt-white: #ffffff;
+}
+
+@import './styles/ragtag.css';
+@import './styles/foundation.css';

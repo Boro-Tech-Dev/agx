@@ -1,0 +1,33 @@
+{
+  "lanes": {
+    "tool_capable": {
+      "label": "Tool-capable",
+      "description": "Uses a larger local model that can run an autonomous tool loop (web search, URL read, repo tools). Final output is still strict JSON from a second formatting pass."
+    },
+    "prefetch_only": {
+      "label": "Pre-fetch only",
+      "description": "Uses a compact model. Web search and other tools run only when the worker pre-fetches context before the model call — the model does not invoke tools itself."
+    },
+    "reasoning_no_tools": {
+      "label": "Reasoning (no tools)",
+      "description": "Uses a reasoning-oriented model without tool calling. Enable optional pre-fetch web search per run if needed."
+    }
+  },
+  "agents": {
+    "pm": { "lane": "tool_capable", "default_model": "llama3.1:8b", "tool_model": "llama3.1:8b", "default_web_search": false, "default_use_tools": false },
+    "builder": { "lane": "tool_capable", "default_model": "qwen2.5:7b", "tool_model": "qwen2.5:7b", "default_web_search": false, "default_use_tools": false },
+    "forge": { "lane": "tool_capable", "default_model": "llama3.2:3b", "tool_model": "llama3.2:3b", "default_web_search": true, "default_use_tools": false },
+    "canon": { "lane": "tool_capable", "default_model": "llama3.2:3b", "tool_model": "llama3.2:3b", "default_web_search": true, "default_use_tools": false },
+    "synergy": { "lane": "prefetch_only", "default_model": "llama3.2:3b", "default_web_search": false, "default_use_tools": false },
+    "clinic": { "lane": "prefetch_only", "default_model": "llama3.2:3b", "default_web_search": false, "default_use_tools": false },
+    "kitt": { "lane": "prefetch_only", "default_model": "gemma3:270m", "default_web_search": false, "default_use_tools": false },
+    "bubs": { "lane": "prefetch_only", "default_model": "tinyllama:1.1b", "default_web_search": false, "default_use_tools": false },
+    "eddie": { "lane": "reasoning_no_tools", "default_model": "deepseek-r1:1.5b", "default_web_search": false, "default_use_tools": false }
+  },
+  "tool_allowlists": {
+    "pm": ["searxng_web_search", "web_url_read", "web_extract"],
+    "builder": ["searxng_web_search", "web_url_read", "web_extract", "repo_search", "repo_read", "repo_summarize"],
+    "forge": ["searxng_web_search", "web_url_read", "web_extract"],
+    "canon": ["searxng_web_search", "web_url_read", "web_extract"]
+  }
+}

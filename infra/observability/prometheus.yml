@@ -1,0 +1,59 @@
+# Static DNS targets: when Compose scales agent-worker / ingestion-worker / model-router,
+# Docker DNS may round-robin the service name — scrapes may rotate across replicas rather than
+# hitting every replica every interval. See docs/scaling.md ("Prometheus and scaled replicas").
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: [localhost:9090]
+
+  - job_name: redis_exporter
+    static_configs:
+      - targets: [redis-exporter:9121]
+
+  - job_name: postgres_exporter
+    static_configs:
+      - targets: [postgres-exporter:9187]
+
+  - job_name: agent_api
+    metrics_path: /metrics
+    static_configs:
+      - targets: [agent-api:8080]
+
+  - job_name: model_router
+    metrics_path: /metrics
+    static_configs:
+      - targets: [model-router:8085]
+
+  - job_name: agent_worker
+    metrics_path: /metrics
+    static_configs:
+      - targets: [agent-worker:8091]
+
+  - job_name: ingestion_worker
+    metrics_path: /metrics
+    static_configs:
+      - targets: [ingestion-worker:8092]
+
+  - job_name: scenario_worker
+    metrics_path: /metrics
+    static_configs:
+      - targets: [scenario-worker:8093]
+
+  - job_name: tool_runner
+    metrics_path: /metrics
+    static_configs:
+      - targets: [tool-runner:8090]
+
+  - job_name: browser_runner
+    metrics_path: /metrics
+    static_configs:
+      - targets: [browser-runner:8094]
+
+  - job_name: search_runner
+    metrics_path: /metrics
+    static_configs:
+      - targets: [search-runner:8092]

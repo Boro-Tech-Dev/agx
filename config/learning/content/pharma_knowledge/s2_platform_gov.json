@@ -1,0 +1,17 @@
+{
+  "summary": "How RagTag handles data, AI, and audit \u2014 separate from FDA promo law.",
+  "sections": [
+    {
+      "heading": "Platform governance (not MLR law)",
+      "paragraphs": [
+        "This section covers how RagTag runs in your environment: identity, retention, local inference, and approvals for platform access."
+      ],
+      "bullets": [
+        "Local inference option keeps sensitive drafts on your stack.",
+        "Audit trail records tool usage for operational review.",
+        "Data retention policies apply to memories and documents in sandbox projects."
+      ]
+    }
+  ],
+  "governance_anchor": "data-retention"
+}

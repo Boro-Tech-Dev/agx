@@ -1,0 +1,14 @@
+{
+  "summary": "Organize sandbox artifacts for a promo workstream.",
+  "sections": [
+    {
+      "paragraphs": [
+        "Open your learning sandbox and locate documents, memories, and runs tied to this enrollment."
+      ]
+    }
+  ],
+  "tool_cta": {
+    "label": "Workspaces",
+    "href": "/workspaces"
+  }
+}

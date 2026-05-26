@@ -1,0 +1,44 @@
+{
+  "id": "creative_pharma",
+  "version": 1,
+  "module_type": "role_playbook",
+  "title": "Creative (Pharma)",
+  "agency_role": "creative",
+  "vertical": "pharma",
+  "estimatedMinutes": 75,
+  "requires": [{ "playbook_id": "pharma_knowledge", "status": "completed" }],
+  "missions": [
+    {
+      "id": "m1",
+      "title": "Creative workflow",
+      "steps": [
+        {
+          "id": "cr_p_s1_brief",
+          "kind": "read",
+          "title": "Brief Generator orientation",
+          "href": "/tools/brief-generator?tab=how",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "cr_p_s2_capture",
+          "kind": "tool_task",
+          "title": "Web Capture reference save",
+          "href": "/tools/web-capture",
+          "validation": { "type": "document", "documentKind": "general" }
+        },
+        {
+          "id": "cr_p_s3_claims",
+          "kind": "read",
+          "title": "Claims and references",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "cr_p_s4_checkpoint",
+          "kind": "reflection",
+          "title": "Creative checkpoint",
+          "validation": { "type": "memory", "title": "Creative pharma checkpoint" }
+        }
+      ]
+    }
+  ]
+}

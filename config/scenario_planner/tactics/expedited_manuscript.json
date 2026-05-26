@@ -1,0 +1,8 @@
+{
+  "id": "expedited_manuscript",
+  "label": "Expedited manuscript",
+  "description": "Example modifier: pull in manuscript development.",
+  "deltas": {
+    "manuscript_development": -2
+  }
+}

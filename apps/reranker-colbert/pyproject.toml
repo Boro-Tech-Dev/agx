@@ -1,0 +1,26 @@
+[project]
+name = "reranker-colbert"
+version = "0.1.0"
+description = "ColBERT-style cross-encoder reranker (TEI-compatible /rerank endpoint)"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115.6",
+  "uvicorn[standard]>=0.34.0",
+  "pydantic>=2.10.4",
+  "prometheus-client>=0.21.0",
+  "prometheus-fastapi-instrumentator>=7.0.0",
+]
+
+# Heavy ML deps are installed in the Dockerfile so the package can be installed
+# in stub mode (used by unit tests on CPU-only / minimal environments).
+[project.optional-dependencies]
+ml = [
+  "torch>=2.2",
+  "transformers>=4.45",
+  "pylate>=1.1.0",
+]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.24", "httpx>=0.28"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

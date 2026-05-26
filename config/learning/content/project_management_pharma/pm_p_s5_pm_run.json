@@ -1,0 +1,15 @@
+{
+  "summary": "PM breakdown on sandbox \u2014 outputs must not promise approval.",
+  "tool_cta": {
+    "label": "PM agent",
+    "href": "/agents/pm"
+  },
+  "sections": [
+    {
+      "bullets": [
+        "Review agent output for approval language.",
+        "Route regulatory questions to account lead."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "summary": "RTE/CLM preview limitations.",
+  "sections": [
+    {
+      "bullets": [
+        "Preview is not a substitute for Vault-approved fragments.",
+        "Document known deltas for client QA."
+      ]
+    }
+  ]
+}

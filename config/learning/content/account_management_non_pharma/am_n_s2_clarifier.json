@@ -1,0 +1,15 @@
+{
+  "summary": "Clarify vague client requests before work starts.",
+  "tool_cta": {
+    "label": "Ask Clarifier",
+    "href": "/tools/ask-clarifier"
+  },
+  "sections": [
+    {
+      "bullets": [
+        "Separate deliverables from timing.",
+        "Confirm channels and approval path with client."
+      ]
+    }
+  ]
+}

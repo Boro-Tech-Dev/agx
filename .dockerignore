@@ -1,0 +1,42 @@
+# Version control
+.git
+.gitattributes
+
+# JS/TS — always reinstalled in Node images
+**/node_modules
+**/npm-debug.log*
+**/yarn-error.log*
+**/.next
+**/out
+**/dist
+**/.turbo
+**/.cache
+**/coverage
+
+# Python bytecode / envs
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/.mypy_cache
+**/*.egg-info
+**/.venv
+**/venv
+
+# OS / editor
+.DS_Store
+**/.DS_Store
+**/*.swp
+**/.idea
+**/.vscode
+
+# Local runtime data (Compose mounts these; not needed in build context)
+uploads/
+artifacts/
+imports/
+postgres_data/
+redis_data/
+minio_data/
+ollama_models/
+prometheus_data/
+grafana_data/
+keycloak_data/

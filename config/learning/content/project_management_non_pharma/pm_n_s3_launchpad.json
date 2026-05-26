@@ -1,0 +1,14 @@
+{
+  "tool_cta": {
+    "label": "Launchpad",
+    "href": "/tools/launchpad"
+  },
+  "summary": "Launchpad readiness.",
+  "sections": [
+    {
+      "paragraphs": [
+        "Complete readiness check."
+      ]
+    }
+  ]
+}

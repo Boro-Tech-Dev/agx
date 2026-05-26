@@ -1,0 +1,4 @@
+project_key,relative_path,document_kind
+mobile-app,Briefs/Acme_Mobile_Brief.pdf,brief
+mobile-app,Estimates/Acme_Mobile_Estimate.xlsx,estimate
+mobile-app,Timelines/Acme_Mobile_Timeline.docx,timeline

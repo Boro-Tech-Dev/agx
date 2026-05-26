@@ -1,0 +1,15 @@
+{
+  "summary": "Set up sandbox hierarchy for a promo campaign.",
+  "tool_cta": {
+    "label": "Workspaces",
+    "href": "/workspaces"
+  },
+  "sections": [
+    {
+      "bullets": [
+        "Find learning sandbox project and folder structure.",
+        "Note where scenario and brief artifacts live."
+      ]
+    }
+  ]
+}

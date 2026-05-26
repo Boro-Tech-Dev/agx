@@ -1,0 +1,46 @@
+{
+  "id": "project_management_non_pharma",
+  "version": 1,
+  "module_type": "role_playbook",
+  "title": "Project Management (Non-pharma)",
+  "agency_role": "project_management",
+  "vertical": "non_pharma",
+  "estimatedMinutes": 90,
+  "competencies_granted": ["pm_delivery"],
+  "missions": [
+    {
+      "id": "m1_delivery",
+      "title": "Delivery planning",
+      "steps": [
+        {
+          "id": "pm_n_s1_workspaces",
+          "kind": "workspace_task",
+          "title": "Open sandbox project",
+          "href": "/workspaces",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "pm_n_s2_scenario",
+          "kind": "tool_task",
+          "title": "Save a scenario document",
+          "href": "/tools/scenario-planner",
+          "validation": { "type": "document", "documentKind": "scenario" }
+        },
+        {
+          "id": "pm_n_s3_launchpad",
+          "kind": "tool_task",
+          "title": "Launchpad readiness",
+          "href": "/tools/launchpad",
+          "validation": { "type": "memory", "title": "Launchpad checkpoint" }
+        },
+        {
+          "id": "pm_n_s4_pm_run",
+          "kind": "agent_task",
+          "title": "PM breakdown on sandbox",
+          "href": "/agents/pm",
+          "validation": { "type": "run", "agentKeys": ["pm", "kitt"] }
+        }
+      ]
+    }
+  ]
+}

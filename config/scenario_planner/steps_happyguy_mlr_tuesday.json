@@ -1,0 +1,252 @@
+{
+  "version": 1,
+  "label": "HappyGuy MLR default (Submit Tuesday)",
+  "source": "fork_of_steps_json",
+  "steps": [
+    {
+      "id": "kickoff",
+      "label": "Kickoff",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Project kickoff; confirm scope, inputs, owners, review path, and PRB calendar."
+    },
+    {
+      "id": "manuscript_development",
+      "label": "Manuscript development",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "Develop manuscript copy and reference approach."
+    },
+    {
+      "id": "internal_review_manuscript",
+      "label": "Internal Review - Manuscript",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Internal brand/medical/strategy review of manuscript draft."
+    },
+    {
+      "id": "revisions_post_internal_manuscript",
+      "label": "Manuscript Revisions",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Revise manuscript based on internal manuscript review feedback."
+    },
+    {
+      "id": "client_review_1_manuscript",
+      "label": "Client Review 1 - Manuscript",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Client review of manuscript draft."
+    },
+    {
+      "id": "manuscript_revisions_start_layout",
+      "label": "Make manuscript revisions and start layout",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Revise after client manuscript review and begin layout handoff."
+    },
+    {
+      "id": "internal_review_layout",
+      "label": "Internal Review - Layout",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Internal review of layout-ready materials."
+    },
+    {
+      "id": "revisions_post_internal_layout",
+      "label": "Layout Revisions",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Revise based on internal layout review feedback."
+    },
+    {
+      "id": "client_review_2_layout",
+      "label": "Client Review 2 - Layout",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Client review of layout."
+    },
+    {
+      "id": "revisions_post_cr2_layout",
+      "label": "Layout Revisions",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Revise layout based on Client Review 2 feedback."
+    },
+    {
+      "id": "client_review_3_submission_prep",
+      "label": "Client Review 3 - Submission prep",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Client review focused on submission readiness.\n\nHappyGuy Submit Tuesday: Client Approval; Account Load into Veeva — Thursday."
+    },
+    {
+      "id": "complete_initial_edit_start_fact_check",
+      "label": "Complete initial edit and start fact check",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Complete initial editorial pass and begin fact check/reference verification."
+    },
+    {
+      "id": "complete_fact_check",
+      "label": "Complete fact check",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Complete fact check and resolve reference/source questions.\n\nHappyGuy Submit Tuesday: Tag and Link complete Friday; Account QC and Push EOD Friday; NEON submission pushed noon Monday."
+    },
+    {
+      "id": "route_to_clean",
+      "label": "Route to clean",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Route edited/fact-checked version to clean copy/layout prep.\n\nHappyGuy Submit Tuesday: Route clean by Tuesday prior to PRB submit."
+    },
+    {
+      "id": "share_client_approval_prb1",
+      "label": "Share with client for Approval to PRB1",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Send clean version/layout for client approval to submit to PRB1.\n\nHappyGuy Submit Tuesday: Client share for approval to submit — Wednesday."
+    },
+    {
+      "id": "submit_prb1",
+      "label": "Submit for PRB1",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Submit layouts for PRB1 review."
+    },
+    {
+      "id": "prb1_review",
+      "label": "PRB1 Review",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRB1 review meeting."
+    },
+    {
+      "id": "prb1_updates",
+      "label": "PRB1 updates",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "Address PRB1 feedback; production continues toward coded/mechanicalized assets for PRB2."
+    },
+    {
+      "id": "client_share_prb1_revisions",
+      "label": "Client share to review PRB1 revisions",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Share PRB1 revisions with client for review."
+    },
+    {
+      "id": "revisions_post_prb1_client",
+      "label": "Revisions",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Revise based on client feedback on PRB1 revisions."
+    },
+    {
+      "id": "share_client_approval_prb2",
+      "label": "Share with client for approval to submit to PRB2",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Secure client approval for PRB2 submission."
+    },
+    {
+      "id": "submit_prb2",
+      "label": "Submit to PRB2",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Submit coded HTML assets or mechanicalized files for PRB2."
+    },
+    {
+      "id": "prb2_review",
+      "label": "PRB2 Review",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRB2 review meeting."
+    },
+    {
+      "id": "revisions_post_prb2",
+      "label": "Revisions based on PRB2 review",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "Address PRB2 comments in coded/mechanicalized assets."
+    },
+    {
+      "id": "share_client_approval_prb3",
+      "label": "Share with client for approval to submit to PRB3",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Secure client approval for PRB3 submission."
+    },
+    {
+      "id": "submit_prb3",
+      "label": "Submit to PRB3",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Submit assets for PRB3 review."
+    },
+    {
+      "id": "prb3_review",
+      "label": "PRB3 Review",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRB3 review meeting."
+    },
+    {
+      "id": "revisions_post_prb3",
+      "label": "Revisions based on PRB3 review",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "Address PRB3 comments in assets."
+    },
+    {
+      "id": "client_approval_final_submit",
+      "label": "Client review and approval to submit for Final Approval",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Client reviews latest PRB updates and approves submission for Final Approval."
+    },
+    {
+      "id": "submit_final_approval",
+      "label": "Submit for Final Approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Submit final updated asset for Final Approval."
+    },
+    {
+      "id": "receive_final_approval",
+      "label": "Receive Final Approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Receive final approval confirmation."
+    },
+    {
+      "id": "upload_final_package",
+      "label": "Upload for Final Package",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Upload approved asset and supporting materials for Final Package."
+    },
+    {
+      "id": "final_package_approved",
+      "label": "Final Package Approved",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Final package approval received."
+    },
+    {
+      "id": "prep_assets_release",
+      "label": "Prep Assets for release",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Prepare final files, QA handoff materials, trafficking details, and vendor-ready package."
+    },
+    {
+      "id": "release_assets_vendors",
+      "label": "Release Assets to vendors",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Release final approved assets to vendors."
+    }
+  ]
+}

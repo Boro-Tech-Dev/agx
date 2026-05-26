@@ -1,0 +1,15 @@
+{
+  "summary": "Build an omnichannel plan in regulated context.",
+  "tool_cta": {
+    "label": "Omnichannel Planner",
+    "href": "/tools/omnichannel-planner"
+  },
+  "sections": [
+    {
+      "bullets": [
+        "Align channel timing with MLR dependencies.",
+        "Flag tactics that need separate review paths."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "id": "account_management_pharma",
+  "version": 1,
+  "module_type": "role_playbook",
+  "title": "Account Management (Pharma)",
+  "agency_role": "account_management",
+  "vertical": "pharma",
+  "estimatedMinutes": 90,
+  "requires": [{ "playbook_id": "pharma_knowledge", "status": "completed" }],
+  "competencies_granted": ["client_ai_safe"],
+  "missions": [
+    {
+      "id": "m1_intake",
+      "title": "Client intake",
+      "steps": [
+        {
+          "id": "am_p_s1_clarifier",
+          "kind": "tool_task",
+          "title": "Ask Clarifier — pharma rush request",
+          "href": "/tools/ask-clarifier",
+          "validation": { "type": "memory", "sourceTool": "ask_clarifier" }
+        },
+        {
+          "id": "am_p_s2_reply",
+          "kind": "tool_task",
+          "title": "Reply Coach — scope and timeline",
+          "href": "/tools/reply-coach",
+          "validation": { "type": "memory", "sourceTool": "reply_coach" }
+        }
+      ]
+    },
+    {
+      "id": "m2_brief",
+      "title": "Brief and escalation",
+      "steps": [
+        {
+          "id": "am_p_s3_brief",
+          "kind": "read",
+          "title": "Brief Generator — How tab",
+          "href": "/tools/brief-generator?tab=how",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "am_p_s4_workspaces",
+          "kind": "workspace_task",
+          "title": "Review sandbox project in Workspaces",
+          "href": "/workspaces",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "am_p_s5_checkpoint",
+          "kind": "reflection",
+          "title": "Account checkpoint note",
+          "validation": { "type": "memory", "title": "AM pharma checkpoint" }
+        }
+      ]
+    }
+  ]
+}

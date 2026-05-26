@@ -1,0 +1,16 @@
+{
+  "summary": "Communicate clearly without promising approval or hidden scope.",
+  "sections": [
+    {
+      "heading": "Client communication",
+      "paragraphs": [
+        "Under timeline pressure, clarify scope and process instead of guaranteeing regulatory outcomes."
+      ],
+      "bullets": [
+        "Good: \u201cWe can deliver a submission-ready package by Thursday; MLR turnaround is client-controlled.\u201d",
+        "Avoid: \u201cWe will get MLR approval by Friday.\u201d",
+        "Escalate unrealistic timelines to account and PM leads early."
+      ]
+    }
+  ]
+}

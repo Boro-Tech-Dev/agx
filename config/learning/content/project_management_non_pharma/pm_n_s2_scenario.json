@@ -1,0 +1,14 @@
+{
+  "tool_cta": {
+    "label": "Scenario Planner",
+    "href": "/tools/scenario-planner"
+  },
+  "summary": "Save a scenario document.",
+  "sections": [
+    {
+      "paragraphs": [
+        "Export or save scenario to sandbox."
+      ]
+    }
+  ]
+}

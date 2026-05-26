@@ -1,0 +1,10 @@
+{
+  "description": "Golden smoke: generic tactic (HCP MLR) at baseline kickoff (linear working-day planner, no holidays).",
+  "request": {
+    "tactic": "generic_tactic",
+    "anchorStartIso": "2026-03-02",
+    "holidays": []
+  },
+  "expectedSubmitPrb1Start": "2026-04-06",
+  "expectedReleaseEnd": "2026-05-29"
+}

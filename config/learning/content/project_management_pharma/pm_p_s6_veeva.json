@@ -1,0 +1,14 @@
+{
+  "summary": "Reference Veeva correctly in timeline communications.",
+  "tool_cta": {
+    "label": "Veeva Suite",
+    "href": "/tools/veeva-suite?tab=how"
+  },
+  "sections": [
+    {
+      "paragraphs": [
+        "Understand Vault vs CLM vs RTE when scoping integration tasks."
+      ]
+    }
+  ]
+}

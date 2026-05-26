@@ -1,0 +1,69 @@
+{
+  "id": "mlr_ops_pharma",
+  "version": 1,
+  "module_type": "role_playbook",
+  "title": "MLR Ops (Pharma)",
+  "agency_role": "mlr_ops",
+  "vertical": "pharma",
+  "estimatedMinutes": 60,
+  "requires": [{ "playbook_id": "pharma_knowledge", "status": "completed" }],
+  "missions": [
+    {
+      "id": "m1",
+      "title": "MLR operations",
+      "steps": [
+        {
+          "id": "mlr_s1_gov",
+          "kind": "read",
+          "title": "Governance and approvals",
+          "href": "/governance",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "mlr_s2_approvals",
+          "kind": "read",
+          "title": "Approvals queue",
+          "href": "/approvals",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "mlr_s3_package",
+          "kind": "read",
+          "title": "MLR package completeness",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "mlr_s4_quiz",
+          "kind": "quiz",
+          "title": "Queue hygiene quiz",
+          "validation": { "type": "quiz", "passingScore": 80 },
+          "quiz": {
+            "passingScore": 80,
+            "questions": [
+              {
+                "id": "mq1",
+                "prompt": "An approval request should include:",
+                "options": [
+                  "Only the requester name",
+                  "Clear scope, owner, and rollback plan",
+                  "A promise of MLR sign-off"
+                ],
+                "correctIndex": 1
+              },
+              {
+                "id": "mq2",
+                "prompt": "RagTag approvals queue is for:",
+                "options": [
+                  "FDA promotional submissions",
+                  "Platform access and operational sign-offs",
+                  "Client Veeva Vault releases"
+                ],
+                "correctIndex": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

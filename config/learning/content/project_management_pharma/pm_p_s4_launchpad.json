@@ -1,0 +1,14 @@
+{
+  "summary": "Run launch readiness before MLR-heavy milestones.",
+  "tool_cta": {
+    "label": "Launchpad",
+    "href": "/tools/launchpad"
+  },
+  "sections": [
+    {
+      "paragraphs": [
+        "Save a memory checkpoint when readiness criteria are met."
+      ]
+    }
+  ]
+}

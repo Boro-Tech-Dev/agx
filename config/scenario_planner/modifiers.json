@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "modifiers": [
+    {
+      "id": "expedited_manuscript",
+      "description": "Shortens manuscript development by 2 business days (example bundle)."
+    },
+    {
+      "id": "extra_client_buffer",
+      "description": "Adds 1 business day to each client-review-class phase (example bundle)."
+    },
+    {
+      "id": "happyguy_milestones_thursday",
+      "description": "Legacy placeholder (no deltas). Milestones are in steps_happyguy_mlr_thursday.json."
+    },
+    {
+      "id": "happyguy_milestones_tuesday",
+      "description": "Legacy placeholder (no deltas). Milestones are in steps_happyguy_mlr_tuesday.json."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "summary": "Decompose a pharma rush request before creative or MLR work starts.",
+  "sections": [
+    {
+      "bullets": [
+        "Identify audience (HCP vs DTC), channels, and due dates.",
+        "Separate agency delivery from client MLR turnaround.",
+        "List missing references, claims, or brand rules."
+      ]
+    }
+  ],
+  "tool_cta": {
+    "label": "Ask Clarifier",
+    "href": "/tools/ask-clarifier",
+    "hint": "Use the pharma rush example."
+  }
+}

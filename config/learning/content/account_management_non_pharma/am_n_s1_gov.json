@@ -1,0 +1,14 @@
+{
+  "summary": "Quick read on RagTag platform governance.",
+  "sections": [
+    {
+      "paragraphs": [
+        "Review how RagTag handles access, retention, and audit \u2014 applicable to all accounts."
+      ]
+    }
+  ],
+  "tool_cta": {
+    "label": "Governance",
+    "href": "/governance"
+  }
+}

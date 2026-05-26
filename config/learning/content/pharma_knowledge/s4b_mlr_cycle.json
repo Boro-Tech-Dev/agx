@@ -1,0 +1,14 @@
+{
+  "summary": "Know the MLR cycle roles: submit, annotate, revise, approve.",
+  "sections": [
+    {
+      "heading": "MLR review cycle",
+      "bullets": [
+        "Submit: agency packages copy, refs, and layout per client template.",
+        "Review: MLR annotates for claims, balance, and compliance.",
+        "Revise: agency addresses comments; may require new references.",
+        "Approve: only client MLR / signatories release materials for use."
+      ]
+    }
+  ]
+}

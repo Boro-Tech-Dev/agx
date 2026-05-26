@@ -1,0 +1,14 @@
+{
+  "tool_cta": {
+    "label": "PM agent",
+    "href": "/agents/pm"
+  },
+  "summary": "PM breakdown on sandbox.",
+  "sections": [
+    {
+      "paragraphs": [
+        "Run PM agent on sandbox project."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "summary": "Match channel and review path to HCP vs DTC audiences.",
+  "sections": [
+    {
+      "heading": "HCP vs DTC",
+      "paragraphs": [
+        "Audience determines tone, disclosures, review depth, and which channels are in scope."
+      ],
+      "bullets": [
+        "HCP: professional email, CLM, congress materials, journal ads \u2014 often gated (\u201cFor US HCPs only\u201d).",
+        "DTC: consumer digital, TV, print \u2014 different fair balance and ISI presentation rules.",
+        "Never repurpose HCP copy to consumer channels without a full review path."
+      ]
+    }
+  ]
+}

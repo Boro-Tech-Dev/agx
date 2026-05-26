@@ -1,0 +1,15 @@
+{
+  "summary": "Save a scenario with PRB rounds matched to complexity.",
+  "tool_cta": {
+    "label": "Scenario Planner",
+    "href": "/tools/scenario-planner"
+  },
+  "sections": [
+    {
+      "bullets": [
+        "Include PRB anchors before MLR submission milestones.",
+        "Do not label scenario dates as MLR approval."
+      ]
+    }
+  ]
+}

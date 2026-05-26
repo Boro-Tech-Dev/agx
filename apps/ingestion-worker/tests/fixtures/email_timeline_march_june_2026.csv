@@ -1,0 +1,29 @@
+Task,Start Date,End Date,Note
+Kickoff,2026-03-02,2026-03-02,"Project kickoff for email asset; confirm scope, inputs, owners, review path, and PRB calendar."
+Manuscript development,2026-03-03,2026-03-13,Develop manuscript copy and reference approach for email asset.
+Internal Review,2026-03-16,2026-03-18,Internal brand/medical/strategy review of manuscript draft before client review.
+Revisions,2026-03-19,2026-03-20,Revise manuscript based on internal review feedback.
+Client Review 1,2026-03-23,2026-03-25,Client review of manuscript draft.
+Revisions,2026-03-26,2026-03-27,Revise manuscript based on Client Review 1 feedback.
+Client Review 2,2026-03-30,2026-04-01,Client second review of revised manuscript.
+Initial edit in parallel with Client Review 2,2026-03-30,2026-04-01,Begin initial editorial review in parallel while client completes second review.
+Complete initial edit and start fact check,2026-04-02,2026-04-03,Complete initial editorial pass and begin fact check/reference verification.
+Complete fact check,2026-04-06,2026-04-07,Complete fact check and resolve reference/source questions.
+Route to clean,2026-04-08,2026-04-09,Route edited/fact-checked version to clean copy/layout prep.
+Share with client for Approval to PRB1,2026-04-10,2026-04-10,Send clean version/layout for client approval to submit to PRB1.
+Submit for PRB1,2026-04-13,2026-04-13,Monday PRB1 submission; submit layouts for PRB1 review.
+PRB1 Review,2026-04-22,2026-04-22,PRB1 meeting occurs Wednesday of the following week after Monday submission.
+PRB1 updates,2026-04-23,2026-04-27,Address PRB1 feedback. Production begins in parallel with PRB1 and continues toward coded HTML/mechanicalized assets for PRB2.
+Client share to review PRB1 revisions,2026-04-28,2026-04-29,Share PRB1 revisions with client for review.
+Revisions,2026-04-30,2026-05-01,Revise based on client feedback on PRB1 revisions.
+Share with client for approval to submit to PRB2,2026-05-04,2026-05-04,Secure client approval for PRB2 submission; PRB2 requires coded HTML assets or mechanicalized files.
+Submit to PRB2,2026-05-11,2026-05-11,Monday PRB2 submission; submit coded HTML assets or mechanicalized files.
+PRB2 Review,2026-05-20,2026-05-20,PRB2 meeting occurs Wednesday of the following week after Monday submission.
+Revisions based on PRB2 review,2026-05-21,2026-05-25,Address PRB2 comments in coded/mechanicalized assets.
+Client review and approval to submit for Final Approval,2026-05-26,2026-05-27,Client reviews PRB2 updates and approves submission for Final Approval.
+Submit for Final Approval,2026-05-28,2026-05-28,Submit final updated asset for Final Approval.
+Receive Final Approval,2026-05-29,2026-05-29,Receive final approval confirmation.
+Upload for Final Package,2026-06-01,2026-06-01,Upload approved asset and supporting materials for Final Package.
+Final Package Approved,2026-06-02,2026-06-02,Final package approval received.
+Prep Assets for release,2026-06-03,2026-06-04,"Prepare final files, QA handoff materials, trafficking details, and vendor-ready package."
+Release Assets to vendors.,2026-06-05,2026-06-05,Release final approved assets to vendors.

@@ -1,0 +1,22 @@
+# Mounted at /etc/searxng/settings.yml — SEARXNG_SECRET_KEY env overrides secret_key at runtime.
+use_default_settings: true
+
+general:
+  debug: false
+  instance_name: "RagTag Search"
+
+search:
+  safe_search: 1
+  formats:
+    - html
+    - json
+
+server:
+  secret_key: "change-me-via-SEARXNG_SECRET_KEY-env"
+  limiter: true
+  image_proxy: true
+  # Overridden by SEARXNG_BASE_URL in compose
+  base_url: "http://localhost:8888/"
+
+valkey:
+  url: redis://redis:6379/3

@@ -1,0 +1,14 @@
+{
+  "tool_cta": {
+    "label": "Workspaces",
+    "href": "/workspaces"
+  },
+  "summary": "Open sandbox project.",
+  "sections": [
+    {
+      "paragraphs": [
+        "Explore project hierarchy."
+      ]
+    }
+  ]
+}

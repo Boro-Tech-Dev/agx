@@ -1,0 +1,6 @@
+entity,workspace_key,client_key,brand_key,key,tactic_key,name,description,tactic_kind,channel,medium,format,tags,status,project_type,pm_kind,project_key,lifecycle_status,priority,start_at,end_at,objective_override,notes,default_success_metrics,default_dependencies,success_metrics_override,dependencies_override,metadata,estimated_cost_cents,currency,cadence,default_start_offset_days,default_duration_days,owner
+workspace,,,,acme-corp,Acme Corporation,Imported workspace,,,,,,,,,,,,
+client,acme-corp,,,retail,Retail division,,,,,,,,,,,,,
+brand,acme-corp,retail,,main-brand,Main brand line,,,,,,,,,,,,,
+project,acme-corp,retail,main-brand,mobile-app,Mobile app refresh,Q1 delivery,,business,,,,,,,,,,
+tactic,,,,,,paid-search,Launch paid search,Kick off paid media,acquisition,paid_search,digital,search,"[\"marketing\",\"acquisition\"]",active,,,,mobile-app,draft,medium,,,,"Drive first-time signups",,{},{},"{}","{}", "{}",50000,USD,weekly,0,30,marketing-lead

@@ -1,0 +1,5 @@
+{"query": "Keycloak authentication setup", "workspace_key": "default", "gold_ids": [], "notes": "Seed fixture — replace gold_ids with real chunk/memory UUIDs from your dev DB"}
+{"query": "DeployDeliver project timeline", "workspace_key": "default", "gold_ids": [], "notes": "Seed fixture"}
+{"query": "BullMQ queue processing", "workspace_key": "default", "gold_ids": [], "notes": "Seed fixture"}
+{"query": "Canon agent synthesis", "workspace_key": "default", "gold_ids": [], "notes": "Seed fixture"}
+{"query": "MLR review checklist", "workspace_key": "default", "gold_ids": [], "notes": "Seed fixture"}

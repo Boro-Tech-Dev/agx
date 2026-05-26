@@ -1,0 +1,15 @@
+{
+  "summary": "Review sandbox project items for completeness.",
+  "tool_cta": {
+    "label": "Workspaces",
+    "href": "/workspaces"
+  },
+  "sections": [
+    {
+      "bullets": [
+        "Confirm scenario doc, memories, and any brief artifacts exist.",
+        "Note gaps for your capstone summary."
+      ]
+    }
+  ]
+}

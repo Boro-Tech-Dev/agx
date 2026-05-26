@@ -1,0 +1,15 @@
+{
+  "tool_cta": {
+    "label": "Veeva Suite",
+    "href": "/tools/veeva-suite?tab=how"
+  },
+  "summary": "Architecture: mock vs production.",
+  "sections": [
+    {
+      "bullets": [
+        "Inventory detects patterns in HTML.",
+        "CLM APIs mocked for local preview only."
+      ]
+    }
+  ]
+}

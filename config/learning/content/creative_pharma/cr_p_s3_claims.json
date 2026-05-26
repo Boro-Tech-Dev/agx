@@ -1,0 +1,11 @@
+{
+  "summary": "Annotate claims vs references.",
+  "sections": [
+    {
+      "bullets": [
+        "Tie each claim to PI or approved reference.",
+        "Flag unsubstantiated superlatives for MLR."
+      ]
+    }
+  ]
+}

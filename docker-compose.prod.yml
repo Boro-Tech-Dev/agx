@@ -1,0 +1,46 @@
+# Production overrides: bind sensitive services to loopback only.
+# Usage: COMPOSE_FILE=docker-compose.yml:docker-compose.prod.yml docker compose up -d
+services:
+  web-dashboard:
+    ports: !reset ["127.0.0.1:3000:3000"]
+
+  agent-api:
+    ports: !reset []
+
+  postgres:
+    ports: !reset []
+
+  redis:
+    ports: !reset []
+
+  minio:
+    ports: !reset []
+    environment:
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin-dev-only}
+
+  ollama:
+    ports: !reset []
+
+  model-router:
+    ports: !reset []
+
+  keycloak:
+    ports: !reset ["127.0.0.1:8180:8080"]
+
+  browser-runner:
+    ports: !reset []
+
+  searxng:
+    ports: !reset []
+
+  search-runner:
+    ports: !reset []
+
+  tool-runner:
+    ports: !reset []
+
+  prometheus:
+    ports: !reset ["127.0.0.1:9090:9090"]
+
+  grafana:
+    ports: !reset ["127.0.0.1:3001:3000"]

@@ -1,0 +1,15 @@
+{
+  "id": "extra_client_buffer",
+  "label": "Extra client buffer",
+  "description": "Example modifier: +1 bd on each client-review milestone phase.",
+  "deltas": {
+    "client_review_1_manuscript": 1,
+    "client_review_2_layout": 1,
+    "client_review_3_submission_prep": 1,
+    "share_client_approval_prb1": 1,
+    "client_share_prb1_revisions": 1,
+    "share_client_approval_prb2": 1,
+    "share_client_approval_prb3": 1,
+    "client_approval_final_submit": 1
+  }
+}

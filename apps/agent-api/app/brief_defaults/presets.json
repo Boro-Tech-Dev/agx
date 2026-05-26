@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "presets": [
+    {
+      "id": "internal_ml_training_deck",
+      "label": "Internal MLR training deck",
+      "tactic_keys": ["slide_deck_scientific"],
+      "field_defaults": {
+        "marketing_objectives": "Develop a training deck that familiarizes the field with approved core materials and how to use them with HCPs.",
+        "tactic_objectives": "Educate the sales force on leveraging in-market materials at launch; include annotations where reps should focus discussion.",
+        "deliverables": "Training deck covering each core material slide-by-slide: objective of each page, details for HCP dialogue, known objection handling.\nOutputs: presentation file and PDF for review; speaker notes as needed.",
+        "key_messages": "Align to brand strategy and PI-based claims only; note any N/A sections pending MLR.",
+        "art_pd_xd": "Leverage existing annotated training deck template where applicable; maintain brand design system.\nEach slide: Internal Only / Confidential disclaimer.\nInclude end matter / thank-you slide.",
+        "mandatories": "Same design mandatories as reference template; internal-only labeling; final thank-you slide with disclaimer.",
+        "submission_files": "Files prepared per client submission guidelines; annotations per AMA where applicable for RC.",
+        "reviews": "Multiple client reviews for message and layout; RC reviews (initial layout + final proof).",
+        "asset_checklist": "Deck with speaker notes; PDF; internal distribution.\nBranded / non-OPDP release per routing.",
+        "creative_asset_needs": "Confirm: Veeva code on piece; ISI requirements; PI insert; internal-only flag.",
+        "development_submission_needs": "PDF vs mechanical timing; comp requirements; hosting (e.g. Veeva Exchange); submission type (New/Successor); annotations/fact-check; marketing notes.",
+        "scope_roles_deliverables": "Integrated producer: timeline, approvals, RC packages.\nCopy: brief-led copy, annotations for RC, RC meetings.\nArt: direction to presentation services.\nEdit: fact-check, reference updates, layout reads.\nSubmissions: Veeva upload, queries, vault/Promomats.\nPresentation services: deck design per AD, PPT + PDF, brand compliance.",
+        "client_approvals_rounds": "Estimate client review rounds before final JRC; client review-day allocation; JRC rounds forecast; target in-market window; rate card / SOW treatment.",
+        "appendix": "Link to workflow timeline (e.g. Workfront) when available."
+      }
+    },
+    {
+      "id": "linkedin_infeed_video_repurpose",
+      "label": "LinkedIn in-feed video (repurpose)",
+      "tactic_keys": ["paid_social_video"],
+      "field_defaults": {
+        "marketing_objectives": "Increase HCP understanding of mechanism / clinical narrative; drive clicks to deeper clinical or MOA content.",
+        "barrier_opportunity": "Opportunity: reach HCPs in professional feed with concise video; barrier: prior asset built for another placement — resize/repurpose for LinkedIn.",
+        "tactic_objectives": "Deliver LinkedIn in-feed video unit adapted from approved reference creative; include variable copy/CTA options where needed.",
+        "deliverables": "LinkedIn MOA (or campaign) video aligned to reference job code.\nMultiple post copy and CTA options for submission flexibility.\nStoryboard frames + mocked post (desktop/mobile).",
+        "specs_reference": "LinkedIn in-feed video (common guidance): MP4; AAC/MPEG4 audio; ~30 fps; destination URL with http(s); headline ~70 chars visible; intro text ~150 chars (verify current LinkedIn specs).\nAspect ratios to consider: 1:1 (square), 4:5 vertical, 16:9 landscape — confirm media plan.\nDuration often short-form for feed (e.g. ~15–30s creative target; platform allows wider range).",
+        "copy_requirements": "Reserve first-line legal/post copy as required by brand (e.g. PI link).\nProvide headline + description variants so copy can refresh without full resubmit where policy allows.\nEnsure continuity from ad → landing experience.",
+        "art_pd_xd": "Resize/rebuild animation from source creative; maintain ISI treatment per social guidance.\nXD: LinkedIn post mockups with storyboard for desktop/mobile.\nFull LOI/ISI presentation during full-screen states as required.",
+        "tech_dev_deployment": "Broadcast produces/resizes video per approved storyboard.\nHand MP4 to media agency for trafficking; UTMs per tracking sheet.",
+        "reviews": "Client reviews on storyboard/mockups; PRB rounds with mockup then video attachment as applicable.",
+        "timeline_milestones": "Typical: CR rounds → PRB submissions → final approval → trafficking.",
+        "appendix": "UTM / naming: pillar, campaign, source LinkedIn, sub-source in-feed sponsored post, indication, branded/unbranded."
+      }
+    },
+    {
+      "id": "hq_crm_email_update",
+      "label": "HQ / CRM email update",
+      "tactic_keys": ["crm_email"],
+      "field_defaults": {
+        "marketing_objectives": "Educate HCPs on evolved clinical story; encourage deeper engagement with approved destination content.",
+        "tactic_objectives": "Update branded HQ email used in calendar/trigger CRM programs; align narrative with cross-channel messaging.",
+        "deliverables": "Updated HTML email layout; desktop + mobile proof.\nSubject lines + preheaders.\nOptional: alignment with trigger program versioning.",
+        "story_flow": "Salutation → concise body (often comparable length to legacy) → primary CTA → secondary if any → legal/footer.",
+        "copy_requirements": "Subject lines + preheaders; full indication ISI; state pricing/transparency footer lines where required.\nKeep promotional audience statement and unsubscribe/privacy links.",
+        "art_pd_xd": "Refresh hero/key visual from latest approved storyboard; HQ-specific template; CTA buttons not full-bleed — preserve side whitespace.",
+        "tech_dev_deployment": "UTMs on site CTAs for deployment partner tracking.\nBuild in ESP; test sends prior to final deployment partner send.\nBRD/FRD to partner once business rules locked.",
+        "submission_files": "Subject/preheader; desktop/mobile captures; high-res exports.",
+        "reviews": "Multiple client reviews; PRB submissions with revisions; final approval and test sends via partner.",
+        "appendix": "UTM grid (Excel); align naming with email deployment taxonomy."
+      }
+    },
+    {
+      "id": "vee_va_rep_triggered",
+      "label": "Veeva rep-triggered email (VAE)",
+      "tactic_keys": ["hcp_email"],
+      "field_defaults": {
+        "marketing_objectives": "Support appropriate HCP engagement following field interactions; drive to approved destination experiences.",
+        "tactic_objectives": "Single branded Veeva Approved Email template with rep-customizable fields per FDM limits.",
+        "deliverables": "(1) Layout proof desktop/mobile.\n(2) HTML Email Template (ET code) with assets zipped per platform guidance.",
+        "copy_requirements": "Pick lists: salutations; recipient name tokens; customizable intro/closing (character limits per policy).\nSubject line options (e.g. 3–4); avoid restricted combinations if policy applies.\nPrimary CTA + supporting body per narrative.",
+        "art_pd_xd": "Match approved header style reference; light imagery so loads reliably in email.\nRep-section placeholders clearly delineated from fixed MLR blocks.",
+        "tech_dev_deployment": "UTMs on web CTAs; HTML QA; assets + spacer gif to ET metadata folder structure; RegOps/account creates ET code; QC test blasts multi-device.",
+        "submission_files": "Mockups align to routed HTML; subject suggestions documented.",
+        "reviews": "Client layout reviews; PRB sequence without separate concept round unless required; distribution approval.",
+        "assumptions": "Neon builds HTML to approved template patterns; assumes fixed number of test-send rounds with IT/Veeva staging.",
+        "exclusions": "FDM submission outside agency scope unless separately scoped; extra review rounds change-order.",
+        "appendix": "UTM naming; Veeva fields for campaign/indication/sub-source."
+      }
+    },
+    {
+      "id": "unbranded_page_net_new",
+      "label": "Unbranded HCP social page (net new)",
+      "tactic_keys": ["organic_social"],
+      "field_defaults": {
+        "marketing_objectives": "Enable paid social activation via compliant brand/unbranded presence; support retargeting journeys.",
+        "tactic_objectives": "Create net-new professional-audience page to house ads; minimal or no organic publishing.",
+        "deliverables": "Facebook (Meta) page setup: naming, handle, profile image, cover, About copy; pharma template; engagement disabled per policy.",
+        "specs_reference": "Profile photo high-res square (~1200×1200 min); cover ~820×312 (note mobile crop); static imagery; HCP-only statement on cover.",
+        "mandatories": "Unbranded look consistent with unbranded campaign; logos/sign-off per legal; disable comments/messenger/posts as approved.",
+        "reviews": "Internal creative review; client L&F + mockup; PRB with screenshots; final approval; Meta engagement-disable via support request (lead time).",
+        "tech_dev_deployment": "Social team builds dev page from setup sheet; creative refreshes screenshots before submission.",
+        "appendix": "UTM conventions for subsequent paid posts; reference social placement guidelines deck if available."
+      }
+    }
+  ]
+}

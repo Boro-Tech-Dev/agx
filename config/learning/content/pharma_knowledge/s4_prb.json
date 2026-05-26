@@ -1,0 +1,21 @@
+{
+  "summary": "PRB is internal/agency review cadence \u2014 not the same as MLR approval.",
+  "sections": [
+    {
+      "heading": "PRB cadence",
+      "paragraphs": [
+        "A Promo Review Board (PRB) round is a structured internal or client-agency review before MLR submission."
+      ],
+      "bullets": [
+        "Basic / medium / complex work may use 1\u20133 PRB rounds in planning tools.",
+        "Agency schedules production around client review windows \u2014 not instead of them.",
+        "PRB readiness does not mean MLR-approved."
+      ]
+    }
+  ],
+  "tool_cta": {
+    "label": "Practice PRB timing (optional)",
+    "href": "/tools/scenario-planner",
+    "hint": "Save a scenario on your learning sandbox to see PRB anchors."
+  }
+}

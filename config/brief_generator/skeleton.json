@@ -1,0 +1,330 @@
+{
+  "version": 1,
+  "sections": [
+    {
+      "id": "admin",
+      "title": "Project admin",
+      "fields": [
+        {
+          "id": "client_brand",
+          "label": "Client / brand",
+          "helper": "Company and brand names.",
+          "placeholder": "[Client] & [Brand]",
+          "rows": 2
+        },
+        {
+          "id": "project_name",
+          "label": "Project name",
+          "helper": "Working title for this deliverable.",
+          "placeholder": "",
+          "rows": 2
+        },
+        {
+          "id": "job_number",
+          "label": "Job / WBS number",
+          "helper": "Internal tracking number if applicable.",
+          "placeholder": "",
+          "rows": 1
+        },
+        {
+          "id": "date_today",
+          "label": "Brief date",
+          "helper": "",
+          "placeholder": "",
+          "rows": 1
+        },
+        {
+          "id": "creative_handover_date",
+          "label": "Creative handover date",
+          "helper": "Target date creative leaves agency.",
+          "placeholder": "",
+          "rows": 1
+        },
+        {
+          "id": "in_market_date",
+          "label": "In-market / live date",
+          "helper": "",
+          "placeholder": "",
+          "rows": 1
+        },
+        {
+          "id": "agency_leads",
+          "label": "Agency project leads",
+          "helper": "Account, PM, creative leads.",
+          "placeholder": "",
+          "rows": 3
+        },
+        {
+          "id": "other_agencies_vendors",
+          "label": "Other agencies / vendors",
+          "helper": "Media, deployment, tech partners and roles.",
+          "placeholder": "",
+          "rows": 3
+        }
+      ]
+    },
+    {
+      "id": "strategy",
+      "title": "Strategy",
+      "fields": [
+        {
+          "id": "marketing_objectives",
+          "label": "Marketing / promotional objectives",
+          "helper": "What business outcomes this work supports.",
+          "placeholder": "",
+          "rows": 4
+        },
+        {
+          "id": "barrier_opportunity",
+          "label": "Key barrier / opportunity",
+          "helper": "Insight framing the ask.",
+          "placeholder": "",
+          "rows": 3
+        },
+        {
+          "id": "si_kpi",
+          "label": "SI / KPI / success metrics",
+          "helper": "Brand imperatives or measurable KPIs.",
+          "placeholder": "",
+          "rows": 3
+        },
+        {
+          "id": "tactic_objectives",
+          "label": "Tactic objectives",
+          "helper": "What this specific unit must accomplish.",
+          "placeholder": "",
+          "rows": 3
+        }
+      ]
+    },
+    {
+      "id": "audience",
+      "title": "Audience",
+      "fields": [
+        {
+          "id": "primary_audience",
+          "label": "Primary audience / segment",
+          "helper": "Who we are reaching.",
+          "placeholder": "",
+          "rows": 2
+        },
+        {
+          "id": "desired_behavior",
+          "label": "Desired behavior change",
+          "helper": "What we want them to think or do differently.",
+          "placeholder": "",
+          "rows": 3
+        },
+        {
+          "id": "segments_specialties",
+          "label": "Segments / specialties / targeting notes",
+          "helper": "Checkbox-style segments, CRM universes, specialties.",
+          "placeholder": "",
+          "rows": 4
+        }
+      ]
+    },
+    {
+      "id": "context",
+      "title": "Context",
+      "fields": [
+        {
+          "id": "background",
+          "label": "Background",
+          "helper": "Why now; prior assets; strategic context.",
+          "placeholder": "",
+          "rows": 5
+        }
+      ]
+    },
+    {
+      "id": "execution",
+      "title": "Execution",
+      "fields": [
+        {
+          "id": "deliverables",
+          "label": "Tactical execution / deliverables",
+          "helper": "Exactly what we are creating (formats, versions, counts).",
+          "placeholder": "",
+          "rows": 6
+        },
+        {
+          "id": "specs_reference",
+          "label": "Specs / reference links",
+          "helper": "Platform specs, legal refs, source asset IDs.",
+          "placeholder": "",
+          "rows": 4
+        }
+      ]
+    },
+    {
+      "id": "creative",
+      "title": "Creative & messaging",
+      "fields": [
+        {
+          "id": "key_messages",
+          "label": "Key messages & data",
+          "helper": "Core / secondary messages; data to include or avoid.",
+          "placeholder": "",
+          "rows": 5
+        },
+        {
+          "id": "story_flow",
+          "label": "Story flow / narrative",
+          "helper": "Sequence, beats, or email sections.",
+          "placeholder": "",
+          "rows": 4
+        },
+        {
+          "id": "copy_requirements",
+          "label": "Copy requirements / best practices",
+          "helper": "Subject lines, headlines, character limits, disclosure placement.",
+          "placeholder": "",
+          "rows": 5
+        },
+        {
+          "id": "art_pd_xd",
+          "label": "Art / PD / XD requirements",
+          "helper": "Layouts, mockups, templates, design mandatories.",
+          "placeholder": "",
+          "rows": 5
+        },
+        {
+          "id": "tech_dev_deployment",
+          "label": "Tech / dev / deployment",
+          "helper": "Build method (HTML, ET code), hosting, UTMs, trafficking handoffs.",
+          "placeholder": "",
+          "rows": 5
+        }
+      ]
+    },
+    {
+      "id": "compliance",
+      "title": "Compliance & submission",
+      "fields": [
+        {
+          "id": "mandatories",
+          "label": "Mandatories",
+          "helper": "ISI, PI, logos, legal footer, branding rules.",
+          "placeholder": "",
+          "rows": 5
+        },
+        {
+          "id": "submission_files",
+          "label": "Submission files expected",
+          "helper": "PRB/RC packages, mockups, annotations.",
+          "placeholder": "",
+          "rows": 4
+        }
+      ]
+    },
+    {
+      "id": "process",
+      "title": "Process",
+      "fields": [
+        {
+          "id": "reviews",
+          "label": "Reviews",
+          "helper": "Client rounds, PRB/RC/JRC, broadcast reviews.",
+          "placeholder": "",
+          "rows": 4
+        },
+        {
+          "id": "assumptions",
+          "label": "Assumptions",
+          "helper": "",
+          "placeholder": "",
+          "rows": 4
+        },
+        {
+          "id": "exclusions",
+          "label": "Exclusions",
+          "helper": "Explicitly out of scope.",
+          "placeholder": "",
+          "rows": 3
+        }
+      ]
+    },
+    {
+      "id": "operations",
+      "title": "Operations",
+      "fields": [
+        {
+          "id": "estimate_timeline",
+          "label": "Estimate / fee / OOP",
+          "helper": "Budget notes if known.",
+          "placeholder": "",
+          "rows": 2
+        },
+        {
+          "id": "timeline_milestones",
+          "label": "Timeline milestones",
+          "helper": "Key dates (CR, PRB, AFD, go-live).",
+          "placeholder": "",
+          "rows": 4
+        }
+      ]
+    },
+    {
+      "id": "internal_production",
+      "title": "Internal production (decks / MLR)",
+      "fields": [
+        {
+          "id": "asset_checklist",
+          "label": "Asset checklist",
+          "helper": "Print, PDF, deck, email, Launchpad, etc.",
+          "placeholder": "",
+          "rows": 3
+        },
+        {
+          "id": "creative_asset_needs",
+          "label": "Creative asset needs questionnaire",
+          "helper": "Veeva code on piece, ISI, PI insert, internal vs external.",
+          "placeholder": "",
+          "rows": 4
+        },
+        {
+          "id": "development_submission_needs",
+          "label": "Development & submission needs",
+          "helper": "Mechanical vs PDF, annotations, marketing notes, related materials.",
+          "placeholder": "",
+          "rows": 4
+        },
+        {
+          "id": "scope_roles_deliverables",
+          "label": "Scope — roles & detailed deliverables",
+          "helper": "Producer, copy, art, edit, submissions, presentation services.",
+          "placeholder": "",
+          "rows": 8
+        },
+        {
+          "id": "client_approvals_rounds",
+          "label": "Client approvals & review rounds",
+          "helper": "Sr client approval, JRC rounds, target in-market.",
+          "placeholder": "",
+          "rows": 4
+        }
+      ]
+    },
+    {
+      "id": "close",
+      "title": "Close",
+      "fields": [
+        {
+          "id": "approvals_signoff",
+          "label": "Brief approvals",
+          "helper": "Agency + client sign-off lines.",
+          "placeholder": "",
+          "rows": 2
+        },
+        {
+          "id": "appendix",
+          "label": "Appendix / metadata",
+          "helper": "UTM grid, content pillar, campaign naming, team checklist.",
+          "placeholder": "",
+          "rows": 4
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "summary": "Where Veeva fits in promo workflow vs RagTag.",
+  "sections": [
+    {
+      "heading": "Veeva in the stack",
+      "bullets": [
+        "Vault PromoMats: asset storage, versioning, and approval status.",
+        "CLM / RTE: rep-facing presentations and email fragments.",
+        "RagTag Veeva Suite orients teams and simulates flows \u2014 it does not replace Vault validation or MLR."
+      ]
+    }
+  ],
+  "tool_cta": {
+    "label": "Veeva Suite orientation",
+    "href": "/tools/veeva-suite?tab=how"
+  }
+}

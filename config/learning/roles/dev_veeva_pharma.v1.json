@@ -1,0 +1,38 @@
+{
+  "id": "dev_veeva_pharma",
+  "version": 1,
+  "module_type": "role_playbook",
+  "title": "Dev / Veeva (Pharma)",
+  "agency_role": "dev_veeva",
+  "vertical": "pharma",
+  "estimatedMinutes": 90,
+  "requires": [{ "playbook_id": "pharma_knowledge", "status": "completed" }],
+  "competencies_granted": ["veeva_orientation"],
+  "missions": [
+    {
+      "id": "m1",
+      "title": "Veeva development",
+      "steps": [
+        {
+          "id": "dv_s1_how",
+          "kind": "read",
+          "title": "Veeva Suite How it works",
+          "href": "/tools/veeva-suite?tab=how",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "dv_s3_rte",
+          "kind": "read",
+          "title": "RTE and CLM preview limits",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "dv_s2_orientation",
+          "kind": "reflection",
+          "title": "Handoff checklist note",
+          "validation": { "type": "memory", "title": "Veeva dev learning note" }
+        }
+      ]
+    }
+  ]
+}

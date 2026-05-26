@@ -1,0 +1,731 @@
+{
+  "version": 1,
+  "tactics": [
+    {
+      "key": "hcp_email",
+      "name": "HCP email",
+      "description": "Permissions-based professional email",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "email",
+      "format": "message",
+      "tags": [
+        "hcp",
+        "b2b"
+      ],
+      "timing_profile": "generic_tactic"
+    },
+    {
+      "key": "dtc_email",
+      "name": "Consumer / DTC email",
+      "description": "Direct-to-consumer promotional email",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "email",
+      "format": "message",
+      "tags": [
+        "dtc",
+        "b2c"
+      ],
+      "timing_profile": "generic_tactic_linear"
+    },
+    {
+      "key": "crm_email",
+      "name": "CRM / lifecycle email",
+      "description": "Triggered or newsletters via CRM",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "email",
+      "format": "message",
+      "tags": [
+        "crm"
+      ],
+      "timing_profile": "generic_tactic_linear"
+    },
+    {
+      "key": "paid_search_sem",
+      "name": "Paid search (SEM)",
+      "description": "Search engine marketing text ads",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "search",
+      "format": "text",
+      "tags": [
+        "sem",
+        "ppc"
+      ],
+      "timing_profile": "sem_seo"
+    },
+    {
+      "key": "seo_organic",
+      "name": "Organic SEO",
+      "description": "Technical and content SEO",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "search",
+      "format": "web",
+      "tags": [
+        "seo"
+      ],
+      "timing_profile": "sem_seo"
+    },
+    {
+      "key": "paid_social_feed",
+      "name": "Paid social – feed",
+      "description": "In-feed sponsored posts",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "social",
+      "format": "feed",
+      "tags": [
+        "social"
+      ],
+      "timing_profile": "social_paid"
+    },
+    {
+      "key": "paid_social_stories",
+      "name": "Paid social – stories/reels",
+      "description": "Full-screen vertical sponsored units",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "social",
+      "format": "stories",
+      "tags": [
+        "social"
+      ],
+      "timing_profile": "social_paid"
+    },
+    {
+      "key": "paid_social_video",
+      "name": "Paid social – in-feed video",
+      "description": "Short-form sponsored video in social",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "social",
+      "format": "video",
+      "tags": [
+        "social"
+      ],
+      "timing_profile": "social_paid"
+    },
+    {
+      "key": "organic_social",
+      "name": "Organic social",
+      "description": "Brand-operated social content",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "social",
+      "format": "mixed",
+      "tags": [
+        "organic"
+      ],
+      "timing_profile": "social_paid"
+    },
+    {
+      "key": "programmatic_display",
+      "name": "Programmatic display",
+      "description": "Open-web display via DSP",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "display",
+      "format": "banner",
+      "tags": [
+        "programmatic"
+      ],
+      "timing_profile": "display_standard"
+    },
+    {
+      "key": "programmatic_video_olv",
+      "name": "Programmatic online video",
+      "description": "OLV / pre-roll outside walled gardens",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "video",
+      "format": "in_stream",
+      "tags": [
+        "olv"
+      ],
+      "timing_profile": "display_standard"
+    },
+    {
+      "key": "ctv_bvod",
+      "name": "CTV / BVOD",
+      "description": "Connected TV and broadcaster VOD",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "ctv",
+      "format": "in_stream",
+      "tags": [
+        "ctv"
+      ],
+      "timing_profile": "ctv_streaming"
+    },
+    {
+      "key": "digital_audio_streaming",
+      "name": "Streaming digital audio",
+      "description": "Music/podcast app audio ads",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "audio",
+      "format": "spot",
+      "tags": [
+        "audio"
+      ],
+      "timing_profile": "audio_podcast_streaming"
+    },
+    {
+      "key": "podcast_host_read",
+      "name": "Podcast host-read",
+      "description": "Integrated podcast endorsements",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "audio",
+      "format": "host_read",
+      "tags": [
+        "podcast"
+      ],
+      "timing_profile": "audio_podcast_streaming"
+    },
+    {
+      "key": "retail_media_network",
+      "name": "Retail media network",
+      "description": "Ads on retailer sites/apps",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "retail",
+      "format": "mixed",
+      "tags": [
+        "commerce"
+      ],
+      "timing_profile": "retail_media"
+    },
+    {
+      "key": "commerce_search",
+      "name": "Commerce search",
+      "description": "Retail site sponsored search",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "retail",
+      "format": "search",
+      "tags": [
+        "commerce"
+      ],
+      "timing_profile": "retail_media"
+    },
+    {
+      "key": "endemic_display",
+      "name": "Endemic publisher display",
+      "description": "Vertical endemic site display",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "publisher",
+      "format": "banner",
+      "tags": [
+        "endemic"
+      ],
+      "timing_profile": "endemic_publisher"
+    },
+    {
+      "key": "endemic_email",
+      "name": "Endemic publisher email",
+      "description": "Dedicated sends via endemic partners",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "publisher",
+      "format": "email",
+      "tags": [
+        "endemic"
+      ],
+      "timing_profile": "endemic_publisher"
+    },
+    {
+      "key": "sms_marketing",
+      "name": "SMS marketing",
+      "description": "Opt-in promotional SMS",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "mobile",
+      "format": "sms",
+      "tags": [
+        "sms"
+      ],
+      "timing_profile": "sms_push"
+    },
+    {
+      "key": "push_notifications",
+      "name": "Mobile push",
+      "description": "App push notifications",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "mobile",
+      "format": "push",
+      "tags": [
+        "push"
+      ],
+      "timing_profile": "sms_push"
+    },
+    {
+      "key": "influencer_paid",
+      "name": "Paid influencer",
+      "description": "Sponsored creator posts",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "social",
+      "format": "creator",
+      "tags": [
+        "influencer"
+      ],
+      "timing_profile": "influencer_creator"
+    },
+    {
+      "key": "influencer_organic_seed",
+      "name": "Creator seeding",
+      "description": "Product seeding / unpaid advocacy",
+      "tactic_kind": "earned",
+      "channel": "digital",
+      "medium": "social",
+      "format": "creator",
+      "tags": [
+        "influencer"
+      ],
+      "timing_profile": "influencer_creator"
+    },
+    {
+      "key": "brand_site",
+      "name": "Brand website",
+      "description": "Corporate or campaign site",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "web",
+      "format": "site",
+      "tags": [
+        "website"
+      ],
+      "timing_profile": "website"
+    },
+    {
+      "key": "landing_microsite",
+      "name": "Landing / microsite",
+      "description": "Campaign landing experiences",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "web",
+      "format": "responsive",
+      "tags": [
+        "landing"
+      ],
+      "timing_profile": "website"
+    },
+    {
+      "key": "mobile_app_experience",
+      "name": "Mobile app",
+      "description": "In-app branded modules",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "mobile",
+      "format": "app",
+      "tags": [
+        "app"
+      ],
+      "timing_profile": "mobile_app_web"
+    },
+    {
+      "key": "interactive_rich_media",
+      "name": "Rich media / interactive",
+      "description": "Expandables, gamified units",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "display",
+      "format": "rich_media",
+      "tags": [
+        "interactive"
+      ],
+      "timing_profile": "display_standard"
+    },
+    {
+      "key": "qr_physical_digital",
+      "name": "QR bridge",
+      "description": "QR driving to digital journeys",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "activation",
+      "format": "qr",
+      "tags": [
+        "qr"
+      ],
+      "timing_profile": "display_standard"
+    },
+    {
+      "key": "webinar_virtual",
+      "name": "Webinars / virtual events",
+      "description": "Live or simulive educational events",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "events",
+      "format": "virtual",
+      "tags": [
+        "webinar"
+      ],
+      "timing_profile": "webinar_virtual_event"
+    },
+    {
+      "key": "virtual_booth",
+      "name": "Virtual congress booth",
+      "description": "Digital congress presence",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "events",
+      "format": "virtual",
+      "tags": [
+        "congress"
+      ],
+      "timing_profile": "webinar_virtual_event"
+    },
+    {
+      "key": "dooh_digital",
+      "name": "Digital out-of-home",
+      "description": "Digital screens OOH",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "ooh",
+      "format": "digital",
+      "tags": [
+        "dooh"
+      ],
+      "timing_profile": "dooh_digital"
+    },
+    {
+      "key": "static_ooh_poster",
+      "name": "Static OOH poster",
+      "description": "Posters / transit static",
+      "tactic_kind": "paid_media",
+      "channel": "offline",
+      "medium": "ooh",
+      "format": "static",
+      "tags": [
+        "ooh"
+      ],
+      "timing_profile": "ooh_static"
+    },
+    {
+      "key": "static_ooh_bulletin",
+      "name": "Bulletins / roadside",
+      "description": "Large format roadside",
+      "tactic_kind": "paid_media",
+      "channel": "offline",
+      "medium": "ooh",
+      "format": "bulletin",
+      "tags": [
+        "ooh"
+      ],
+      "timing_profile": "ooh_static"
+    },
+    {
+      "key": "consumer_print_magazine",
+      "name": "Consumer print magazine",
+      "description": "Magazine advertising",
+      "tactic_kind": "paid_media",
+      "channel": "offline",
+      "medium": "print",
+      "format": "magazine",
+      "tags": [
+        "print"
+      ],
+      "timing_profile": "print_magazine_newspaper"
+    },
+    {
+      "key": "trade_print",
+      "name": "Trade / HCP print journals",
+      "description": "Professional publication ads",
+      "tactic_kind": "paid_media",
+      "channel": "offline",
+      "medium": "print",
+      "format": "journal",
+      "tags": [
+        "hcp",
+        "print"
+      ],
+      "timing_profile": "print_magazine_newspaper"
+    },
+    {
+      "key": "newspaper_print",
+      "name": "Newspaper advertising",
+      "description": "Daily / weekly news print",
+      "tactic_kind": "paid_media",
+      "channel": "offline",
+      "medium": "print",
+      "format": "newspaper",
+      "tags": [
+        "print"
+      ],
+      "timing_profile": "print_magazine_newspaper"
+    },
+    {
+      "key": "fsi_insert",
+      "name": "FSI / coupon inserts",
+      "description": "Freestanding inserts",
+      "tactic_kind": "paid_media",
+      "channel": "offline",
+      "medium": "print",
+      "format": "insert",
+      "tags": [
+        "fsi"
+      ],
+      "timing_profile": "print_insert_fsi"
+    },
+    {
+      "key": "direct_mail",
+      "name": "Direct mail",
+      "description": "Postcard / letter packs",
+      "tactic_kind": "paid_media",
+      "channel": "offline",
+      "medium": "direct",
+      "format": "mail",
+      "tags": [
+        "direct_mail"
+      ],
+      "timing_profile": "direct_mail"
+    },
+    {
+      "key": "brochure_leave_behind_print",
+      "name": "Print brochure leave-behind",
+      "description": "Rep-delivered print brochures",
+      "tactic_kind": "paid_media",
+      "channel": "offline",
+      "medium": "print",
+      "format": "brochure",
+      "tags": [
+        "collateral"
+      ],
+      "timing_profile": "collateral_leave_behind"
+    },
+    {
+      "key": "flashcards_print",
+      "name": "Print flashcards / tear pads",
+      "description": "POC or office tear pads",
+      "tactic_kind": "paid_media",
+      "channel": "offline",
+      "medium": "print",
+      "format": "flashcard",
+      "tags": [
+        "poc"
+      ],
+      "timing_profile": "poc_print"
+    },
+    {
+      "key": "point_of_care_digital",
+      "name": "Point-of-care digital",
+      "description": "Exam-room digital screens",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "poc",
+      "format": "screen",
+      "tags": [
+        "poc"
+      ],
+      "timing_profile": "endemic_publisher"
+    },
+    {
+      "key": "point_of_care_print",
+      "name": "Point-of-care print",
+      "description": "Waiting-room posters / brochures",
+      "tactic_kind": "paid_media",
+      "channel": "offline",
+      "medium": "poc",
+      "format": "print",
+      "tags": [
+        "poc"
+      ],
+      "timing_profile": "poc_print"
+    },
+    {
+      "key": "congress_exhibit",
+      "name": "Congress exhibit graphics",
+      "description": "Booth panels / hanging signs",
+      "tactic_kind": "paid_media",
+      "channel": "offline",
+      "medium": "events",
+      "format": "exhibit",
+      "tags": [
+        "congress"
+      ],
+      "timing_profile": "congress_exhibit_print"
+    },
+    {
+      "key": "congress_digital_screen",
+      "name": "Congress digital signage",
+      "description": "On-site congress LED / loops",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "events",
+      "format": "screen",
+      "tags": [
+        "congress"
+      ],
+      "timing_profile": "tradeshow_digital"
+    },
+    {
+      "key": "sales_aid_clm",
+      "name": "CLM / sales aid",
+      "description": "Closed-loop field sales materials",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "field",
+      "format": "tablet",
+      "tags": [
+        "clm"
+      ],
+      "timing_profile": "clm"
+    },
+    {
+      "key": "slide_deck_scientific",
+      "name": "Scientific slide deck",
+      "description": "MLR-tracked scientific decks",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "sales",
+      "format": "slides",
+      "tags": [
+        "slides"
+      ],
+      "timing_profile": "clm"
+    },
+    {
+      "key": "video_ad_production",
+      "name": "Video ad production",
+      "description": "Hero spots for broadcast / digital",
+      "tactic_kind": "production",
+      "channel": "cross",
+      "medium": "video",
+      "format": "spot",
+      "tags": [
+        "video"
+      ],
+      "timing_profile": "video_production"
+    },
+    {
+      "key": "long_form_video",
+      "name": "Long-form video",
+      "description": "Extended brand or MOA films",
+      "tactic_kind": "production",
+      "channel": "cross",
+      "medium": "video",
+      "format": "long_form",
+      "tags": [
+        "video"
+      ],
+      "timing_profile": "video_production"
+    },
+    {
+      "key": "animation_moa",
+      "name": "Animation / MOA",
+      "description": "Mechanism of action animation",
+      "tactic_kind": "production",
+      "channel": "cross",
+      "medium": "video",
+      "format": "animation",
+      "tags": [
+        "animation"
+      ],
+      "timing_profile": "animation"
+    },
+    {
+      "key": "banner_standard_iab",
+      "name": "Standard IAB banners",
+      "description": "Leaderboard / MPU web banners",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "display",
+      "format": "banner",
+      "tags": [
+        "display"
+      ],
+      "timing_profile": "banner"
+    },
+    {
+      "key": "native_advertising",
+      "name": "Native advertising",
+      "description": "In-feed native units",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "publisher",
+      "format": "native",
+      "tags": [
+        "native"
+      ],
+      "timing_profile": "endemic_publisher"
+    },
+    {
+      "key": "affiliate_marketing",
+      "name": "Affiliate / partner",
+      "description": "Performance partner publishers",
+      "tactic_kind": "paid_media",
+      "channel": "digital",
+      "medium": "partner",
+      "format": "mixed",
+      "tags": [
+        "affiliate"
+      ],
+      "timing_profile": "display_standard"
+    },
+    {
+      "key": "happyguy_tactic_1",
+      "name": "HappyGuy Tactic 1",
+      "description": "HappyGuy baseline delivery (Thursday/Tuesday PRB anchors; OPDP binder profile)",
+      "tactic_kind": "owned",
+      "channel": "other",
+      "medium": "mixed",
+      "format": "mixed",
+      "tags": [
+        "happyguy",
+        "delivery"
+      ],
+      "timing_profile": "happyguy_submit_thursday"
+    },
+    {
+      "key": "happyguy_mad_healthgrades_360_email",
+      "name": "HappyGuy — Wellscore 360 email",
+      "description": "Vendor screenshot cycles, resubmit path, OPDP; HappyGuy week-aligned PRB",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "email",
+      "format": "html",
+      "tags": [
+        "happyguy",
+        "wellscore",
+        "email"
+      ],
+      "timing_profile": "happyguy_mad_healthgrades_360_email"
+    },
+    {
+      "key": "happyguy_mad_patient_profiles_tll",
+      "name": "HappyGuy — Patient profiles (TLL)",
+      "description": "TLL alignment, profile creative, extended post-PRB1 revision track; HappyGuy week-aligned PRB",
+      "tactic_kind": "owned",
+      "channel": "other",
+      "medium": "mixed",
+      "format": "mixed",
+      "tags": [
+        "happyguy",
+        "patient_profiles",
+        "tll"
+      ],
+      "timing_profile": "happyguy_mad_patient_profiles_tll"
+    },
+    {
+      "key": "happyguy_mad_liver_brochure_training_blueprint",
+      "name": "HappyGuy — Liver brochure / training schematic",
+      "description": "Tighter discovery, layout + accessibility/fact-check overlap; HappyGuy week-aligned PRB",
+      "tactic_kind": "owned",
+      "channel": "print",
+      "medium": "brochure",
+      "format": "pdf",
+      "tags": [
+        "happyguy",
+        "brochure",
+        "training"
+      ],
+      "timing_profile": "happyguy_mad_liver_brochure_training_blueprint"
+    }
+  ]
+}

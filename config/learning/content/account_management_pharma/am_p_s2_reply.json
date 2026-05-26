@@ -1,0 +1,16 @@
+{
+  "summary": "Push back on scope and timeline without promising MLR approval.",
+  "sections": [
+    {
+      "bullets": [
+        "Acknowledge urgency; confirm what \u201cdone\u201d means.",
+        "Offer submission-ready dates, not approval dates.",
+        "Flag scope that triggers new MLR review."
+      ]
+    }
+  ],
+  "tool_cta": {
+    "label": "Reply Coach",
+    "href": "/tools/reply-coach"
+  }
+}

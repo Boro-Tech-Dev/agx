@@ -1,0 +1,160 @@
+{
+  "id": "pharma_knowledge",
+  "version": 2,
+  "module_type": "pharma_knowledge",
+  "title": "Pharma Knowledge",
+  "estimatedMinutes": 75,
+  "competencies_granted": ["pharma_literacy"],
+  "missions": [
+    {
+      "id": "m1_basics",
+      "title": "Regulated promotional fundamentals",
+      "steps": [
+        {
+          "id": "s1_intro",
+          "kind": "read",
+          "title": "What regulated promotional work is",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "s1b_audiences",
+          "kind": "read",
+          "title": "HCP vs DTC audiences",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "s1c_materials",
+          "kind": "read",
+          "title": "Promo materials and claims",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "s2_platform_gov",
+          "kind": "read",
+          "title": "RagTag governance (data and AI)",
+          "validation": { "type": "manual" },
+          "governance_anchor": "data-retention"
+        },
+        {
+          "id": "s3_mlr_quiz",
+          "kind": "quiz",
+          "title": "MLR boundaries quiz",
+          "validation": { "type": "quiz", "passingScore": 80 },
+          "governance_anchor": "authorization",
+          "quiz": {
+            "passingScore": 80,
+            "questions": [
+              {
+                "id": "q1",
+                "prompt": "Can RagTag approve MLR submissions?",
+                "options": ["Yes, when configured", "No — it is a planning aid only", "Only for internal decks"],
+                "correctIndex": 1
+              },
+              {
+                "id": "q2",
+                "prompt": "Who owns final regulatory sign-off?",
+                "options": ["The PM agent", "Client MLR / medical-legal reviewers", "Veeva Suite tool"],
+                "correctIndex": 1
+              },
+              {
+                "id": "q3",
+                "prompt": "Fair balance and ISI on HCP materials are owned by:",
+                "options": ["Agency creative lead", "Client MLR / medical-legal", "Project manager"],
+                "correctIndex": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "m2_cadence",
+      "title": "Review, cadence, and systems",
+      "steps": [
+        {
+          "id": "s4_prb",
+          "kind": "read",
+          "title": "PRB cadence concepts",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "s4b_mlr_cycle",
+          "kind": "read",
+          "title": "MLR review cycle (conceptual)",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "s5_comms",
+          "kind": "read",
+          "title": "Client communication boundaries",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "s6_veeva",
+          "kind": "read",
+          "title": "Veeva in the promo stack",
+          "validation": { "type": "manual" }
+        }
+      ]
+    },
+    {
+      "id": "m3_checkpoint",
+      "title": "Channels and checkpoint",
+      "steps": [
+        {
+          "id": "s6b_tactics",
+          "kind": "read",
+          "title": "Promo tactic types (orientation)",
+          "validation": { "type": "manual" }
+        },
+        {
+          "id": "s7_checkpoint_quiz",
+          "kind": "quiz",
+          "title": "Pharma knowledge checkpoint",
+          "validation": { "type": "quiz", "passingScore": 80 },
+          "quiz": {
+            "passingScore": 80,
+            "questions": [
+              {
+                "id": "q3",
+                "prompt": "When a client asks for guaranteed MLR approval by Friday, you should:",
+                "options": [
+                  "Promise delivery if the timeline looks feasible",
+                  "Clarify scope and avoid promising approval dates",
+                  "Route to Veeva Suite for automatic approval"
+                ],
+                "correctIndex": 1
+              },
+              {
+                "id": "q4",
+                "prompt": "An HCP email draft is routed to consumer social. The first fix is:",
+                "options": [
+                  "Resize the creative",
+                  "Confirm audience and channel before copy changes",
+                  "Skip MLR to save time"
+                ],
+                "correctIndex": 1
+              },
+              {
+                "id": "q5",
+                "prompt": "RagTag can help your team with timelines and drafts, but cannot:",
+                "options": [
+                  "Store sandbox documents",
+                  "Approve promotional materials for use in market",
+                  "Run scenario planning"
+                ],
+                "correctIndex": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "s8_reflection",
+          "kind": "reflection",
+          "title": "Reflection note",
+          "validation": { "type": "memory", "title": "Pharma knowledge reflection" }
+        }
+      ]
+    }
+  ]
+}

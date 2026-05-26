@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+}
+
+[data-radix-dialog-overlay] {
+  background: rgb(15 23 42 / 0.55);
+}
+.dark [data-radix-dialog-overlay] {
+  background: rgb(0 0 0 / 0.65);
+}
+
+.vis-item.vis-range.gantt-bar-kickoff_vendor,
+.vis-item.vis-point.gantt-bar-kickoff_vendor .vis-item-content {
+  background-color: rgba(160, 108, 255, 0.4);
+  border-color: rgba(160, 108, 255, 0.88);
+}
+.vis-item.vis-range.gantt-bar-client_review,
+.vis-item.vis-point.gantt-bar-client_review .vis-item-content {
+  background-color: rgba(245, 158, 11, 0.42);
+  border-color: rgba(217, 119, 6, 0.85);
+}
+.vis-item.vis-range.gantt-bar-internal_review,
+.vis-item.vis-point.gantt-bar-internal_review .vis-item-content {
+  background-color: rgba(244, 63, 94, 0.36);
+  border-color: rgba(225, 29, 72, 0.82);
+}
+.vis-item.vis-range.gantt-bar-prb_submission,
+.vis-item.vis-point.gantt-bar-prb_submission .vis-item-content {
+  background-color: rgba(139, 92, 246, 0.38);
+  border-color: rgba(124, 58, 237, 0.85);
+}
+.vis-item.vis-range.gantt-bar-development_days,
+.vis-item.vis-point.gantt-bar-development_days .vis-item-content {
+  background-color: rgba(132, 204, 22, 0.38);
+  border-color: rgba(101, 163, 13, 0.85);
+}
+.vis-item.vis-range.gantt-bar-prb_review,
+.vis-item.vis-point.gantt-bar-prb_review .vis-item-content {
+  background-color: rgba(59, 130, 246, 0.38);
+  border-color: rgba(37, 99, 235, 0.85);
+}
+.vis-item.vis-range.gantt-bar-default,
+.vis-item.vis-point.gantt-bar-default .vis-item-content {
+  background-color: rgba(0, 187, 211, 0.35);
+  border-color: rgba(0, 187, 211, 0.75);
+}
+
+.vis-item.vis-point.memory-timeline-point .vis-item-content {
+  background-color: rgba(126, 217, 87, 0.35);
+  border-color: rgba(126, 217, 87, 0.85);
+}

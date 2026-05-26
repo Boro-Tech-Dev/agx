@@ -1,0 +1,533 @@
+name: agent-x
+services:
+  ollama:
+    image: ollama/ollama:0.22.1
+    volumes:
+    - ollama_models:/root/.ollama
+    environment:
+      OLLAMA_HOST: 0.0.0.0:11434
+      OLLAMA_KEEP_ALIVE: 30m
+    restart: unless-stopped
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - ollama list >/dev/null 2>&1 || exit 1
+      interval: 5s
+      timeout: 15s
+      retries: 36
+      start_period: 30s
+  ollama-pull:
+    image: ollama/ollama:0.22.1
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: 'no'
+    env_file:
+    - path: .env
+      required: false
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      DEFAULT_BUILDER_MODEL: ${DEFAULT_BUILDER_MODEL:-qwen2.5:7b}
+      DEFAULT_PM_MODEL: ${DEFAULT_PM_MODEL:-llama3.1:8b}
+      DEFAULT_FORGE_MODEL: ${DEFAULT_FORGE_MODEL:-llama3.2:3b}
+      DEFAULT_CANON_MODEL: ${DEFAULT_CANON_MODEL:-llama3.2:3b}
+      DEFAULT_KITT_MODEL: ${DEFAULT_KITT_MODEL:-gemma3:270m}
+      DEFAULT_EDDIE_MODEL: ${DEFAULT_EDDIE_MODEL:-deepseek-r1:1.5b}
+      DEFAULT_BUBS_MODEL: ${DEFAULT_BUBS_MODEL:-tinyllama:1.1b}
+    volumes:
+    - ./scripts/ollama-warm-models.sh:/warm.sh:ro
+    entrypoint:
+    - /bin/sh
+    - /warm.sh
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: dd_agent
+      POSTGRES_PASSWORD: dd_agent_dev
+      POSTGRES_DB: dd_agents
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+    - ./infra/postgres/schema.sql:/docker-entrypoint-initdb.d/001_schema.sql:ro
+    - ./infra/postgres/seeds/workspaces_clients.sql:/docker-entrypoint-initdb.d/002_workspaces_clients.sql:ro
+    - ./infra/postgres/seeds/demo_projects.sql:/docker-entrypoint-initdb.d/003_demo_projects.sql:ro
+    - ./infra/postgres/init/018_tactic_library_seed.sql:/docker-entrypoint-initdb.d/004_tactic_library_seed.sql:ro
+    - ./infra/postgres/seeds/learning_workspace.sql:/docker-entrypoint-initdb.d/005_learning_workspace.sql:ro
+    - ./infra/postgres/init/023_timing_profile_columns.sql:/docker-entrypoint-initdb.d/006_timing_profile_columns.sql:ro
+    - ./infra/postgres/seeds/retrieval_catalog.sql:/docker-entrypoint-initdb.d/007_retrieval_catalog.sql:ro
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U dd_agent -d dd_agents
+      interval: 2s
+      timeout: 5s
+      retries: 30
+      start_period: 15s
+    restart: unless-stopped
+  redis:
+    image: redis:7-alpine
+    command:
+    - redis-server
+    - --appendonly
+    - 'yes'
+    volumes:
+    - redis_data:/data
+    restart: unless-stopped
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin-dev-only}
+    volumes:
+    - minio_data:/data
+    restart: unless-stopped
+  searxng:
+    image: docker.io/searxng/searxng:latest
+    env_file:
+    - path: .env
+      required: false
+    environment:
+      SEARXNG_BASE_URL: ${SEARXNG_BASE_URL:-http://localhost:8888/}
+      SEARXNG_SECRET_KEY: ${SEARXNG_SECRET_KEY:-ultrasecretkey-change-me}
+      BIND_ADDRESS: 0.0.0.0:8080
+    volumes:
+    - ./infra/searxng:/etc/searxng:ro
+    - searxng_cache:/var/cache/searxng
+    depends_on:
+      redis:
+        condition: service_started
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - wget -q --spider http://127.0.0.1:8080/healthz || exit 1
+      interval: 15s
+      timeout: 8s
+      retries: 12
+      start_period: 30s
+    restart: unless-stopped
+  reranker-colbert:
+    build:
+      context: .
+      dockerfile: apps/reranker-colbert/Dockerfile
+      args:
+        COLBERT_WITH_ML: ${COLBERT_WITH_ML:-1}
+    environment:
+      HF_HOME: /data/hf
+      COLBERT_MODEL: ${COLBERT_MODEL:-lightonai/GTE-ModernColBERT-v1}
+      COLBERT_BATCH_SIZE: ${COLBERT_BATCH_SIZE:-16}
+      COLBERT_MAX_DOC_TOKENS: ${COLBERT_MAX_DOC_TOKENS:-300}
+      COLBERT_MAX_QUERY_TOKENS: ${COLBERT_MAX_QUERY_TOKENS:-64}
+      COLBERT_FORCE_STUB: ${COLBERT_FORCE_STUB:-0}
+      HF_HUB_ENABLE_HF_TRANSFER: '1'
+    volumes:
+    - reranker_colbert_hf:/data/hf
+    healthcheck:
+      test:
+      - CMD
+      - python
+      - -c
+      - import urllib.request; urllib.request.urlopen('http://127.0.0.1:8097/health',
+        timeout=5).read()
+      interval: 15s
+      timeout: 10s
+      retries: 18
+      start_period: 600s
+    restart: unless-stopped
+  search-runner:
+    build:
+      context: .
+      dockerfile: apps/search-runner/Dockerfile
+    env_file:
+    - path: .env
+      required: false
+    environment:
+      SEARXNG_URL: http://searxng:8080
+      WEB_SEARCH_ENABLED: ${WEB_SEARCH_ENABLED:-1}
+      WEB_SEARCH_TIMEOUT_SEC: ${WEB_SEARCH_TIMEOUT_SEC:-15}
+      WEB_SEARCH_MAX_RESULTS: ${WEB_SEARCH_MAX_RESULTS:-10}
+    depends_on:
+      searxng:
+        condition: service_healthy
+    restart: unless-stopped
+  model-router:
+    build:
+      context: .
+      dockerfile: apps/model-router/Dockerfile
+    env_file:
+    - path: .env
+      required: false
+    environment:
+      UVICORN_WORKERS: '1'
+      WAIT_BACKENDS_SEC: '300'
+      OLLAMA_NUM_CTX: ${OLLAMA_NUM_CTX:-2048}
+      OLLAMA_PROBE_CHAT: ${OLLAMA_PROBE_CHAT:-0}
+      OLLAMA_GRAMMAR_FAILURE_FALLBACK: ${OLLAMA_GRAMMAR_FAILURE_FALLBACK:-1}
+      KITT_ROUTER_GRAMMAR_MODE: ${KITT_ROUTER_GRAMMAR_MODE:-never}
+      DEFAULT_BUILDER_MODEL: ${DEFAULT_BUILDER_MODEL:-qwen2.5:7b}
+      DEFAULT_KITT_MODEL: ${DEFAULT_KITT_MODEL:-gemma3:270m}
+      DEFAULT_EDDIE_MODEL: ${DEFAULT_EDDIE_MODEL:-deepseek-r1:1.5b}
+      DEFAULT_BUBS_MODEL: ${DEFAULT_BUBS_MODEL:-tinyllama:1.1b}
+      DEFAULT_PM_MODEL: ${DEFAULT_PM_MODEL:-llama3.1:8b}
+      DEFAULT_FORGE_MODEL: ${DEFAULT_FORGE_MODEL:-llama3.2:3b}
+      DEFAULT_CANON_MODEL: ${DEFAULT_CANON_MODEL:-llama3.2:3b}
+      DEFAULT_SYNERGY_MODEL: ${DEFAULT_SYNERGY_MODEL:-llama3.2:3b}
+      DEFAULT_CLINIC_MODEL: ${DEFAULT_CLINIC_MODEL:-llama3.2:3b}
+      SEARCH_RUNNER_URL: http://search-runner:8092
+      BROWSER_RUNNER_URL: http://browser-runner:8094
+      TOOL_RUNNER_URL: http://tool-runner:8090
+      MCP_BRIDGE_ENABLED: ${MCP_BRIDGE_ENABLED:-0}
+      MCP_BRIDGE_TARGETS: ${MCP_BRIDGE_TARGETS:-mcp-searxng=http://mcp-searxng:3030}
+      MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN:-mcp-searxng-dev-token}
+      RERANKER_COLBERT_URL: http://reranker-colbert:8097
+      RERANK_TEI_TIMEOUT_SEC: ${RERANK_TEI_TIMEOUT_SEC:-30}
+    depends_on:
+      ollama:
+        condition: service_healthy
+      search-runner:
+        condition: service_started
+      reranker-colbert:
+        condition: service_healthy
+    healthcheck:
+      test:
+      - CMD
+      - python
+      - -c
+      - import urllib.request; urllib.request.urlopen('http://127.0.0.1:8085/health',
+        timeout=5).read()
+      interval: 10s
+      timeout: 8s
+      retries: 6
+      start_period: 330s
+    restart: unless-stopped
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.7
+    command:
+    - start
+    - --http-enabled=true
+    - --hostname-strict=false
+    - --import-realm
+    env_file:
+    - path: .env
+      required: false
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_HEALTH_ENABLED: 'true'
+      KC_HTTP_RELATIVE_PATH: /
+    ports:
+    - 127.0.0.1:8180:8080
+    volumes:
+    - keycloak_data:/opt/keycloak/data
+    - ./infra/keycloak/realm-platform.json:/opt/keycloak/data/import/realm-platform.json:ro
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080'
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 90s
+    restart: unless-stopped
+  agent-api:
+    build:
+      context: .
+      dockerfile: apps/agent-api/Dockerfile
+    env_file:
+    - path: .env
+      required: false
+    environment:
+      DATABASE_URL: postgresql://dd_agent:dd_agent_dev@postgres:5432/dd_agents
+      REDIS_URL: redis://redis:6379/0
+      AGENT_WORKER_URL: http://agent-worker:8091
+      SCENARIO_WORKER_URL: http://scenario-worker:8093
+      AGENT_WORKER_HEALTH_SAMPLES: ${AGENT_WORKER_HEALTH_SAMPLES:-1}
+      UPLOAD_ROOT: /uploads
+      DOCUMENT_INGEST_QUEUE: document.ingest
+      MODEL_ROUTER_URL: http://model-router:8085
+      RETRIEVAL_V2_ENABLED: ${RETRIEVAL_V2_ENABLED:-1}
+      EMBED_AT_INGEST: ${EMBED_AT_INGEST:-nomic-embed-text}
+      DOCUMENT_INGEST_PROCESSING_QUEUE: document.ingest.processing
+      BROWSER_RUNNER_URL: http://browser-runner:8094
+      SEARCH_RUNNER_URL: http://search-runner:8092
+      WEB_SEARCH_ENABLED: ${WEB_SEARCH_ENABLED:-1}
+      VEEVA_SUITE_WORKER_URL: http://veeva-suite-worker:4317
+      WEB_PROXY_SCREENSHOT_TIMEOUT_SEC: ${WEB_PROXY_SCREENSHOT_TIMEOUT_SEC:-300}
+      WEB_PROXY_EXTRACT_TIMEOUT_SEC: ${WEB_PROXY_EXTRACT_TIMEOUT_SEC:-300}
+      WEB_PROXY_CRAWL_TIMEOUT_SEC: ${WEB_PROXY_CRAWL_TIMEOUT_SEC:-900}
+      VEEVA_SUITE_PROXY_TIMEOUT_SEC: ${VEEVA_SUITE_PROXY_TIMEOUT_SEC:-600}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+      model-router:
+        condition: service_healthy
+      scenario-worker:
+        condition: service_started
+      browser-runner:
+        condition: service_started
+      search-runner:
+        condition: service_started
+      veeva-suite-worker:
+        condition: service_started
+    volumes:
+    - ./workspace:/workspace:ro
+    - ./artifacts:/artifacts
+    - ./uploads:/uploads
+    restart: unless-stopped
+  scenario-worker:
+    build:
+      context: .
+      dockerfile: apps/scenario-worker/Dockerfile
+    env_file:
+    - path: .env
+      required: false
+    restart: unless-stopped
+  browser-runner:
+    build:
+      context: .
+      dockerfile: apps/browser-runner/Dockerfile
+    env_file:
+    - path: .env
+      required: false
+    environment:
+      WEB_NAV_TIMEOUT_MS: ${WEB_NAV_TIMEOUT_MS:-45000}
+      WEB_MAX_CRAWL_PAGES: ${WEB_MAX_CRAWL_PAGES:-50}
+      WEB_MAX_CRAWL_DEPTH: ${WEB_MAX_CRAWL_DEPTH:-6}
+      WEB_MAX_CRAWL_SECONDS: ${WEB_MAX_CRAWL_SECONDS:-600}
+      WEB_MAX_CRAWL_ARTICLE_CHARS: ${WEB_MAX_CRAWL_ARTICLE_CHARS:-12000}
+      WEB_ALLOW_INSECURE_TLS: ${WEB_ALLOW_INSECURE_TLS:-false}
+      WEB_BROWSER_ENGINE: ${WEB_BROWSER_ENGINE:-chromium}
+      WEB_DEBUG_ON_FAILURE: ${WEB_DEBUG_ON_FAILURE:-false}
+      WEB_DEBUG_ARTIFACT_MAX_BYTES: ${WEB_DEBUG_ARTIFACT_MAX_BYTES:-2000000}
+      WEB_HAR_MAX_BYTES: ${WEB_HAR_MAX_BYTES:-1500000}
+      WEB_CRAWL_PDF_MAX_BYTES: ${WEB_CRAWL_PDF_MAX_BYTES:-2000000}
+    restart: unless-stopped
+  agent-worker:
+    build:
+      context: .
+      dockerfile: apps/agent-worker/Dockerfile
+    env_file:
+    - path: .env
+      required: false
+    environment:
+      DATABASE_URL: postgresql://dd_agent:dd_agent_dev@postgres:5432/dd_agents
+      REDIS_URL: redis://redis:6379/0
+      MODEL_ROUTER_URL: http://model-router:8085
+      SEARCH_RUNNER_URL: http://search-runner:8092
+      BROWSER_RUNNER_URL: http://browser-runner:8094
+      TOOL_RUNNER_URL: http://tool-runner:8090
+      WEB_SEARCH_ENABLED: ${WEB_SEARCH_ENABLED:-1}
+      AGENT_API_URL: http://agent-api:8080
+      RETRIEVAL_V2_ENABLED: ${RETRIEVAL_V2_ENABLED:-1}
+      EMBED_AT_INGEST: ${EMBED_AT_INGEST:-nomic-embed-text}
+      WEB_DEEPFETCH_ENABLED: ${WEB_DEEPFETCH_ENABLED:-0}
+      WEB_DEEPFETCH_TOP_URLS: ${WEB_DEEPFETCH_TOP_URLS:-6}
+      WEB_DEEPFETCH_CONCURRENCY: ${WEB_DEEPFETCH_CONCURRENCY:-4}
+      WEB_DEEPFETCH_PER_URL_TIMEOUT_SEC: ${WEB_DEEPFETCH_PER_URL_TIMEOUT_SEC:-8}
+      WEB_DEEPFETCH_BUDGET_MS: ${WEB_DEEPFETCH_BUDGET_MS:-12000}
+      WEB_DEEPFETCH_MIN_CHARS: ${WEB_DEEPFETCH_MIN_CHARS:-200}
+      WEB_DEEPFETCH_RENDER_JS_FALLBACK: ${WEB_DEEPFETCH_RENDER_JS_FALLBACK:-0}
+      WEB_DEEPFETCH_CACHE_TTL_SEC: ${WEB_DEEPFETCH_CACHE_TTL_SEC:-21600}
+      WEB_DEEPFETCH_NEG_TTL_SEC: ${WEB_DEEPFETCH_NEG_TTL_SEC:-600}
+      WEB_DEEPFETCH_TOP_CHUNKS: ${WEB_DEEPFETCH_TOP_CHUNKS:-8}
+      WEB_DEEPFETCH_CHUNK_SIZE: ${WEB_DEEPFETCH_CHUNK_SIZE:-1200}
+      WEB_DEEPFETCH_CHUNK_OVERLAP: ${WEB_DEEPFETCH_CHUNK_OVERLAP:-150}
+      WEB_DEEPFETCH_BLOCK_MAX_CHARS: ${WEB_DEEPFETCH_BLOCK_MAX_CHARS:-5000}
+      WEB_DEEPFETCH_RERANKER_ID: ${WEB_DEEPFETCH_RERANKER_ID:-colbert_gte_modern}
+      MODEL_ROUTER_SCHEMA_KEY: ${MODEL_ROUTER_SCHEMA_KEY:-1}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+      model-router:
+        condition: service_healthy
+      agent-api:
+        condition: service_started
+    volumes:
+    - ./workspace:/workspace:ro
+    - ./artifacts:/artifacts
+    restart: unless-stopped
+  ingestion-worker:
+    build:
+      context: .
+      dockerfile: apps/ingestion-worker/Dockerfile
+    env_file:
+    - path: .env
+      required: false
+    environment:
+      DATABASE_URL: postgresql://dd_agent:dd_agent_dev@postgres:5432/dd_agents
+      REDIS_URL: redis://redis:6379/0
+      UPLOAD_ROOT: /uploads
+      DOCUMENT_INGEST_QUEUE: document.ingest
+      DOCUMENT_INGEST_PROCESSING_QUEUE: document.ingest.processing
+      INGEST_REDIS_RELIABLE: ${INGEST_REDIS_RELIABLE:-0}
+      MODEL_ROUTER_URL: http://model-router:8085
+      EMBED_AT_INGEST: ${EMBED_AT_INGEST:-nomic-embed-text}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+      model-router:
+        condition: service_healthy
+    volumes:
+    - ./workspace:/workspace:ro
+    - ./imports:/imports:ro
+    - ./uploads:/uploads
+    restart: unless-stopped
+  tool-runner:
+    build:
+      context: .
+      dockerfile: apps/tool-runner/Dockerfile
+    env_file:
+    - path: .env
+      required: false
+    volumes:
+    - ./workspace:/workspace:ro
+    - ./artifacts:/artifacts
+    restart: unless-stopped
+  veeva-suite-worker:
+    build:
+      context: ./apps/veeva-suite-worker
+      dockerfile: Dockerfile
+    init: true
+    ipc: host
+    env_file:
+    - path: .env
+      required: false
+    environment:
+      PORT: '4317'
+      STORAGE_DIR: /app/storage
+      WEB_PATH_PREFIX: /api/veeva-suite
+      PUBLIC_OUTPUT_BASE_URL: ${VEEVA_SUITE_PUBLIC_OUTPUT_BASE_URL:-http://127.0.0.1:4317}
+      ENABLE_SCREENSHOTS: ${VEEVA_SUITE_ENABLE_SCREENSHOTS:-false}
+      MAX_UPLOAD_BYTES: '52428800'
+    volumes:
+    - veeva_suite_worker_storage:/app/storage
+    restart: unless-stopped
+  web-dashboard:
+    build:
+      context: .
+      dockerfile: apps/web-dashboard/Dockerfile
+    env_file:
+    - path: .env
+      required: false
+    environment:
+      AGENT_API_URL: http://agent-api:8080
+      KEYCLOAK_BASE_URL: http://keycloak:8080
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-platform}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-web-dashboard}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-web-dashboard-dev-secret}
+      KEYCLOAK_ISSUER: ${KEYCLOAK_ISSUER:-}
+    depends_on:
+      keycloak:
+        condition: service_healthy
+    restart: unless-stopped
+    expose:
+    - '3000'
+    labels:
+    - traefik.enable=true
+    - traefik.http.routers.ragtag.rule=Host(`idea-impact.com`) || Host(`www.idea-impact.com`)
+    - traefik.http.routers.ragtag.entrypoints=websecure
+    - traefik.http.routers.ragtag.tls=true
+    - traefik.http.routers.ragtag.tls.certresolver=letsencrypt
+    - traefik.http.routers.ragtag.service=ragtag
+    - traefik.http.services.ragtag.loadbalancer.server.port=3000
+    - traefik.http.routers.ragtag-hstgr.rule=Host(`srv1139701.hstgr.cloud`)
+    - traefik.http.routers.ragtag-hstgr.entrypoints=websecure
+    - traefik.http.routers.ragtag-hstgr.tls=true
+    - traefik.http.routers.ragtag-hstgr.tls.certresolver=letsencrypt
+    - traefik.http.routers.ragtag-hstgr.middlewares=ragtag-hstgr-redirect
+    - traefik.http.middlewares.ragtag-hstgr-redirect.redirectregex.regex=^https://srv1139701\.hstgr\.cloud/(.*)
+    - traefik.http.middlewares.ragtag-hstgr-redirect.redirectregex.replacement=https://idea-impact.com/$${1}
+    - traefik.http.middlewares.ragtag-hstgr-redirect.redirectregex.permanent=true
+  prometheus:
+    profiles:
+    - observability
+    image: prom/prometheus:v2.53.0
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    - --storage.tsdb.path=/prometheus
+    - --web.enable-lifecycle
+    ports:
+    - 127.0.0.1:9090:9090
+    volumes:
+    - prometheus_data:/prometheus
+    - ./infra/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+    - redis-exporter
+    - postgres-exporter
+    restart: unless-stopped
+  grafana:
+    profiles:
+    - observability
+    image: grafana/grafana:11.3.0
+    ports:
+    - 127.0.0.1:3001:3000
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+    volumes:
+    - grafana_data:/var/lib/grafana
+    - ./infra/observability/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+    - ./infra/observability/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+    - ./infra/observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+    - prometheus
+    restart: unless-stopped
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.66.0
+    environment:
+      REDIS_ADDR: redis:6379
+    depends_on:
+      redis:
+        condition: service_started
+    restart: unless-stopped
+  postgres-exporter:
+    profiles:
+    - observability
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.16.0
+    environment:
+      DATA_SOURCE_NAME: postgresql://dd_agent:dd_agent_dev@postgres:5432/dd_agents?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+  mcp-searxng:
+    profiles:
+    - mcp
+    image: isokoliuk/mcp-searxng:latest
+    stdin_open: true
+    environment:
+      SEARXNG_URL: http://searxng:8080
+      MCP_HTTP_PORT: '3030'
+      MCP_HTTP_HARDEN: 'true'
+      MCP_HTTP_AUTH_TOKEN: ${MCP_AUTH_TOKEN:-mcp-searxng-dev-token}
+      MCP_HTTP_ALLOWED_ORIGINS: ${MCP_HTTP_ALLOWED_ORIGINS:-http://model-router:8085}
+      MCP_HTTP_ALLOWED_HOSTS: ${MCP_HTTP_ALLOWED_HOSTS:-mcp-searxng,model-router,127.0.0.1,localhost}
+      MCP_HTTP_ALLOW_PRIVATE_URLS: ${MCP_HTTP_ALLOW_PRIVATE_URLS:-true}
+    depends_on:
+      searxng:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  searxng_cache: null
+  veeva_suite_worker_storage: null
+  ollama_models: null
+  keycloak_data: null
+  postgres_data: null
+  redis_data: null
+  minio_data: null
+  prometheus_data: null
+  grafana_data: null
+  reranker_colbert_hf: null

@@ -1,0 +1,71 @@
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# --- Secrets (keep .env.example tracked) ---
+.env
+.env.*
+!.env.example
+
+# --- Local docker / runtime data ---
+.docker/
+uploads/*
+!uploads/.gitkeep
+
+# --- Generated / local artifacts ---
+artifacts/*
+!artifacts/.gitkeep
+*.log
+logs/
+
+# --- Node (install in CI / on VPS via npm ci) ---
+node_modules/
+.npm/
+.pnpm-store/
+*.tsbuildinfo
+.next/
+out/
+dist/
+.turbo/
+.vercel/
+
+# --- Archives & large binaries (use object storage / LFS if needed) ---
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.dmg
+*.iso
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+*.egg-info/
+.eggs/
+*.egg
+
+# --- Stale setuptools / legacy package copies ---
+apps/agent-api/build/
+apps/agent-worker/build/
+
+# --- Playwright / browser caches ---
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/

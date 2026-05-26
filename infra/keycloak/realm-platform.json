@@ -1,0 +1,53 @@
+{
+  "realm": "platform",
+  "displayName": "Agent-X Platform",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": false,
+  "accessTokenLifespan": 43200,
+  "ssoSessionIdleTimeout": 172800,
+  "ssoSessionMaxLifespan": 604800,
+  "accessCodeLifespan": 60,
+  "accessCodeLifespanUserAction": 300,
+  "clients": [
+    {
+      "clientId": "web-dashboard",
+      "name": "Web Dashboard",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "web-dashboard-dev-secret",
+      "protocol": "openid-connect",
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "fullScopeAllowed": true,
+      "redirectUris": ["/*"],
+      "webOrigins": ["/*"],
+      "attributes": {
+        "use.refresh.tokens": "true"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "operator",
+      "enabled": true,
+      "email": "operator@local.invalid",
+      "emailVerified": true,
+      "firstName": "Operator",
+      "lastName": "User",
+      "requiredActions": [],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "operator-dev-password",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}
