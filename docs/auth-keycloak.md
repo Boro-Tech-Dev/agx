@@ -134,6 +134,25 @@ docker volume rm <project>_keycloak_data <project>_postgres_data ...  # keep oll
 ./scripts/compose-up.sh -d --build
 ```
 
+## Production security headers (Netskope / SWG)
+
+The dashboard sets standard security headers on all routes via [`apps/web-dashboard/next.config.js`](../apps/web-dashboard/next.config.js) and [`apps/web-dashboard/lib/securityHeaders.js`](../apps/web-dashboard/lib/securityHeaders.js) (`HSTS`, `Content-Security-Policy`, `X-Frame-Options`, etc.). `X-Powered-By` is disabled. The login page does not render the external Problemattic Solutions footer link (authenticated shell still does).
+
+After each `web-dashboard` deploy to idea-impact.com, verify from any host:
+
+```bash
+curl -sSI https://idea-impact.com/login | grep -iE 'strict-transport|content-security|x-frame|x-content-type|referrer-policy|permissions-policy|x-powered-by'
+```
+
+Expect the security headers above and **no** `X-Powered-By`. Confirm login HTML has no `problematticsolutions.com` link:
+
+```bash
+curl -sS https://idea-impact.com/login | grep -c problematticsolutions.com || true
+# Expect 0
+```
+
+If corporate Netskope still blocks after headers are present, use **Skope IT → URL Lookup** for `idea-impact.com`. Request recategorization or a tenant allow policy if the domain is stuck as Uncategorized / Newly Observed Domain despite being in production use.
+
 ## Post-reset hardening
 
 1. Change `operator-dev-password` in Keycloak admin (`http://127.0.0.1:8180` on VPS via SSH tunnel).
@@ -146,3 +165,4 @@ docker volume rm <project>_keycloak_data <project>_postgres_data ...  # keep oll
 - [`docker-compose.yml`](../docker-compose.yml) — Keycloak service + `web-dashboard` env
 - [`apps/web-dashboard/middleware.ts`](../apps/web-dashboard/middleware.ts) — route gate
 - [`apps/web-dashboard/lib/auth/verifyAccessToken.ts`](../apps/web-dashboard/lib/auth/verifyAccessToken.ts) — JWT verification
+- [`apps/web-dashboard/lib/securityHeaders.js`](../apps/web-dashboard/lib/securityHeaders.js) — production HTTP security headers

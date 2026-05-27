@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 
-import { ProblematticSolutionsFooter } from '../../components/ProblematticSolutionsFooter';
 import { HazardStripe } from '../../components/ui/ragtag/HazardStripe';
 import { RtBadge } from '../../components/ui/ragtag/RtBadge';
 import { LoginForm } from './LoginForm';
@@ -21,7 +20,6 @@ export default function LoginPage() {
         <LoginForm />
       </Suspense>
       </div>
-      <ProblematticSolutionsFooter />
     </main>
   );
 }
