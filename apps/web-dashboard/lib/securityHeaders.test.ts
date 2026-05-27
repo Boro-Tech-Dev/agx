@@ -38,4 +38,10 @@ describe('securityHeaders', () => {
     expect(csp).toContain("form-action 'self'");
     expect(csp).toContain("default-src 'self'");
   });
+
+  it('does not allow chrome-extension scripts outside production', () => {
+    const csp = headerValue('Content-Security-Policy') ?? '';
+    expect(process.env.NODE_ENV).not.toBe('production');
+    expect(csp).not.toContain('chrome-extension:');
+  });
 });

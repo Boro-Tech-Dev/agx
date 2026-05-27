@@ -3,9 +3,15 @@
  * Consumed by next.config.js `headers()` — keep in sync with docs/auth-keycloak.md verification.
  */
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+const scriptSrc = isProduction
+  ? "script-src 'self' 'unsafe-inline' chrome-extension:"
+  : "script-src 'self' 'unsafe-inline'";
+
 const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  scriptSrc,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
