@@ -12,7 +12,8 @@ POSTGRES_PASSWORD="$(rand_hex 24)"
 MINIO_SECRET_KEY="$(rand_hex 24)"
 SEARXNG_SECRET_KEY="$(rand_hex 32)"
 KEYCLOAK_ADMIN_PASSWORD="$(rand_hex 24)"
-KEYCLOAK_CLIENT_SECRET="$(rand_hex 32)"
+# Must match infra/keycloak/realm-platform.json (imported once into keycloak_data).
+KEYCLOAK_CLIENT_SECRET="web-dashboard-dev-secret"
 MCP_AUTH_TOKEN="$(rand_hex 32)"
 
 umask 077
