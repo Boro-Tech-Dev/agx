@@ -151,6 +151,15 @@ curl -sS https://idea-impact.com/login | grep -c problematticsolutions.com || tr
 # Expect 0
 ```
 
+Confirm manifest probes do not return login HTML (404 plain text instead):
+
+```bash
+curl -sSI https://idea-impact.com/site.webmanifest | grep -iE 'HTTP/|content-type|location'
+curl -sS https://idea-impact.com/site.webmanifest
+# Expect: HTTP 404, Content-Type: text/plain; charset=utf-8, body "Not Found"
+# Must NOT see: Location: /login or Content-Type: text/html
+```
+
 If corporate Netskope still blocks after headers are present, use **Skope IT → URL Lookup** for `idea-impact.com`. Request recategorization or a tenant allow policy if the domain is stuck as Uncategorized / Newly Observed Domain despite being in production use.
 
 ## Post-reset hardening

@@ -5,15 +5,23 @@ import { isAuthDisabled } from './lib/auth/env';
 import { safeNextPath } from './lib/auth/safeNextPath';
 import { verifyAccessToken } from './lib/auth/verifyAccessToken';
 import { ACCESS_TOKEN_COOKIE } from './lib/auth/constants';
+import { isWebManifestProbe } from './lib/webManifestProbe';
 
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };
 
 export async function middleware(req: NextRequest) {
-  if (isAuthDisabled()) return NextResponse.next();
-
   const { pathname } = req.nextUrl;
+
+  if (isWebManifestProbe(pathname)) {
+    return new NextResponse('Not Found', {
+      status: 404,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    });
+  }
+
+  if (isAuthDisabled()) return NextResponse.next();
 
   if (pathname === '/login' || pathname.startsWith('/api/auth/')) {
     return NextResponse.next();
