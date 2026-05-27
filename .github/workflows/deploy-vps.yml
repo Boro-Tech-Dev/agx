@@ -129,6 +129,25 @@ jobs:
       - name: Verify SSH to VPS
         run: ssh vps-deploy 'echo "SSH OK as $(whoami)@$(hostname)"'
 
+      - name: Checkout deploy commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve.outputs.deploy_sha }}
+
+      - name: Sync compose and scripts to VPS
+        run: |
+          rsync -avz -e ssh \
+            --exclude '.env' \
+            --exclude '.env.*' \
+            --exclude '.git' \
+            --exclude 'uploads/' \
+            --exclude 'artifacts/' \
+            --exclude 'workspace/' \
+            --exclude 'apps/' \
+            --exclude 'node_modules' \
+            --exclude '__pycache__' \
+            ./ "vps-deploy:${VPS_DEPLOY_PATH}/"
+
       - name: Write production .env on VPS
         env:
           VPS_DOTENV: ${{ secrets.VPS_DOTENV }}
@@ -143,11 +162,6 @@ jobs:
           ssh vps-deploy "bash -s" <<REMOTE
           set -euo pipefail
           cd '${VPS_DEPLOY_PATH}'
-          if [[ -d .git ]]; then
-            git fetch origin main
-            git checkout main
-            git pull --ff-only origin main
-          fi
           set -a
           # shellcheck disable=SC1091
           source .env
