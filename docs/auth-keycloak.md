@@ -31,18 +31,34 @@ Set in `.env` (loaded by Compose `env_file` on `web-dashboard` and `keycloak`):
 
 ## Login flow
 
+The `/login` page is a **server-rendered HTML form** (`method="POST"` → `/api/auth/login`). Sign-in works **without JavaScript** (password managers and paste use native inputs). The root layout **does not** mount dashboard client providers on `/login` (middleware sets internal header `x-ragtag-login-route`).
+
 ```mermaid
 sequenceDiagram
   participant Browser
+  participant LoginPage
   participant WebDashboard
   participant Keycloak
-  Browser->>WebDashboard: POST /api/auth/login
+  Browser->>LoginPage: GET /login?next=/tools
+  Browser->>WebDashboard: POST form application/x-www-form-urlencoded
   WebDashboard->>Keycloak: password grant + client_secret
-  Keycloak-->>WebDashboard: access_token + refresh_token
-  WebDashboard-->>Browser: Set-Cookie + redirect
+  alt success
+    WebDashboard-->>Browser: Set-Cookie + 302 to next
+  else failure
+    WebDashboard-->>Browser: 302 /login?error=...&next=...
+  end
 ```
 
-Implementation: [`apps/web-dashboard/app/api/auth/login/route.ts`](../apps/web-dashboard/app/api/auth/login/route.ts), [`apps/web-dashboard/lib/server/keycloakPasswordGrant.ts`](../apps/web-dashboard/lib/server/keycloakPasswordGrant.ts).
+Implementation:
+
+- [`apps/web-dashboard/app/login/page.tsx`](../apps/web-dashboard/app/login/page.tsx) — HTML form
+- [`apps/web-dashboard/app/api/auth/login/route.ts`](../apps/web-dashboard/app/api/auth/login/route.ts) — grant + cookies
+- [`apps/web-dashboard/lib/auth/loginRedirect.ts`](../apps/web-dashboard/lib/auth/loginRedirect.ts) — HTML vs JSON responses
+- [`apps/web-dashboard/lib/server/keycloakPasswordGrant.ts`](../apps/web-dashboard/lib/server/keycloakPasswordGrant.ts)
+
+**Automation / curl** (JSON, unchanged): send `Accept: application/json` and `Content-Type: application/json` for `{"ok":true,"next":"/"}` instead of a redirect.
+
+**Failed browser login:** redirects to `/login?error=<message>&next=<path>` (message capped; safe `next` only).
 
 ## Common error: Invalid Keycloak client secret
 

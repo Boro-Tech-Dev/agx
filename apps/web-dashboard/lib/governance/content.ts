@@ -48,7 +48,7 @@ const GOVERNANCE_DOC: GovernanceDoc = {
       id: 'access-control',
       title: 'Access control and session security',
       paragraphs: [
-        'The Next.js dashboard enforces authentication on all routes except /login, /api/auth/*, /health, and static assets. Credentials are posted to /api/auth/login (password grant); tokens live in httpOnly cookies dd_access_token and dd_refresh_token.',
+        'The Next.js dashboard enforces authentication on all routes except /login, /api/auth/*, /health, and static assets. /login uses a server-rendered HTML form POST to /api/auth/login (password grant; JSON Accept for automation). Tokens live in httpOnly cookies dd_access_token and dd_refresh_token.',
         'Same-origin /api/* requests are proxied to agent-api only after resolveDashboardSession validates the access JWT or refreshes via Keycloak.',
       ],
       bullets: [

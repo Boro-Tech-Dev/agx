@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { isAuthDisabled } from './lib/auth/env';
+import { LOGIN_ROUTE_HEADER } from './lib/auth/loginRedirect';
 import { safeNextPath } from './lib/auth/safeNextPath';
 import { verifyAccessToken } from './lib/auth/verifyAccessToken';
 import { ACCESS_TOKEN_COOKIE } from './lib/auth/constants';
@@ -21,9 +22,16 @@ export async function middleware(req: NextRequest) {
     });
   }
 
-  if (isAuthDisabled()) return NextResponse.next();
+  if (isAuthDisabled()) {
+    if (pathname === '/login') return nextWithLoginRouteHeader(req);
+    return NextResponse.next();
+  }
 
-  if (pathname === '/login' || pathname.startsWith('/api/auth/')) {
+  if (pathname === '/login') {
+    return nextWithLoginRouteHeader(req);
+  }
+
+  if (pathname.startsWith('/api/auth/')) {
     return NextResponse.next();
   }
 
@@ -54,4 +62,10 @@ function redirectToLogin(req: NextRequest) {
   const path = req.nextUrl.pathname + req.nextUrl.search;
   login.searchParams.set('next', safeNextPath(path));
   return NextResponse.redirect(login);
+}
+
+function nextWithLoginRouteHeader(req: NextRequest): NextResponse {
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set(LOGIN_ROUTE_HEADER, '1');
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
