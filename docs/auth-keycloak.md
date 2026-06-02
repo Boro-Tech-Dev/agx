@@ -136,15 +136,27 @@ docker volume rm <project>_keycloak_data <project>_postgres_data ...  # keep oll
 
 ## Production security headers (Netskope / SWG)
 
-The dashboard sets standard security headers on all routes via [`apps/web-dashboard/next.config.js`](../apps/web-dashboard/next.config.js) and [`apps/web-dashboard/lib/securityHeaders.js`](../apps/web-dashboard/lib/securityHeaders.js) (`HSTS`, `Content-Security-Policy`, `X-Frame-Options`, etc.). `X-Powered-By` is disabled. The external Problemattic Solutions footer link is not rendered on any route (login or authenticated shell).
+The dashboard sets HTTP headers on all routes via [`apps/web-dashboard/next.config.js`](../apps/web-dashboard/next.config.js) and [`apps/web-dashboard/lib/securityHeaders.js`](../apps/web-dashboard/lib/securityHeaders.js). Posture matches **problematticsolutions.com** on measurable signals: `HSTS`, `X-Content-Type-Options`, `X-XSS-Protection`, plus `X-Frame-Options` and `Referrer-Policy` on idea-impact. There is **no** `Content-Security-Policy` or `Permissions-Policy`. Typography loads from `fonts.googleapis.com` (Oswald + JetBrains Mono) instead of self-hosted `next/font` woff2. `X-Powered-By` is disabled. The external Problemattic Solutions footer link is not rendered on any route (login or authenticated shell).
 
 After each `web-dashboard` deploy to idea-impact.com, verify from any host:
 
 ```bash
-curl -sSI https://idea-impact.com/login | grep -iE 'strict-transport|content-security|x-frame|x-content-type|referrer-policy|permissions-policy|x-powered-by'
+# Headers: HSTS and hardening present; no CSP / Permissions-Policy (match problematticsolutions.com)
+curl -sSI https://idea-impact.com/login | grep -iE 'strict-transport|content-security|x-frame|x-content-type|referrer-policy|permissions-policy|x-powered-by|x-xss'
+# Expect: strict-transport-security, x-frame-options, x-content-type-options, referrer-policy, x-xss-protection
+# Must NOT see: content-security-policy, permissions-policy, x-powered-by
+
+curl -sSI https://idea-impact.com/login | grep -iE 'content-security|permissions-policy'
+# Expect: no output
+
+curl -sS https://idea-impact.com/login | grep -oE 'fonts\.googleapis\.com[^"'\'' ]*' | head
+# Expect: fonts.googleapis.com/css2?... (via bundled CSS @import)
+
+curl -sS https://idea-impact.com/login | grep -c '/_next/static/media/.*woff2' || true
+# Expect: 0 (next/font self-host removed)
 ```
 
-Expect the security headers above and **no** `X-Powered-By`. Confirm login HTML has no `problematticsolutions.com` link:
+Confirm login HTML has no `problematticsolutions.com` link:
 
 ```bash
 curl -sS https://idea-impact.com/login | grep -c problematticsolutions.com || true
@@ -152,12 +164,6 @@ curl -sS https://idea-impact.com/login | grep -c problematticsolutions.com || tr
 ```
 
 Authenticated pages are mostly client-rendered; after signing in, confirm in browser DevTools (Elements) on `/` or any tool page: no `problematticsolutions.com`, and Web Search results use copy/open controls instead of `<a href="https://…">` for result URLs.
-
-Confirm production CSP is tightened (no `chrome-extension:`, no `connect-src … https:`, no `img-src … https:`):
-
-```bash
-curl -sSI https://idea-impact.com/ | grep -i content-security-policy
-```
 
 Confirm manifest probes do not return login HTML (404 plain text instead):
 

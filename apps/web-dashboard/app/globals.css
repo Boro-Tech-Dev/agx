@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import 'tailwindcss';
 
 @source '../components/**/*.{ts,tsx}';
@@ -5,6 +6,12 @@
 @source '../lib/**/*.{ts,tsx}';
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --font-app-sans: 'Oswald', ui-sans-serif, system-ui, sans-serif;
+  --font-app-display: 'Oswald', ui-sans-serif, system-ui, sans-serif;
+  --font-app-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
 
 @theme {
   --breakpoint-xs: 400px;
