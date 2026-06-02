@@ -5,23 +5,38 @@
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const scriptSrc = isProduction
-  ? "script-src 'self' 'unsafe-inline' chrome-extension:"
-  : "script-src 'self' 'unsafe-inline'";
+/**
+ * @param {{ production?: boolean }} [opts]
+ * @returns {string}
+ */
+function buildContentSecurityPolicy(opts = {}) {
+  const production = opts.production ?? isProduction;
 
-const CONTENT_SECURITY_POLICY = [
-  "default-src 'self'",
-  scriptSrc,
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https:",
-  "font-src 'self' data:",
-  "connect-src 'self' https:",
-  "form-action 'self'",
-  "frame-ancestors 'none'",
-  "base-uri 'self'",
-  "object-src 'none'",
-  'upgrade-insecure-requests',
-].join('; ');
+  const scriptSrc = production
+    ? "script-src 'self' 'unsafe-inline'"
+    : "script-src 'self' 'unsafe-inline'";
+
+  const connectSrc = production ? "connect-src 'self'" : "connect-src 'self' https:";
+
+  const imgSrc = production ? "img-src 'self' data: blob:" : "img-src 'self' data: blob: https:";
+
+  return [
+    "default-src 'self'",
+    scriptSrc,
+    "style-src 'self' 'unsafe-inline'",
+    imgSrc,
+    "font-src 'self' data:",
+    connectSrc,
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "frame-src 'self'",
+    "base-uri 'self'",
+    "object-src 'none'",
+    'upgrade-insecure-requests',
+  ].join('; ');
+}
+
+const CONTENT_SECURITY_POLICY = buildContentSecurityPolicy();
 
 const securityHeaders = [
   {
@@ -36,4 +51,4 @@ const securityHeaders = [
   { key: 'X-XSS-Protection', value: '1; mode=block' },
 ];
 
-module.exports = { securityHeaders };
+module.exports = { securityHeaders, buildContentSecurityPolicy };

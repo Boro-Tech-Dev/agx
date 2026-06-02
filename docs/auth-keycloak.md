@@ -136,7 +136,7 @@ docker volume rm <project>_keycloak_data <project>_postgres_data ...  # keep oll
 
 ## Production security headers (Netskope / SWG)
 
-The dashboard sets standard security headers on all routes via [`apps/web-dashboard/next.config.js`](../apps/web-dashboard/next.config.js) and [`apps/web-dashboard/lib/securityHeaders.js`](../apps/web-dashboard/lib/securityHeaders.js) (`HSTS`, `Content-Security-Policy`, `X-Frame-Options`, etc.). `X-Powered-By` is disabled. The login page does not render the external Problemattic Solutions footer link (authenticated shell still does).
+The dashboard sets standard security headers on all routes via [`apps/web-dashboard/next.config.js`](../apps/web-dashboard/next.config.js) and [`apps/web-dashboard/lib/securityHeaders.js`](../apps/web-dashboard/lib/securityHeaders.js) (`HSTS`, `Content-Security-Policy`, `X-Frame-Options`, etc.). `X-Powered-By` is disabled. The external Problemattic Solutions footer link is not rendered on any route (login or authenticated shell).
 
 After each `web-dashboard` deploy to idea-impact.com, verify from any host:
 
@@ -149,6 +149,14 @@ Expect the security headers above and **no** `X-Powered-By`. Confirm login HTML 
 ```bash
 curl -sS https://idea-impact.com/login | grep -c problematticsolutions.com || true
 # Expect 0
+```
+
+Authenticated pages are mostly client-rendered; after signing in, confirm in browser DevTools (Elements) on `/` or any tool page: no `problematticsolutions.com`, and Web Search results use copy/open controls instead of `<a href="https://…">` for result URLs.
+
+Confirm production CSP is tightened (no `chrome-extension:`, no `connect-src … https:`, no `img-src … https:`):
+
+```bash
+curl -sSI https://idea-impact.com/ | grep -i content-security-policy
 ```
 
 Confirm manifest probes do not return login HTML (404 plain text instead):

@@ -28,8 +28,6 @@ export const CONTRIBUTORS: readonly ContributorEntry[] = [
   {
     name: 'Contributor name',
     role: 'Add role or thanks here',
-    href: 'https://example.com',
-    linkLabel: 'Profile',
   },
   {
     name: 'Another colleague',
@@ -37,8 +35,6 @@ export const CONTRIBUTORS: readonly ContributorEntry[] = [
   },
   {
     name: 'Teammate three',
-    role: 'Optional link below — remove href if not needed',
-    href: 'https://github.com',
-    linkLabel: 'GitHub',
+    role: 'Optional profile link — set href and linkLabel when ready',
   },
 ] as const;

@@ -5,7 +5,6 @@ import type { LayoutShellProps } from '../../lib/layout/types';
 import { SHELL_HEADER_BAND } from '../../lib/shellClasses';
 import { RagTagSidebar } from './RagTagSidebar';
 import { RagTagTopNav } from './RagTagTopNav';
-import { ProblematticSolutionsFooter } from '../ProblematticSolutionsFooter';
 import { HazardStripe } from '../ui/ragtag/HazardStripe';
 
 export function RagTagShell({
@@ -38,9 +37,6 @@ export function RagTagShell({
             <div className="grid min-w-0 grid-cols-1 gap-4 desktop:grid-cols-[1fr_minmax(0,18rem)]">
               <div className="min-w-0">{children}</div>
               {rightAside != null ? <div className="min-w-0 desktop:max-w-xs">{rightAside}</div> : null}
-            </div>
-            <div className="-mx-4 mt-8 lg:-mx-6">
-              <ProblematticSolutionsFooter />
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 
+import { ExternalUrlActions } from '../../ui/ExternalUrlActions';
 import { apiUrlForFetch, type RteEmailPreviewStyle, type VeevaSuiteResponse } from '../../../lib/api';
 import { analyzeVeevaSuite, exportVeevaSuiteMarkdown, type Severity } from '../../../lib/veevaSuite/analysis';
 import { ScreenshotComparator } from './ScreenshotComparator';
@@ -52,11 +53,40 @@ function outputUrl(result: VeevaSuiteResponse, relPath?: string): string {
   return `${root}/${relPath.replace(/^\/+/, '')}`;
 }
 
+function isCrossOriginHttpUrl(path: string): boolean {
+  if (!/^https?:\/\//i.test(path)) return false;
+  if (typeof window === 'undefined') return false;
+  try {
+    return new URL(path).origin !== window.location.origin;
+  } catch {
+    return true;
+  }
+}
+
 function fetchableUrl(path: string): string {
   if (!path || path === '#') return '#';
-  if (/^https?:\/\//i.test(path)) return path;
+  if (/^https?:\/\//i.test(path)) {
+    if (typeof window !== 'undefined') {
+      try {
+        const u = new URL(path);
+        if (u.origin === window.location.origin) {
+          return apiUrlForFetch(`${u.pathname}${u.search}`);
+        }
+      } catch {
+        return '#';
+      }
+    }
+    return path;
+  }
   const normalized = path.startsWith('/') ? path : `/${path}`;
   return apiUrlForFetch(normalized);
+}
+
+/** Same-origin only — for img src under tightened CSP img-src. */
+function imageSrcUrl(path: string): string | null {
+  if (isCrossOriginHttpUrl(path)) return null;
+  const u = fetchableUrl(path);
+  return u === '#' ? null : u;
 }
 
 type EvidenceLink = { label: string; href: string };
@@ -444,16 +474,37 @@ export function VeevaSuiteResult({
             <div className="rounded-lg border border-app-border bg-app-fill/60 p-3">
               <h3 className="text-sm font-semibold text-app-text">Captured evidence</h3>
               <div className="mt-3 grid gap-3 tablet:grid-cols-2">
-                {evidence.map((item) => (
-                  <div key={item.label} className="rounded border border-app-border bg-app-surface p-2">
-                    <a className="text-[11px] font-medium text-indigo-600 hover:underline dark:text-indigo-300" href={fetchableUrl(item.href)} target="_blank" rel="noreferrer">
-                      {item.label}
-                    </a>
-                    <div className="mt-2 overflow-hidden rounded border border-app-border bg-black/5 dark:bg-white/5">
-                      <img className="max-h-64 w-full object-contain" src={fetchableUrl(item.href)} alt={item.label} loading="lazy" />
+                {evidence.map((item) => {
+                  const imgSrc = imageSrcUrl(item.href);
+                  const external = isCrossOriginHttpUrl(item.href);
+                  return (
+                    <div key={item.label} className="rounded border border-app-border bg-app-surface p-2">
+                      <div className="text-[11px] font-medium text-indigo-600 dark:text-indigo-300">{item.label}</div>
+                      {external ? (
+                        <ExternalUrlActions url={item.href} className="mt-1" />
+                      ) : (
+                        <a
+                          className="mt-1 inline-block text-[11px] font-medium text-indigo-600 hover:underline dark:text-indigo-300"
+                          href={fetchableUrl(item.href)}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Open artifact
+                        </a>
+                      )}
+                      {imgSrc ? (
+                        <div className="mt-2 overflow-hidden rounded border border-app-border bg-black/5 dark:bg-white/5">
+                          <img
+                            className="max-h-64 w-full object-contain"
+                            src={imgSrc}
+                            alt={item.label}
+                            loading="lazy"
+                          />
+                        </div>
+                      ) : null}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ) : (

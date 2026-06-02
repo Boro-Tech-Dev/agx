@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from 'react';
 
+import { ExternalUrlActions } from '../ui/ExternalUrlActions';
 import { postWebExtract, postWebCrawl, postWebSearch, type WebSearchResponse } from '../../lib/api';
 import { saveToolOutputAsMemory } from '../../lib/tools/saveToolOutputAsMemory';
 
@@ -145,9 +146,7 @@ export function WebSearchPanel({ projectKey }: Props) {
               <div className="font-medium text-app-text">
                 [{i + 1}] {r.title || '(no title)'}
               </div>
-              <a className="break-all text-app-accent hover:underline" href={r.url} target="_blank" rel="noreferrer">
-                {r.url}
-              </a>
+              <ExternalUrlActions url={r.url} className="mt-0.5" />
               <p className="mt-1 text-app-muted">{r.snippet}</p>
               <div className="mt-2 flex flex-wrap gap-2">
                 <button

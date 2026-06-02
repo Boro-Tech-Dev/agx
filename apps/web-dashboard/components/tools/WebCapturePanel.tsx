@@ -20,6 +20,7 @@ import {
   type WebScreenshotResponse,
   type WebStagingOptions,
 } from '../../lib/api';
+import { base64ToBlob, downloadBase64File, objectUrlFromBase64 } from '../../lib/downloadBase64';
 
 type Mode = 'screenshot' | 'extract' | 'crawl';
 
@@ -30,13 +31,6 @@ function crawlPagePdfFilename(page: { url: string; title?: string }, index: numb
   return `web-crawl-page-${index + 1}-${base || 'page'}.pdf`;
 }
 type WaitUntil = 'load' | 'domcontentloaded' | 'networkidle';
-
-function base64ToBlob(b64: string, mime: string): Blob {
-  const bin = atob(b64);
-  const arr = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
-  return new Blob([arr], { type: mime });
-}
 
 function stampSlug(): string {
   const d = new Date();
@@ -300,10 +294,28 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
     ],
   );
 
-  const previewSrc = useMemo(() => {
-    if (!shot?.image_base64) return null;
-    return `data:image/png;base64,${shot.image_base64}`;
-  }, [shot]);
+  const [previewSrc, setPreviewSrc] = useState<string | null>(null);
+  const [errScreenshotSrc, setErrScreenshotSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!shot?.image_base64) {
+      setPreviewSrc(null);
+      return;
+    }
+    const url = objectUrlFromBase64(shot.image_base64, 'image/png');
+    setPreviewSrc(url);
+    return () => URL.revokeObjectURL(url);
+  }, [shot?.image_base64]);
+
+  useEffect(() => {
+    if (!errDebug?.screenshot_base64) {
+      setErrScreenshotSrc(null);
+      return;
+    }
+    const url = objectUrlFromBase64(errDebug.screenshot_base64, 'image/png');
+    setErrScreenshotSrc(url);
+    return () => URL.revokeObjectURL(url);
+  }, [errDebug?.screenshot_base64]);
 
   const runButtonLabel = useMemo(() => {
     void timerPulse;
@@ -1214,25 +1226,27 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
       {err ? (
         <div className="mt-2 rounded border border-rose-200 bg-rose-50 p-2 text-[11px] text-rose-800 dark:border-rose-500/35 dark:bg-rose-500/10 dark:text-rose-100">
           <p>{err}</p>
-          {errDebug?.screenshot_base64 ? (
+          {errScreenshotSrc ? (
             <div className="mt-2">
               <p className="text-[10px] font-semibold">Failure screenshot</p>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={`data:image/png;base64,${errDebug.screenshot_base64}`}
+                src={errScreenshotSrc}
                 alt="Failure debug"
                 className="mt-1 max-h-40 rounded border border-rose-300/50"
               />
             </div>
           ) : null}
           {errDebug?.trace_base64 ? (
-            <a
-              className="mt-2 inline-block text-[10px] font-semibold text-indigo-700 underline dark:text-indigo-300"
-              href={`data:application/zip;base64,${errDebug.trace_base64}`}
-              download="web-capture-trace.zip"
+            <button
+              type="button"
+              className="mt-2 block text-[10px] font-semibold text-indigo-700 underline dark:text-indigo-300"
+              onClick={() =>
+                downloadBase64File(errDebug.trace_base64!, 'application/zip', 'web-capture-trace.zip')
+              }
             >
               Download Playwright trace (.zip)
-            </a>
+            </button>
           ) : null}
           {errDebug?.final_url ? (
             <p className="mt-1 break-all text-[10px] opacity-90">Final URL: {errDebug.final_url}</p>
@@ -1321,13 +1335,19 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
                     <InteractivesDetails items={p.interactives} serverTruncated={p.interactives_truncated} />
                   ) : null}
                   {p.pdf_base64 ? (
-                    <a
-                      className="mt-0.5 inline-block text-[10px] font-semibold text-indigo-600 underline dark:text-indigo-400"
-                      href={`data:application/pdf;base64,${p.pdf_base64}`}
-                      download={crawlPagePdfFilename(p, pageIdx)}
+                    <button
+                      type="button"
+                      className="mt-0.5 block text-[10px] font-semibold text-indigo-600 underline dark:text-indigo-400"
+                      onClick={() =>
+                        downloadBase64File(
+                          p.pdf_base64!,
+                          'application/pdf',
+                          crawlPagePdfFilename(p, pageIdx),
+                        )
+                      }
                     >
                       Download PDF{p.pdf_truncated ? ' (truncated)' : ''}
-                    </a>
+                    </button>
                   ) : null}
                   {p.pdf_error ? (
                     <div className="text-[10px] text-rose-600 dark:text-rose-400">PDF: {p.pdf_error}</div>
