@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
   }
 
   const result = await exchangeAuthorizationCode(req);
-  if (!result.ok) {
+  if (result.ok === false) {
     return redirectLandingWithError(req, result.message);
   }
 
