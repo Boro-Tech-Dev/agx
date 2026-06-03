@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export function RtBadge({ href = '/' }: { href?: string }) {
+export function RtBadge({ href = '/', linked = true }: { href?: string; linked?: boolean }) {
   const inner = (
     <>
       <div className="flex h-6 w-6 shrink-0 items-center justify-center bg-rt-cyan text-[10px] font-bold tracking-tighter text-rt-black">
@@ -17,7 +17,7 @@ export function RtBadge({ href = '/' }: { href?: string }) {
     </>
   );
 
-  if (href) {
+  if (linked) {
     return (
       <Link href={href} className="flex items-center gap-3">
         {inner}

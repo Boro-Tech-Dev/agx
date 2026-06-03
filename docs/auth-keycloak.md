@@ -155,14 +155,14 @@ docker volume rm <project>_keycloak_data <project>_postgres_data ...  # keep oll
 
 ## Production security headers (Netskope / SWG)
 
-The dashboard sets HTTP headers on all routes via [`apps/web-dashboard/next.config.js`](../apps/web-dashboard/next.config.js) and [`apps/web-dashboard/lib/securityHeaders.js`](../apps/web-dashboard/lib/securityHeaders.js). Posture matches **problematticsolutions.com** on measurable signals: `HSTS`, `X-Content-Type-Options`, `X-XSS-Protection`, plus `X-Frame-Options` and `Referrer-Policy` on idea-impact. There is **no** `Content-Security-Policy` or `Permissions-Policy`. Typography is self-hosted via `@fontsource/oswald` and `@fontsource/jetbrains-mono` (no `fonts.googleapis.com` on login). `X-Powered-By` is disabled. The external Problemattic Solutions footer link is not rendered on any route (login or authenticated shell).
+The dashboard sets HTTP headers on all routes via [`apps/web-dashboard/next.config.js`](../apps/web-dashboard/next.config.js) and [`apps/web-dashboard/lib/securityHeaders.js`](../apps/web-dashboard/lib/securityHeaders.js). Posture matches **problematticsolutions.com** on measurable signals: `HSTS`, `X-Content-Type-Options`, `X-XSS-Protection`, plus `X-Frame-Options` and `Referrer-Policy` on idea-impact. There is **no** `Content-Security-Policy` or `Permissions-Policy`. Typography is self-hosted via `@fontsource/oswald` and `@fontsource/jetbrains-mono` (no `fonts.googleapis.com` on login). `X-Powered-By` is disabled. The external Problemattic Solutions footer link is not rendered on any route (login or authenticated shell). The login page does not render the hazard stripe or “internal access” copy (credential form remains on `/login` only).
 
 After each `web-dashboard` deploy to idea-impact.com, verify from any host:
 
 ```bash
-# Unauthenticated root: 200 login HTML at / (rewrite), not 307 to /login
+# Unauthenticated root: redirect to /login (no login HTML body on /)
 curl -sSI https://idea-impact.com/ | grep -iE '^HTTP/|^location:|^content-type:'
-# Expect: HTTP/2 200, content-type: text/html; must NOT see location: /login
+# Expect: HTTP/2 307 or 302, Location: .../login — must NOT be 200 text/html with password fields
 
 # Headers: HSTS and hardening present; no CSP / Permissions-Policy (match problematticsolutions.com)
 curl -sSI https://idea-impact.com/login | grep -iE 'strict-transport|content-security|x-frame|x-content-type|referrer-policy|permissions-policy|x-powered-by|x-xss'
@@ -199,8 +199,14 @@ done
 # Expect each: HTTP 404, Content-Type: text/plain; charset=utf-8, body "Not Found"
 # Must NOT see: Location: /login or Content-Type: text/html
 
-curl -sSI https://idea-impact.com/favicon.ico | grep -iE '^HTTP/|^content-type:'
-# Expect: HTTP/2 200 (or 304), image/* — not 404 HTML
+curl -sSI https://idea-impact.com/favicon.ico | grep -iE '^HTTP/|^content-type:|^location:'
+# Expect: HTTP/2 200 (or 304), image/* — not 404 HTML, no Location: /login
+
+curl -sSI https://idea-impact.com/icon.svg | grep -iE '^HTTP/|^content-type:|^location:'
+# Expect: HTTP/2 200, image/svg+xml — no Location: /login
+
+curl -sSI https://idea-impact.com/apple-touch-icon.png | grep -iE '^HTTP/|^content-type:|^location:'
+# Expect: HTTP/2 200, image/png — no Location: /login
 
 # After sign-in (browser or curl with valid credentials): Location must stay on idea-impact.com
 # Expect: never http://localhost:3000 in redirect Location headers

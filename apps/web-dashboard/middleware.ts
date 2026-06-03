@@ -6,11 +6,12 @@ import { LOGIN_ROUTE_HEADER } from './lib/auth/loginRedirect';
 import { safeNextPath } from './lib/auth/safeNextPath';
 import { verifyAccessToken } from './lib/auth/verifyAccessToken';
 import { ACCESS_TOKEN_COOKIE } from './lib/auth/constants';
+import { isPublicStaticAsset } from './lib/publicStaticProbe';
 import { isWebManifestProbe } from './lib/webManifestProbe';
 import { absolutePublicUrl } from './lib/server/requestPublicOrigin';
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|icon.svg|apple-touch-icon).*)'],
 };
 
 export async function middleware(req: NextRequest) {
@@ -28,6 +29,10 @@ export async function middleware(req: NextRequest) {
       status: 404,
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
     });
+  }
+
+  if (isPublicStaticAsset(pathname)) {
+    return NextResponse.next();
   }
 
   if (isAuthDisabled()) {
@@ -54,13 +59,11 @@ export async function middleware(req: NextRequest) {
 
   const token = req.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
   if (!token) {
-    if (pathname === '/') return rewriteToLogin(req);
     return redirectToLogin(req);
   }
 
   const ok = await verifyAccessToken(token);
   if (!ok) {
-    if (pathname === '/') return rewriteToLogin(req);
     return redirectToLogin(req);
   }
 
@@ -78,12 +81,4 @@ function nextWithLoginRouteHeader(req: NextRequest): NextResponse {
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set(LOGIN_ROUTE_HEADER, '1');
   return NextResponse.next({ request: { headers: requestHeaders } });
-}
-
-function rewriteToLogin(req: NextRequest) {
-  const url = req.nextUrl.clone();
-  url.pathname = '/login';
-  const requestHeaders = new Headers(req.headers);
-  requestHeaders.set(LOGIN_ROUTE_HEADER, '1');
-  return NextResponse.rewrite(url, { request: { headers: requestHeaders } });
 }

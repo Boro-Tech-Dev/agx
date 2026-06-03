@@ -1,4 +1,3 @@
-import { HazardStripe } from '../../components/ui/ragtag/HazardStripe';
 import { RtBadge } from '../../components/ui/ragtag/RtBadge';
 import { isAuthDisabled } from '../../lib/auth/env';
 import { capLoginErrorMessage } from '../../lib/auth/loginRedirect';
@@ -17,9 +16,8 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
   if (isAuthDisabled()) {
     return (
       <main className="flex min-h-screen flex-col bg-rt-black p-4 font-sans text-rt-ice">
-        <HazardStripe />
         <div className="flex flex-col items-center justify-center gap-6 py-12">
-          <RtBadge />
+          <RtBadge linked={false} />
           <div className={`w-full max-w-sm ${RT_PANEL}`}>
             <p className="text-[13px] text-rt-ice/70">
               Authentication is disabled for this environment. Use the{' '}
@@ -36,12 +34,11 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
 
   return (
     <main className="flex min-h-screen flex-col bg-rt-black p-4 font-sans text-rt-ice">
-      <HazardStripe />
       <div className="flex flex-col items-center justify-center gap-6 py-12">
-        <RtBadge />
+        <RtBadge linked={false} />
         <div className={`w-full max-w-sm ${RT_PANEL}`}>
           <h1 className="font-display text-lg font-bold uppercase tracking-widest text-rt-white">Sign in</h1>
-          <p className="mt-1 font-mono text-[11px] text-rt-ice/60">PM Operator Grid — internal access</p>
+          <p className="mt-1 font-mono text-[11px] text-rt-ice/60">Sign in with your operator account</p>
 
           <form className="mt-4 space-y-3" method="POST" action="/api/auth/login" acceptCharset="UTF-8">
             <input type="hidden" name="next" value={next} />
