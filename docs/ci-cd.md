@@ -41,6 +41,8 @@ Same pattern as LandScraper — add under **Settings → Secrets and variables �
 
 ### SSH troubleshooting
 
+Deploy VPS retries SSH/rsync up to **5 times** (15s–120s backoff), scans host keys on IPv4 then dual-stack, and uses `ConnectTimeout 30` without forcing IPv4-only—see [deploy-vps.yml](../.github/workflows/deploy-vps.yml).
+
 Test from your Mac (same key you paste into GitHub):
 
 ```bash

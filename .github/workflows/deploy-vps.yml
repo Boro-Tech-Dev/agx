@@ -74,6 +74,7 @@ jobs:
     needs: [resolve, build]
     if: always() && needs.resolve.result == 'success' && (needs.build.result == 'success' || needs.build.result == 'skipped')
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     env:
       IMAGE_TAG: ${{ needs.resolve.outputs.image_tag }}
     steps:
@@ -114,21 +115,99 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keygen -y -f ~/.ssh/deploy_key >/dev/null
           echo "Deploy key fingerprint: $(ssh-keygen -lf ~/.ssh/deploy_key | awk '{print $2}')"
-          ssh-keyscan -4 -p "${SSH_PORT}" -H "${VPS_HOST}" >> ~/.ssh/known_hosts 2>/dev/null || true
+          known_hosts_vps="${HOME}/.ssh/known_hosts_vps"
+          : > "${known_hosts_vps}"
+          keyscan_ok=false
+          for attempt in 1 2 3 4 5; do
+            : > "${known_hosts_vps}"
+            if ssh-keyscan -4 -T 30 -p "${SSH_PORT}" -H "${VPS_HOST}" > "${known_hosts_vps}" 2>/dev/null \
+              && [[ -s "${known_hosts_vps}" ]]; then
+              keyscan_ok=true
+              echo "ssh-keyscan (IPv4) succeeded on attempt ${attempt}"
+              break
+            fi
+            : > "${known_hosts_vps}"
+            if ssh-keyscan -T 30 -p "${SSH_PORT}" -H "${VPS_HOST}" > "${known_hosts_vps}" 2>/dev/null \
+              && [[ -s "${known_hosts_vps}" ]]; then
+              keyscan_ok=true
+              echo "ssh-keyscan (default) succeeded on attempt ${attempt}"
+              break
+            fi
+            echo "::warning::ssh-keyscan attempt ${attempt}/5 failed; retrying in 15s..."
+            sleep 15
+          done
+          if [[ "${keyscan_ok}" != "true" ]]; then
+            echo "::error::ssh-keyscan failed for ${VPS_HOST}:${SSH_PORT} after 5 attempts" >&2
+            exit 1
+          fi
+          cat "${known_hosts_vps}" >> ~/.ssh/known_hosts
           {
             echo 'Host vps-deploy'
             echo "  HostName ${VPS_HOST}"
             echo "  User ${VPS_USER}"
             echo "  Port ${SSH_PORT}"
-            echo '  AddressFamily inet'
             echo '  IdentityFile ~/.ssh/deploy_key'
             echo '  IdentitiesOnly yes'
             echo '  StrictHostKeyChecking yes'
+            echo '  ConnectTimeout 30'
+            echo '  ConnectionAttempts 3'
+            echo '  ServerAliveInterval 15'
+            echo '  ServerAliveCountMax 4'
+            echo '  TCPKeepAlive yes'
           } > ~/.ssh/config
           chmod 600 ~/.ssh/config
+          cat > ~/.ssh/ci-deploy-helpers.sh <<'HELPERS'
+          # shellcheck shell=bash
+          ssh_with_retry() {
+            local max_attempts=5
+            local delay=15
+            local attempt=1
+            local rc=0
+            while (( attempt <= max_attempts )); do
+              if ssh vps-deploy "$@"; then
+                return 0
+              fi
+              rc=$?
+              if (( attempt == max_attempts )); then
+                break
+              fi
+              echo "::warning::SSH attempt ${attempt}/${max_attempts} failed (exit ${rc}); retrying in ${delay}s..."
+              sleep "${delay}"
+              if (( delay < 120 )); then delay=$((delay * 2)); fi
+              ((attempt++))
+            done
+            echo "::error::SSH failed after ${max_attempts} attempts (last exit ${rc})" >&2
+            return "${rc}"
+          }
+          rsync_with_retry() {
+            local max_attempts=5
+            local delay=15
+            local attempt=1
+            local rc=0
+            while (( attempt <= max_attempts )); do
+              if rsync -avz -e ssh "$@"; then
+                return 0
+              fi
+              rc=$?
+              if (( attempt == max_attempts )); then
+                break
+              fi
+              echo "::warning::rsync attempt ${attempt}/${max_attempts} failed (exit ${rc}); retrying in ${delay}s..."
+              sleep "${delay}"
+              if (( delay < 120 )); then delay=$((delay * 2)); fi
+              ((attempt++))
+            done
+            echo "::error::rsync failed after ${max_attempts} attempts (last exit ${rc})" >&2
+            return "${rc}"
+          }
+          HELPERS
+          chmod 600 ~/.ssh/ci-deploy-helpers.sh
 
       - name: Verify SSH to VPS
-        run: ssh vps-deploy 'echo "SSH OK as $(whoami)@$(hostname)"'
+        run: |
+          # shellcheck source=/dev/null
+          source ~/.ssh/ci-deploy-helpers.sh
+          ssh_with_retry 'echo "SSH OK as $(whoami)@$(hostname)"'
 
       - name: Checkout deploy commit
         uses: actions/checkout@v4
@@ -137,7 +216,9 @@ jobs:
 
       - name: Sync compose and scripts to VPS
         run: |
-          rsync -avz -e ssh \
+          # shellcheck source=/dev/null
+          source ~/.ssh/ci-deploy-helpers.sh
+          rsync_with_retry \
             --exclude '.env' \
             --exclude '.env.*' \
             --exclude '.git' \
@@ -153,14 +234,18 @@ jobs:
         env:
           VPS_DOTENV: ${{ secrets.VPS_DOTENV }}
         run: |
-          printf '%s\n' "$VPS_DOTENV" | ssh vps-deploy \
+          # shellcheck source=/dev/null
+          source ~/.ssh/ci-deploy-helpers.sh
+          printf '%s\n' "$VPS_DOTENV" | ssh_with_retry \
             "umask 077 && mkdir -p '${VPS_DEPLOY_PATH}' && cat > '${VPS_DEPLOY_PATH}/.env' && chmod 600 '${VPS_DEPLOY_PATH}/.env'"
 
       - name: Pull images and restart stack on VPS
         env:
           IMAGE_TAG: ${{ needs.resolve.outputs.image_tag }}
         run: |
-          ssh vps-deploy "bash -s" <<REMOTE
+          # shellcheck source=/dev/null
+          source ~/.ssh/ci-deploy-helpers.sh
+          ssh_with_retry "bash -s" <<REMOTE
           set -euo pipefail
           cd '${VPS_DEPLOY_PATH}'
           set -a
