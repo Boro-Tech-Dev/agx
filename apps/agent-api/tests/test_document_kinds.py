@@ -16,6 +16,10 @@ class TestDocumentKinds(unittest.TestCase):
         self.assertEqual(normalize_document_kind('veeva_suite'), 'veeva_suite')
         self.assertEqual(normalize_document_kind('VEEVA_SUITE'), 'veeva_suite')
 
+    def test_web_capture_staging_allowed(self):
+        self.assertIn('web_capture_staging', DOCUMENT_KINDS)
+        self.assertEqual(normalize_document_kind('web_capture_staging'), 'web_capture_staging')
+
     def test_unknown_kind_raises(self):
         with self.assertRaises(ValueError):
             normalize_document_kind('not_a_kind')

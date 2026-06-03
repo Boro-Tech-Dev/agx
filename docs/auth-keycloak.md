@@ -1,6 +1,6 @@
 # Keycloak authentication (web-dashboard)
 
-The Next.js dashboard (`web-dashboard`) authenticates operators via Keycloak using the **resource-owner password grant**. Session tokens are stored in httpOnly cookies (`dd_access_token`, `dd_refresh_token`).
+The Next.js dashboard (`web-dashboard`) authenticates operators via **Keycloak OIDC** (authorization code + PKCE). Passwords are entered on **auth.idea-impact.com** only. Session tokens are stored in httpOnly cookies (`dd_access_token`, `dd_refresh_token`).
 
 ## Defaults (realm import)
 
@@ -25,42 +25,59 @@ Set in `.env` (loaded by Compose `env_file` on `web-dashboard` and `keycloak`):
 | `KEYCLOAK_REALM` | Realm name (default `platform`) |
 | `KEYCLOAK_CLIENT_ID` | OAuth client (default `web-dashboard`) |
 | `KEYCLOAK_CLIENT_SECRET` | Must match the **Credentials** tab for `web-dashboard` in Keycloak |
-| `KEYCLOAK_ISSUER` | Optional JWT issuer allowlist (e.g. `https://idea-impact.com/realms/platform`) |
+| `KEYCLOAK_ISSUER` | Public JWT issuer (production: `https://auth.idea-impact.com/realms/platform`; local: `http://localhost:8180/realms/platform`) |
 
 **Important:** Never set `KEYCLOAK_CLIENT_SECRET=` with no value in `.env`. Docker Compose passes an empty string and overrides compose defaults, which breaks login.
 
 | `APP_PUBLIC_ORIGIN` | Public site origin for login/logout redirects (e.g. `https://idea-impact.com`). **Required on VPS** behind Traefik; without it, successful sign-in can redirect to `http://localhost:3000`. Falls back to `VPS_PUBLIC_URL` if unset. |
 
-## Login flow
+## Login flow (OIDC + PKCE)
 
-The `/login` page is a **server-rendered HTML form** (`method="POST"` → `/api/auth/login`). Sign-in works **without JavaScript** (password managers and paste use native inputs). The root layout **does not** mount dashboard client providers on `/login` (middleware sets internal header `x-ragtag-login-route`).
+Public landing at `/` has no password fields. **Sign in** → `/login` → `/api/auth/login` → redirect to Keycloak at **auth.idea-impact.com**. After credentials, Keycloak returns to `/api/auth/callback`; the dashboard sets cookies and redirects to `next` (default `/home`).
 
 ```mermaid
 sequenceDiagram
   participant Browser
-  participant LoginPage
-  participant WebDashboard
-  participant Keycloak
-  Browser->>LoginPage: GET /login?next=/tools
-  Browser->>WebDashboard: POST form application/x-www-form-urlencoded
-  WebDashboard->>Keycloak: password grant + client_secret
-  alt success
-    WebDashboard-->>Browser: Set-Cookie + 302 to next
-  else failure
-    WebDashboard-->>Browser: 302 /login?error=...&next=...
-  end
+  participant Dashboard as idea-impact.com
+  participant KC as auth.idea-impact.com
+  Browser->>Dashboard: GET /
+  Browser->>Dashboard: GET /login
+  Dashboard->>KC: 302 authorize (PKCE)
+  Browser->>KC: Enter credentials
+  KC->>Dashboard: 302 /api/auth/callback?code=
+  Dashboard->>KC: server-side code exchange
+  Dashboard-->>Browser: Set-Cookie + 302 /home
 ```
 
 Implementation:
 
-- [`apps/web-dashboard/app/(auth)/login/page.tsx`](../apps/web-dashboard/app/(auth)/login/page.tsx) — HTML form
-- [`apps/web-dashboard/app/api/auth/login/route.ts`](../apps/web-dashboard/app/api/auth/login/route.ts) — grant + cookies
-- [`apps/web-dashboard/lib/auth/loginRedirect.ts`](../apps/web-dashboard/lib/auth/loginRedirect.ts) — HTML vs JSON responses
-- [`apps/web-dashboard/lib/server/keycloakPasswordGrant.ts`](../apps/web-dashboard/lib/server/keycloakPasswordGrant.ts)
+- [`apps/web-dashboard/app/(public)/page.tsx`](../apps/web-dashboard/app/(public)/page.tsx) — public landing
+- [`apps/web-dashboard/app/login/route.ts`](../apps/web-dashboard/app/login/route.ts) — redirect to OIDC start
+- [`apps/web-dashboard/app/api/auth/login/route.ts`](../apps/web-dashboard/app/api/auth/login/route.ts) — PKCE authorize redirect
+- [`apps/web-dashboard/app/api/auth/callback/route.ts`](../apps/web-dashboard/app/api/auth/callback/route.ts) — code exchange + cookies
+- [`apps/web-dashboard/lib/server/keycloakOidc.ts`](../apps/web-dashboard/lib/server/keycloakOidc.ts)
+- [`apps/web-dashboard/lib/server/keycloakRefreshGrant.ts`](../apps/web-dashboard/lib/server/keycloakRefreshGrant.ts) — BFF session refresh
 
-**Automation / curl** (JSON, unchanged): send `Accept: application/json` and `Content-Type: application/json` for `{"ok":true,"next":"/"}` instead of a redirect.
+**Password grant removed.** Automation uses Keycloak token endpoint directly (client credentials or service account):
 
-**Failed browser login:** redirects to `/login?error=<message>&next=<path>` (message capped; safe `next` only).
+```bash
+curl -sS -X POST 'https://auth.idea-impact.com/realms/platform/protocol/openid-connect/token' \
+  -d 'grant_type=client_credentials' \
+  -d 'client_id=<service-account-client>' \
+  -d 'client_secret=<secret>'
+```
+
+**Failed browser login:** callback redirects to `/?error=<message>` (message capped).
+
+### Existing Keycloak volume (OIDC migration)
+
+Realm import runs once. After deploy, run on VPS:
+
+```bash
+COMPOSE_FILE=docker-compose.vps.yml:docker-compose.traefik.yml ./scripts/keycloak-enable-oidc.sh
+```
+
+Or update client `web-dashboard` manually: standard flow on, direct access grants off, redirect URI `https://idea-impact.com/api/auth/callback`, PKCE S256.
 
 ## Common error: Invalid Keycloak client secret
 
@@ -106,7 +123,7 @@ grep KEYCLOAK .env
 # KEYCLOAK_CLIENT_SECRET=web-dashboard-dev-secret
 # KEYCLOAK_REALM=platform
 # KEYCLOAK_CLIENT_ID=web-dashboard
-# KEYCLOAK_ISSUER=https://idea-impact.com/realms/platform
+# KEYCLOAK_ISSUER=https://auth.idea-impact.com/realms/platform
 # APP_PUBLIC_ORIGIN=https://idea-impact.com
 
 # 2. Stop stack (no -v)
@@ -125,20 +142,16 @@ docker compose up -d postgres    # wait healthy
 docker compose up -d keycloak    # wait healthy (~90s)
 docker compose up -d --build
 
-# 5. Verify
+# 5. Verify OIDC discovery (production)
+curl -fsS 'https://auth.idea-impact.com/realms/platform/.well-known/openid-configuration' | head -c 200
+
+# Local Keycloak token (client credentials — password grant disabled)
 curl -sS -X POST 'http://127.0.0.1:8180/realms/platform/protocol/openid-connect/token' \
   -H 'Content-Type: application/x-www-form-urlencoded' \
-  --data-urlencode 'grant_type=password' \
+  --data-urlencode 'grant_type=client_credentials' \
   --data-urlencode 'client_id=web-dashboard' \
-  --data-urlencode 'client_secret=web-dashboard-dev-secret' \
-  --data-urlencode 'username=operator' \
-  --data-urlencode 'password=operator-dev-password'
-# Expect JSON with access_token
-
-curl -sS -X POST 'https://idea-impact.com/api/auth/login' \
-  -H 'Content-Type: application/json' -H 'Accept: application/json' \
-  -d '{"username":"operator","password":"operator-dev-password","next":"/"}'
-# Expect {"ok":true,"next":"/"}
+  --data-urlencode 'client_secret=web-dashboard-dev-secret'
+# Expect JSON with access_token when service accounts enabled; otherwise configure a service-account client.
 ```
 
 ### Local dev
@@ -160,12 +173,14 @@ The dashboard sets HTTP headers on all routes via [`apps/web-dashboard/next.conf
 After each `web-dashboard` deploy to idea-impact.com, verify from any host:
 
 ```bash
-# Unauthenticated root: redirect to /login (no login HTML body on /)
+# Unauthenticated root → public landing (no redirect to login)
 curl -sSI https://idea-impact.com/ | grep -iE '^HTTP/|^location:|^content-type:'
-# Expect: HTTP/2 307 or 302, Location: .../login — must NOT be 200 text/html with password fields
+curl -sS https://idea-impact.com/ | grep -ci 'type="password"' || true
+# Expect: HTTP 200, 0 password fields
 
-# Headers: HSTS and hardening present; no CSP / Permissions-Policy (match problematticsolutions.com)
-curl -sSI https://idea-impact.com/login | grep -iE 'strict-transport|content-security|x-frame|x-content-type|referrer-policy|permissions-policy|x-powered-by|x-xss'
+# Login starts OIDC on auth subdomain
+curl -sSI 'https://idea-impact.com/login' | grep -i location
+# Expect: Location contains auth.idea-impact.com
 # Expect: strict-transport-security, x-frame-options, x-content-type-options, referrer-policy, x-xss-protection
 # Must NOT see: content-security-policy, permissions-policy, x-powered-by
 
