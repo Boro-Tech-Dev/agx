@@ -144,7 +144,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
   const [interPageDelayMs, setInterPageDelayMs] = useState(2000);
   const [includeFullText, setIncludeFullText] = useState(true);
   const [includeInteractives, setIncludeInteractives] = useState(false);
-  const [includePdfs, setIncludePdfs] = useState(true);
+  const [includePdfs, setIncludePdfs] = useState(false);
   const [crawlPagesCap, setCrawlPagesCap] = useState(FALLBACK_CRAWL_PAGES_CAP);
   const [crawlDepthCap, setCrawlDepthCap] = useState(FALLBACK_CRAWL_DEPTH_CAP);
   const [crawlMaxSeconds, setCrawlMaxSeconds] = useState<number | null>(null);
@@ -637,7 +637,9 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
             <strong>{maxDepth}</strong>
             {sameSiteOnly ? ', same site only' : ''}). {interPageDelayMs > 0 ? `Delay between pages: ${interPageDelayMs} ms. ` : ''}
             {includeFullText ? 'Full article text is extracted per page (capped server-side). ' : ''}
-            {includePdfs ? 'Each page is printed to PDF (no PNG screenshots). ' : ''}
+            {includePdfs
+              ? 'Each page is printed to PDF (no PNG screenshots). '
+              : 'PDF export is off by default (enable below to reduce response size). '}
             This often takes <strong>several minutes</strong>
             {crawlMaxSeconds != null
               ? ` (hard cap ~${Math.ceil(crawlMaxSeconds / 60)} min from browser-runner).`

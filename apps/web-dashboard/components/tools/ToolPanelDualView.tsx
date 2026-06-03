@@ -1,11 +1,19 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useLayoutEffect, useState, type ReactNode } from 'react';
 
 import { toolRouteHref, type ToolCatalogId, type ToolPanelTab } from '../../lib/toolCatalog';
 import { resolveToolPanelTab } from '../../lib/tools/toolPanelTab';
-import { HowItsMadePanel } from './how-its-made/HowItsMadePanel';
+
+const HowItsMadePanel = dynamic(
+  () => import('./how-its-made/HowItsMadePanel').then((m) => ({ default: m.HowItsMadePanel })),
+  {
+    ssr: false,
+    loading: () => <p className="text-[11px] text-app-muted">Loading tool…</p>,
+  },
+);
 
 export type { ToolPanelTab };
 

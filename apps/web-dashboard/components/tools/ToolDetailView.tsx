@@ -6,22 +6,12 @@ import { getToolCatalogEntry, humanizeToolLabel, type ToolCatalogId } from '../.
 import { LearningCompetencyBanner } from './learning/LearningCompetencyBanner';
 import { LearningMissionBanner } from './learning/LearningMissionBanner';
 import { dashboardToolKeyForCatalog } from '../../lib/navConfig';
+import { LearningTeamPanel, renderLazyToolPanel } from '../../lib/tools/lazyToolPanels';
 import { useToolsProject } from '../../lib/tools/toolsProjectContext';
-import { AskClarifierPanel } from './AskClarifierPanel';
-import { BriefGeneratorPanel } from './BriefGeneratorPanel';
-import { LaunchpadPanel } from './LaunchpadPanel';
-import { OmnichannelPlannerPanel } from './OmnichannelPlannerPanel';
-import { ReplyCoachPanel } from './ReplyCoachPanel';
-import { ScenarioPlannerPanel } from './ScenarioPlannerPanel';
 import { ToolDetailChrome } from './ToolDetailChrome';
 import { ToolPanelDualView } from './ToolPanelDualView';
 import { ToolsCadenceBanner } from './ToolsCadenceBanner';
 import { ToolsHubShell } from './ToolsHubShell';
-import { VeevaSuitePanel } from './VeevaSuitePanel';
-import { LearningToolPanel } from './learning/LearningToolPanel';
-import { LearningTeamPanel } from './learning/LearningTeamPanel';
-import { WebCapturePanel } from './WebCapturePanel';
-import { WebSearchPanel } from './WebSearchPanel';
 
 function AllToolsLink() {
   return (
@@ -37,44 +27,11 @@ function ToolDetailBody({ toolId }: { toolId: ToolCatalogId }) {
   const entry = getToolCatalogEntry(toolId);
   const showCadenceBanner = entry.requiresCadence === true && toolsScenarioTactic == null;
 
-  const usePanel = (() => {
-    switch (toolId) {
-      case 'ask_clarifier':
-        return <AskClarifierPanel projectKey={projectKey} />;
-      case 'brief_generator':
-        return <BriefGeneratorPanel projectKey={projectKey} />;
-      case 'launchpad':
-        return <LaunchpadPanel projectKey={projectKey} />;
-      case 'reply_coach':
-        return <ReplyCoachPanel projectKey={projectKey} />;
-      case 'omnichannel':
-        return (
-          <OmnichannelPlannerPanel
-            projectKey={projectKey}
-            scenarioTactic={toolsScenarioTactic}
-            onScenarioTacticChange={handleToolsTimingChange}
-            projectCadenceContext={projectCadenceContext}
-          />
-        );
-      case 'scenario':
-        return (
-          <ScenarioPlannerPanel
-            projectKey={projectKey}
-            scenarioTactic={toolsScenarioTactic}
-            onScenarioTacticChange={handleToolsTimingChange}
-            projectCadenceContext={projectCadenceContext}
-          />
-        );
-      case 'veeva_suite':
-        return <VeevaSuitePanel projectKey={projectKey} />;
-      case 'web_capture':
-        return <WebCapturePanel projectKey={projectKey} />;
-      case 'web_search':
-        return <WebSearchPanel projectKey={projectKey} />;
-      case 'learning':
-        return <LearningToolPanel />;
-    }
-  })();
+  const usePanel = renderLazyToolPanel(toolId, projectKey, {
+    scenarioTactic: toolsScenarioTactic,
+    onScenarioTacticChange: handleToolsTimingChange,
+    projectCadenceContext,
+  });
 
   const teamPanel = toolId === 'learning' ? <LearningTeamPanel /> : undefined;
 

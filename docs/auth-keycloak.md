@@ -214,7 +214,7 @@ grep APP_PUBLIC_ORIGIN .env
 # Expect: APP_PUBLIC_ORIGIN=https://idea-impact.com (or VPS_PUBLIC_URL set; compose maps both into web-dashboard)
 ```
 
-If corporate Netskope still blocks after headers are present, use **Skope IT → URL Lookup** for `idea-impact.com`. Request recategorization or a tenant allow policy if the domain is stuck as Uncategorized / Newly Observed Domain despite being in production use.
+If corporate Netskope still blocks browser traffic after headers are present, see **[netskope-idea-impact-browser.md](netskope-idea-impact-browser.md)** for required tenant policies (URL list, steering bypass, SSL DND, DLP waiver) and the browser verification checklist.
 
 ## Post-reset hardening
 

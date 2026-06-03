@@ -10,7 +10,7 @@ import { useReducedMotion } from 'framer-motion';
 
 import type { HomeHeroCta, HomeHeroCtaIcon, HomeHeroSlide } from '../../lib/home/homeHeroCopy';
 
-const HERO_LOGO_SRC = '/brand/ragtag-stack.png';
+const HERO_LOGO_SRC = '/brand/ragtag-stack.webp';
 const HERO_LOGO_WIDTH = 1236;
 const HERO_LOGO_HEIGHT = 824;
 
