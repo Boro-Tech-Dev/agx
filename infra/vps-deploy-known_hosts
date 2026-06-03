@@ -1,0 +1,6 @@
+# Pinned SSH host keys for GitHub Actions deploy (srv1139701.hstgr.cloud:22).
+# Regenerate: ssh-keyscan -H -p 22 srv1139701.hstgr.cloud
+# Verify fingerprint: ssh-keygen -lf <(ssh-keyscan -H srv1139701.hstgr.cloud 2>/dev/null | grep ed25519)
+|1|WSjitbFXatjHBmrykvTmnBsbmnw=|8QROBUj/bNzLm1tq9P9GPY9c2VM= ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC6NEU2Ae97BalWRoBqdHFF8Z8zDWjTqDHD9KGK+FSZx3q/iL/932jbs8cW6FwT+U6KVxQAVUQ/NblZ+MUoeYWZdKPsVDs78pV+Pfu0sJnzaGv/oYMuIfCooeipUNvePwvC0quKNU962jed6UzRmnDMdFFSvnUQpp1CqtLoTBeSJZwIm2OqdguHVbkrRh6vW7dG6M9JNMtyvCEgEeQPA/QBWzwnacih0DDHvtXxz/cUMIlxxzwSLUrBu1G4cS502bgcXDoTIvCDRYfvR1/w3W+dNyjpuFMapCoZZ/0bJ32lFfbWs/Um3k03hgaWLoMZtqq3nHsPp14HADIFEVn57B7ZBbiW9tWW1DQ7pShJChmKCqhXt4lr064GDx5rKr6JT/bX91Kat4UZUibm4sxL1ZDq6IgMlm63UaKcyUE7POxozH+uXMHgDGtOUooAvPY8TIKtSqMbuerY5tj5jCO+7IhECgwoEk25ithcSOtzeGJ8sdfUbYHYGrAxSW9HVcUIm98=
+|1|pSS2kTdFOaryvu27P3gu5ZuQt8I=|F/keE/kGBWKm3tM1v2pw+du27CM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKe9eDoZ0vtgtWorr5P+HLOARVXTTdeDXre5TewlPwyGVCEGapo4maEQPTfsPCr5F06yBN+1xGYRHoKgOq4aYiw=
+|1|HqIbAHpK3OdwGUofASloonSlo0s=|jdb3Dk/W4NisUOr8OB0l7S2SHGE= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGaL3r2jU+ygQpWdGUWysBNtg+uTWSIEbyyM68po5afb

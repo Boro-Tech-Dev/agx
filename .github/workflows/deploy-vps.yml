@@ -78,10 +78,16 @@ jobs:
     env:
       IMAGE_TAG: ${{ needs.resolve.outputs.image_tag }}
     steps:
+      - name: Checkout deploy commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve.outputs.deploy_sha }}
+
       - name: Configure SSH and deploy target
         env:
           VPS_DOTENV: ${{ secrets.VPS_DOTENV }}
           VPS_SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          VPS_SSH_KNOWN_HOSTS: ${{ secrets.VPS_SSH_KNOWN_HOSTS }}
         run: |
           set -euo pipefail
           if [[ -z "${VPS_DOTENV//[[:space:]]/}" ]]; then
@@ -115,32 +121,48 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keygen -y -f ~/.ssh/deploy_key >/dev/null
           echo "Deploy key fingerprint: $(ssh-keygen -lf ~/.ssh/deploy_key | awk '{print $2}')"
-          known_hosts_vps="${HOME}/.ssh/known_hosts_vps"
-          : > "${known_hosts_vps}"
-          keyscan_ok=false
-          for attempt in 1 2 3 4 5; do
-            : > "${known_hosts_vps}"
-            if ssh-keyscan -4 -T 30 -p "${SSH_PORT}" -H "${VPS_HOST}" > "${known_hosts_vps}" 2>/dev/null \
-              && [[ -s "${known_hosts_vps}" ]]; then
-              keyscan_ok=true
-              echo "ssh-keyscan (IPv4) succeeded on attempt ${attempt}"
-              break
-            fi
-            : > "${known_hosts_vps}"
-            if ssh-keyscan -T 30 -p "${SSH_PORT}" -H "${VPS_HOST}" > "${known_hosts_vps}" 2>/dev/null \
-              && [[ -s "${known_hosts_vps}" ]]; then
-              keyscan_ok=true
-              echo "ssh-keyscan (default) succeeded on attempt ${attempt}"
-              break
-            fi
-            echo "::warning::ssh-keyscan attempt ${attempt}/5 failed; retrying in 15s..."
-            sleep 15
-          done
-          if [[ "${keyscan_ok}" != "true" ]]; then
-            echo "::error::ssh-keyscan failed for ${VPS_HOST}:${SSH_PORT} after 5 attempts" >&2
-            exit 1
+          : > ~/.ssh/known_hosts
+          pinned="${GITHUB_WORKSPACE}/infra/vps-deploy-known_hosts"
+          if [[ -f "${pinned}" ]]; then
+            grep -v '^#' "${pinned}" | grep -q . && cat "${pinned}" >> ~/.ssh/known_hosts
+            echo "Loaded pinned host keys from infra/vps-deploy-known_hosts"
+          else
+            echo "::warning::${pinned} missing; will rely on keyscan or VPS_SSH_KNOWN_HOSTS"
           fi
-          cat "${known_hosts_vps}" >> ~/.ssh/known_hosts
+          if [[ -n "${VPS_SSH_KNOWN_HOSTS//[[:space:]]/}" ]]; then
+            printf '%s\n' "${VPS_SSH_KNOWN_HOSTS}" >> ~/.ssh/known_hosts
+            echo "Appended VPS_SSH_KNOWN_HOSTS secret"
+          fi
+          host_in_known_hosts() {
+            ssh-keygen -F "[${VPS_HOST}]:${SSH_PORT}" -f ~/.ssh/known_hosts >/dev/null 2>&1 \
+              || ssh-keygen -F "${VPS_HOST}" -f ~/.ssh/known_hosts >/dev/null 2>&1
+          }
+          if ! host_in_known_hosts; then
+            echo "::warning::No known_hosts entry for ${VPS_HOST}; fallback ssh-keyscan (stderr visible)"
+            keyscan_ok=false
+            for attempt in 1 2 3; do
+              scan_out="${HOME}/.ssh/keyscan-fallback.txt"
+              : > "${scan_out}"
+              echo "--- ssh-keyscan -4 attempt ${attempt} ---"
+              ssh-keyscan -4 -T 15 -p "${SSH_PORT}" -H "${VPS_HOST}" 2>&1 | tee -a "${scan_out}" || true
+              echo "--- ssh-keyscan default attempt ${attempt} ---"
+              ssh-keyscan -T 15 -p "${SSH_PORT}" -H "${VPS_HOST}" 2>&1 | tee -a "${scan_out}" || true
+              grep -v '^#' "${scan_out}" | grep -q . && grep -v '^#' "${scan_out}" >> ~/.ssh/known_hosts
+              if host_in_known_hosts; then
+                keyscan_ok=true
+                echo "ssh-keyscan fallback succeeded on attempt ${attempt}"
+                break
+              fi
+              echo "::warning::ssh-keyscan fallback attempt ${attempt}/3 produced no usable host key"
+              sleep 10
+            done
+            if [[ "${keyscan_ok}" != "true" ]]; then
+              echo "::error::No known_hosts for ${VPS_HOST} after pin + keyscan fallback" >&2
+              exit 1
+            fi
+          else
+            echo "Using pinned known_hosts (no keyscan)"
+          fi
           {
             echo 'Host vps-deploy'
             echo "  HostName ${VPS_HOST}"
@@ -208,11 +230,6 @@ jobs:
           # shellcheck source=/dev/null
           source ~/.ssh/ci-deploy-helpers.sh
           ssh_with_retry 'echo "SSH OK as $(whoami)@$(hostname)"'
-
-      - name: Checkout deploy commit
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.resolve.outputs.deploy_sha }}
 
       - name: Sync compose and scripts to VPS
         run: |

@@ -41,7 +41,7 @@ Same pattern as LandScraper — add under **Settings → Secrets and variables �
 
 ### SSH troubleshooting
 
-Deploy VPS retries SSH/rsync up to **5 times** (15s–120s backoff), scans host keys on IPv4 then dual-stack, and uses `ConnectTimeout 30` without forcing IPv4-only—see [deploy-vps.yml](../.github/workflows/deploy-vps.yml).
+Deploy VPS loads **pinned** host keys from [`infra/vps-deploy-known_hosts`](../infra/vps-deploy-known_hosts) (no live keyscan on the normal path). Optional secret `VPS_SSH_KNOWN_HOSTS` overrides. Fallback keyscan logs stderr to the Actions log. SSH/rsync retry up to **5 times**—see [deploy-vps.yml](../.github/workflows/deploy-vps.yml).
 
 Test from your Mac (same key you paste into GitHub):
 
