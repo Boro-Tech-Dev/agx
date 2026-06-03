@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { clearAuthTokenCookies } from '../../../../lib/server/authCookies';
+import { absolutePublicUrl } from '../../../../lib/server/requestPublicOrigin';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +12,7 @@ export async function POST(req: NextRequest) {
 
   const res = wantsJson
     ? NextResponse.json({ ok: true, next: '/login' })
-    : NextResponse.redirect(new URL('/login', req.url), 302);
+    : NextResponse.redirect(absolutePublicUrl(req, '/login'), 302);
 
   clearAuthTokenCookies(res, req);
   return res;

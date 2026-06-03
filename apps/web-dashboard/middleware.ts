@@ -7,6 +7,7 @@ import { safeNextPath } from './lib/auth/safeNextPath';
 import { verifyAccessToken } from './lib/auth/verifyAccessToken';
 import { ACCESS_TOKEN_COOKIE } from './lib/auth/constants';
 import { isWebManifestProbe } from './lib/webManifestProbe';
+import { absolutePublicUrl } from './lib/server/requestPublicOrigin';
 
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
@@ -67,7 +68,7 @@ export async function middleware(req: NextRequest) {
 }
 
 function redirectToLogin(req: NextRequest) {
-  const login = new URL('/login', req.url);
+  const login = absolutePublicUrl(req, '/login');
   const path = req.nextUrl.pathname + req.nextUrl.search;
   login.searchParams.set('next', safeNextPath(path));
   return NextResponse.redirect(login);

@@ -423,6 +423,7 @@ services:
       required: false
     environment:
       AGENT_API_URL: http://agent-api:8080
+      APP_PUBLIC_ORIGIN: ${APP_PUBLIC_ORIGIN:-${VPS_PUBLIC_URL:-https://idea-impact.com}}
       KEYCLOAK_BASE_URL: http://keycloak:8080
       KEYCLOAK_REALM: ${KEYCLOAK_REALM:-platform}
       KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-web-dashboard}

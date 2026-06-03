@@ -29,6 +29,8 @@ Set in `.env` (loaded by Compose `env_file` on `web-dashboard` and `keycloak`):
 
 **Important:** Never set `KEYCLOAK_CLIENT_SECRET=` with no value in `.env`. Docker Compose passes an empty string and overrides compose defaults, which breaks login.
 
+| `APP_PUBLIC_ORIGIN` | Public site origin for login/logout redirects (e.g. `https://idea-impact.com`). **Required on VPS** behind Traefik; without it, successful sign-in can redirect to `http://localhost:3000`. Falls back to `VPS_PUBLIC_URL` if unset. |
+
 ## Login flow
 
 The `/login` page is a **server-rendered HTML form** (`method="POST"` → `/api/auth/login`). Sign-in works **without JavaScript** (password managers and paste use native inputs). The root layout **does not** mount dashboard client providers on `/login` (middleware sets internal header `x-ragtag-login-route`).
@@ -105,6 +107,7 @@ grep KEYCLOAK .env
 # KEYCLOAK_REALM=platform
 # KEYCLOAK_CLIENT_ID=web-dashboard
 # KEYCLOAK_ISSUER=https://idea-impact.com/realms/platform
+# APP_PUBLIC_ORIGIN=https://idea-impact.com
 
 # 2. Stop stack (no -v)
 ./scripts/compose-down.sh
@@ -198,6 +201,11 @@ done
 
 curl -sSI https://idea-impact.com/favicon.ico | grep -iE '^HTTP/|^content-type:'
 # Expect: HTTP/2 200 (or 304), image/* — not 404 HTML
+
+# After sign-in (browser or curl with valid credentials): Location must stay on idea-impact.com
+# Expect: never http://localhost:3000 in redirect Location headers
+grep APP_PUBLIC_ORIGIN .env
+# Expect: APP_PUBLIC_ORIGIN=https://idea-impact.com (or VPS_PUBLIC_URL set; compose maps both into web-dashboard)
 ```
 
 If corporate Netskope still blocks after headers are present, use **Skope IT → URL Lookup** for `idea-impact.com`. Request recategorization or a tenant allow policy if the domain is stuck as Uncategorized / Newly Observed Domain despite being in production use.

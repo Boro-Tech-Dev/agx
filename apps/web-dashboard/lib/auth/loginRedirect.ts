@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
+import { requestPublicOrigin } from '../server/requestPublicOrigin';
 import { safeNextPath } from './safeNextPath';
 
 /** Set by middleware on GET /login so root layout skips dashboard client providers. */
@@ -27,11 +28,11 @@ export function buildLoginErrorUrl(baseUrl: string, message: string, next: strin
 }
 
 export function redirectToLoginWithError(
-  req: Pick<NextRequest, 'url'>,
+  req: NextRequest,
   message: string,
   next: string,
 ): NextResponse {
-  return NextResponse.redirect(buildLoginErrorUrl(req.url, message, next), 302);
+  return NextResponse.redirect(buildLoginErrorUrl(requestPublicOrigin(req), message, next), 302);
 }
 
 export function loginErrorResponse(

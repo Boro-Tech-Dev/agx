@@ -27,6 +27,7 @@ VPS_USER=root
 VPS_SSH_PORT=22
 VPS_DEPLOY_PATH=/opt/agent-x
 VPS_PUBLIC_URL=https://idea-impact.com
+APP_PUBLIC_ORIGIN=https://idea-impact.com
 GHCR_USERNAME=boro-tech-dev
 # Leave empty when GHCR packages are public (default). Set a PAT with read:packages only if pulls return 401.
 GHCR_READ_TOKEN=

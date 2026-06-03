@@ -7,6 +7,7 @@ import { loginErrorResponse, wantsJsonLoginResponse } from '../../../../lib/auth
 import { safeNextPath } from '../../../../lib/auth/safeNextPath';
 import { setAccessTokenCookie, setRefreshTokenCookie } from '../../../../lib/server/authCookies';
 import { keycloakPasswordGrant } from '../../../../lib/server/keycloakPasswordGrant';
+import { absolutePublicUrl } from '../../../../lib/server/requestPublicOrigin';
 
 export const dynamic = 'force-dynamic';
 
@@ -56,7 +57,7 @@ function parseBody(text: string, contentType: string): { username: string; passw
 }
 
 export async function POST(req: NextRequest) {
-  const fallbackNext = safeNextPath(new URL(req.url).searchParams.get('next'));
+  const fallbackNext = safeNextPath(req.nextUrl.searchParams.get('next'));
 
   if (isAuthDisabled()) {
     return loginErrorResponse(req, 'Authentication is disabled (AUTH_DISABLED).', 400, fallbackNext);
@@ -107,7 +108,7 @@ export async function POST(req: NextRequest) {
 
   const res = wantsJson
     ? NextResponse.json({ ok: true, next })
-    : NextResponse.redirect(new URL(next, req.url), 302);
+    : NextResponse.redirect(absolutePublicUrl(req, next), 302);
 
   setAccessTokenCookie(res, grant.data.access_token, req);
   if (typeof grant.data.refresh_token === 'string' && grant.data.refresh_token.trim()) {

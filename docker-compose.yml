@@ -470,6 +470,8 @@ services:
     environment:
       # Runtime: same-origin /api/* and /health are proxied to agent-api (see app/api/[[...path]]/route.ts).
       AGENT_API_URL: http://agent-api:8080
+      # Public URL for redirects behind Traefik (req.url is often http://localhost:3000 in the container).
+      APP_PUBLIC_ORIGIN: ${APP_PUBLIC_ORIGIN:-${VPS_PUBLIC_URL:-}}
       KEYCLOAK_BASE_URL: http://keycloak:8080
       KEYCLOAK_REALM: ${KEYCLOAK_REALM:-platform}
       KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-web-dashboard}
