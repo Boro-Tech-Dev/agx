@@ -123,6 +123,8 @@ def create_project_upload(
         doc_meta = {'scenario_csv': True}
     elif kind == 'omnichannel_plan':
         doc_meta = {'omnichannel_plan': True}
+    elif kind == 'web_capture_staging':
+        doc_meta = {'web_capture_staging': True, 'skip_ingest': True}
     row = execute(
         """INSERT INTO source_documents(
                id, title, source_type, source_uri, storage_bucket, storage_key, mime_type, checksum,
@@ -133,7 +135,8 @@ def create_project_upload(
            ) RETURNING *""",
         (str(doc_id), title, rel_key, mt, checksum, j(doc_meta), wk, project_key, raw_name, kind),
     )
-    enqueue_document_ingest(str(doc_id))
+    if kind != 'web_capture_staging':
+        enqueue_document_ingest(str(doc_id))
     return row
 
 

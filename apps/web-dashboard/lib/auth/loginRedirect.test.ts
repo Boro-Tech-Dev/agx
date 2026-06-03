@@ -24,7 +24,7 @@ describe('loginRedirect', () => {
 
   it('buildLoginErrorUrl rejects open redirects in next', () => {
     const url = buildLoginErrorUrl('https://idea-impact.com', 'Failed', '//evil');
-    expect(url.searchParams.get('next')).toBe('/');
+    expect(url.searchParams.get('next')).toBe('/home');
   });
 
   it('capLoginErrorMessage trims and caps length', () => {

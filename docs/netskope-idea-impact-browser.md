@@ -6,7 +6,7 @@ Internal dashboard (`web-dashboard`) is served at **https://idea-impact.com** be
 
 **Out of scope for this document:** SSH deploy to `srv1139701.hstgr.cloud`, `ghcr.io` image pulls, and GitHub Actions runners. Those use different hostnames; see [ci-cd.md](ci-cd.md) if those paths need separate policies.
 
-Application mitigations in-repo: isolated `/login` layout (no dashboard fonts/providers), client-fetched home data (no large RSC JSON in `/` HTML), per-tool lazy chunks, Web Capture full-text and PDFs off by default with base64 stripped from React state, hero WebP under `public/brand/`. NetOps may still apply tenant policies below for edge cases.
+Application mitigations in-repo: public landing at `/` (no password fields), OIDC login on **auth.idea-impact.com** (no credential form on idea-impact.com), client-fetched home data at `/home`, per-tool lazy chunks, Web Capture staging credentials via uploaded project profiles (no password inputs in browser), hero WebP under `public/brand/`. NetOps ticket template: [netskope-netops-ticket.md](netskope-netops-ticket.md).
 
 ---
 
@@ -20,6 +20,7 @@ Submit to NetOps / security engineering. Wording matches the infrastructure requ
 |-------|--------|
 | Target domain | `idea-impact.com` |
 | Wildcard domain | `*.idea-impact.com` |
+| IdP (Keycloak OIDC) | `auth.idea-impact.com` |
 
 ### 2. Traffic steering exception
 
@@ -35,17 +36,25 @@ Submit to NetOps / security engineering. Wording matches the infrastructure requ
 | Field | Value |
 |-------|--------|
 | Rule policy | Do Not Decrypt (DND) |
-| Destination | `*.idea-impact.com` |
+| Destination | `idea-impact.com`, `*.idea-impact.com`, `auth.idea-impact.com` |
 | Reason | Clients and scripts must not see Netskope MITM certificates on production TLS |
 
-### 4. DLP / real-time protection content waiver
+### 4. Real-time protection — Allow (not Isolate)
+
+| Field | Value |
+|-------|--------|
+| Action | **Allow** — do not apply Remote Browser Isolation |
+| Destinations | Same URL list |
+| Reason | Approved internal dashboard; credentials entered on `auth.idea-impact.com` only |
+
+### 5. DLP / real-time protection content waiver
 
 If full steering bypass is not approved, apply to the same URL list:
 
 - **Allow high-entropy strings** — compiled UI assets (Base64 in API JSON, minified JS) must not be blocked as obfuscated exfiltration.
 - **Raise file scan thresholds** — outbound/inbound `.js`, `.map`, `.json` multipart and chunked transfers should not hit byte-size or rate caps used for generic DLP.
 
-Optional: **Skope IT → URL Lookup** for `idea-impact.com` — recategorize if stuck as Uncategorized / Newly Observed Domain despite production use.
+Optional: **Skope IT → URL Lookup** for `idea-impact.com` and `auth.idea-impact.com` — recategorize if stuck as Uncategorized / Newly Observed Domain despite production use.
 
 ---
 
@@ -57,15 +66,20 @@ Run from any host with HTTPS access to production. Detailed header expectations:
 # Health
 curl -fsS https://idea-impact.com/health
 
-# Unauthenticated root → login redirect
+# Unauthenticated root → public landing (no redirect to login)
 curl -sSI https://idea-impact.com/ | grep -iE '^HTTP/|^location:|^content-type:'
+curl -sS https://idea-impact.com/ | grep -ci 'type="password"' || true
+# Expect: HTTP 200, 0 password fields
 
-# Security headers on login
-curl -sSI https://idea-impact.com/login | grep -iE 'strict-transport|x-frame|x-content-type|referrer-policy|x-xss'
+# Login starts OIDC on auth subdomain
+curl -sSI 'https://idea-impact.com/login' | grep -i location
+# Expect: Location contains auth.idea-impact.com
 
-# Static JS/CSS reachable (replace CSS path from /login HTML if needed)
-CSS=$(curl -sS https://idea-impact.com/login | grep -oE '/_next/static/css/[^"'\'' ]+\.css' | head -1)
-curl -sSI "https://idea-impact.com${CSS}" | grep -iE '^HTTP/|^content-type:'
+# Keycloak OIDC discovery
+curl -fsS 'https://auth.idea-impact.com/realms/platform/.well-known/openid-configuration' | head -c 200
+
+# Security headers on landing
+curl -sSI https://idea-impact.com/ | grep -iE 'strict-transport|x-frame|x-content-type|referrer-policy|x-xss'
 
 # Brand hero (WebP after mitigations)
 curl -sSI https://idea-impact.com/brand/ragtag-stack.webp | grep -iE '^HTTP/|^content-type:'
@@ -77,12 +91,12 @@ curl -sSI https://idea-impact.com/icon.svg | grep -iE '^HTTP/|^content-type:'
 
 **Corp browser (manual):**
 
-1. Load `/login` — Network tab should show only framework + login page chunks (no dashboard shell `7614` / hero `8893` chunks, no `@fontsource` woff2 storm).
-2. Sign in — redirects stay on `idea-impact.com` (never `http://localhost:3000`).
-3. On `/` — initial HTML is small (skeleton); six `/api/...` calls load after paint; shell/hero/hub chunks load on demand.
-4. Open `/tools/web-capture` — only the web-capture panel chunk + hub shell; not every tool panel.
-5. Crawl with default settings (full article text off, PDFs off) — response renders without silent drop.
-6. Enable full text or PDFs only when needed — larger JSON; may still need DLP waiver.
+1. Load `/` — public landing with `idea-impact.com` visible text; no password fields; click **Sign in**.
+2. Sign in — browser redirects to **auth.idea-impact.com** for credentials (not RBI read-only on idea-impact.com).
+3. After auth — `/home` loads; no password POST to idea-impact.com in Network tab.
+4. On `/home` — initial HTML is small (skeleton); `/api/...` calls load after paint; shell/hero/hub chunks load on demand.
+5. Open `/tools/web-capture` — no password input fields; staging via uploaded profile JSON only.
+6. Crawl with default settings (full article text off, PDFs off) — response renders without silent drop.
 
 ---
 

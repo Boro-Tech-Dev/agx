@@ -195,7 +195,7 @@ export function DashboardNav({
       active ? `${activeBg} ${activeText}` : `${idleBg} ${idleText}`
     }`;
 
-  const onDashboard = pathname === '/';
+  const onDashboard = pathname === '/home';
 
   const renderNavLinks = (group: { id: DashboardToolKey; href: string; label: string }[]) =>
     group.map(({ id, href, label }) => {
@@ -209,7 +209,7 @@ export function DashboardNav({
 
   return (
     <nav className="text-xs desktop:min-w-0" aria-label="Section navigation">
-      <a href="/" className={primaryToolSidebarClasses(onDashboard)}>
+      <a href="/home" className={primaryToolSidebarClasses(onDashboard)}>
         Dashboard
       </a>
       <div className="my-1 border-t border-rt-panel" />

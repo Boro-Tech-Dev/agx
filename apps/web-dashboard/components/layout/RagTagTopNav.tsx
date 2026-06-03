@@ -38,20 +38,20 @@ function navLinkClass(active: boolean) {
 
 export function RagTagTopNav() {
   const pathname = usePathname() ?? '/';
-  const onGrid = pathname === '/';
+  const onGrid = pathname === '/home';
   const onTools = pathname === '/tools' || pathname.startsWith('/tools/');
   const onQueue = pathname === '/monitoring';
 
   return (
     <header className="flex h-14 shrink-0 items-center justify-between border-b border-rt-panel bg-rt-black px-4 lg:px-6">
       <div className="flex items-center gap-6">
-        <RtBadge href="/" />
+        <RtBadge href="/home" />
         <SystemStatusPill />
       </div>
 
       <div className="flex items-center gap-4">
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
-          <Link href="/" className={navLinkClass(onGrid)}>
+          <Link href="/home" className={navLinkClass(onGrid)}>
             Grid
           </Link>
           <Link href="/tools" className={navLinkClass(onTools)}>

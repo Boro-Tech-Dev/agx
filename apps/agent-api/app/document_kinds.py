@@ -16,6 +16,7 @@ DOCUMENT_KINDS = frozenset(
         'scenario',
         'omnichannel_plan',
         'veeva_suite',
+        'web_capture_staging',
     }
 )
 

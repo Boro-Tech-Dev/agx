@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PanelChevron } from '../workspaces/PanelChevron';
 import {
   getWebCaptureHealth,
+  listProjectDocuments,
   postWebCrawl,
   postWebExtract,
   postWebScreenshot,
@@ -177,8 +178,10 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
   const [saveErr, setSaveErr] = useState<string | null>(null);
 
   const [stagingOpen, setStagingOpen] = useState(false);
-  const [basicUser, setBasicUser] = useState('');
-  const [basicPass, setBasicPass] = useState('');
+  const [stagingProfileId, setStagingProfileId] = useState('');
+  const [stagingProfiles, setStagingProfiles] = useState<Array<{ id: string; title: string }>>([]);
+  const [stagingUploadMsg, setStagingUploadMsg] = useState<string | null>(null);
+  const stagingUploadRef = useRef<HTMLInputElement>(null);
   const [waitUntil, setWaitUntil] = useState<WaitUntil>('networkidle');
   const [postLoadDelayMs, setPostLoadDelayMs] = useState(750);
   const [consentAuto, setConsentAuto] = useState(true);
@@ -186,16 +189,6 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
   const [locale, setLocale] = useState('');
   const [timezoneId, setTimezoneId] = useState('');
   const [ignoreTls, setIgnoreTls] = useState(false);
-
-  const [useFormLogin, setUseFormLogin] = useState(false);
-  const [formLoginUrl, setFormLoginUrl] = useState('');
-  const [formUserSel, setFormUserSel] = useState('');
-  const [formPassSel, setFormPassSel] = useState('');
-  const [formSubmitSel, setFormSubmitSel] = useState('');
-  const [formUser, setFormUser] = useState('');
-  const [formPass, setFormPass] = useState('');
-  const [formPostWait, setFormPostWait] = useState<WaitUntil>('networkidle');
-  const [formPostDelayMs, setFormPostDelayMs] = useState(0);
 
   const [interactionPlan, setInteractionPlan] = useState<WebInteractionPlanStep[]>([]);
   const [planPageIndex, setPlanPageIndex] = useState(0);
@@ -240,8 +233,41 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
     return () => window.clearInterval(id);
   }, [busy, busySession]);
 
-  const buildStaging = useCallback(
-    (forCrawl: boolean): WebStagingOptions => {
+  useEffect(() => {
+    if (!projectKey) {
+      setStagingProfiles([]);
+      setStagingProfileId('');
+      return;
+    }
+    let cancelled = false;
+    void listProjectDocuments(projectKey, { kinds: ['web_capture_staging'] })
+      .then((rows) => {
+        if (cancelled) return;
+        const list = Array.isArray(rows)
+          ? rows
+              .filter((r): r is { id: string; title?: string } => typeof r === 'object' && r !== null && 'id' in r)
+              .map((r) => ({ id: String(r.id), title: String(r.title || r.id) }))
+          : [];
+        setStagingProfiles(list);
+        setStagingProfileId((prev) => (list.some((p) => p.id === prev) ? prev : list[0]?.id || ''));
+      })
+      .catch(() => {
+        if (!cancelled) setStagingProfiles([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [projectKey]);
+
+  const stagingProfilePayload = useCallback(() => {
+    if (!stagingProfileId.trim()) return {};
+    return {
+      project_key: projectKey,
+      staging_profile_document_id: stagingProfileId.trim(),
+    };
+  }, [projectKey, stagingProfileId]);
+
+  const buildStaging = useCallback((): WebStagingOptions => {
       const staging: WebStagingOptions = {
         wait_until: waitUntil,
         post_load_delay_ms: Math.min(15000, Math.max(0, postLoadDelayMs)),
@@ -260,28 +286,8 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
           /* invalid JSON ignored until run validates */
         }
       }
-      if (basicUser.trim() || basicPass) {
-        staging.http_credentials = { username: basicUser.trim(), password: basicPass };
-      }
       if (locale.trim()) staging.locale = locale.trim();
       if (timezoneId.trim()) staging.timezone_id = timezoneId.trim();
-
-      if (!forCrawl && useFormLogin) {
-        const uSel = formUserSel.trim();
-        const pSel = formPassSel.trim();
-        if (uSel && pSel) {
-          staging.form_login = {
-            login_url: formLoginUrl.trim() || null,
-            username_selector: uSel,
-            password_selector: pSel,
-            submit_selector: formSubmitSel.trim() || null,
-            username: formUser,
-            password: formPass,
-            post_submit_wait_until: formPostWait,
-            post_submit_delay_ms: Math.min(15000, Math.max(0, formPostDelayMs)),
-          };
-        }
-      }
       return staging;
     },
     [
@@ -290,19 +296,8 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
       consentAuto,
       extraSelectorsText,
       ignoreTls,
-      basicUser,
-      basicPass,
       locale,
       timezoneId,
-      useFormLogin,
-      formLoginUrl,
-      formUserSel,
-      formPassSel,
-      formSubmitSel,
-      formUser,
-      formPass,
-      formPostWait,
-      formPostDelayMs,
       blockUrlsText,
       extraHeadersText,
     ],
@@ -416,30 +411,8 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
         return;
       }
     }
-    if (basicPass && !basicUser.trim()) {
-      setErr('Basic auth password is set — add a username too.');
-      return;
-    }
-    if (useFormLogin && mode === 'crawl') {
-      setErr('Form login applies to screenshot and extract (browser) only — not crawl.');
-      return;
-    }
-    if (useFormLogin && mode === 'extract' && !renderJs) {
-      setErr('Form login requires full browser render — turn off “Fast HTML only (no JS)”.');
-      return;
-    }
-    if (useFormLogin) {
-      if (!formUserSel.trim() || !formPassSel.trim()) {
-        setErr('Form login needs username and password CSS selectors.');
-        return;
-      }
-      if (!formUser.trim()) {
-        setErr('Form login needs a login username.');
-        return;
-      }
-    }
-
-    const staging = buildStaging(mode === 'crawl');
+    const staging = buildStaging();
+    const profilePayload = stagingProfilePayload();
     setBusySession({ since: Date.now(), mode });
     setBusy(true);
     try {
@@ -454,6 +427,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
           omit_background: omitScreenshotBg,
           include_interactives: includeInteractives,
           staging,
+          ...profilePayload,
           ...planPayload,
           ...advancedPayload,
         });
@@ -464,6 +438,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
           render_js: renderJs,
           include_interactives: includeInteractives,
           staging,
+          ...profilePayload,
           ...planPayload,
           ...advancedPayload,
         });
@@ -480,6 +455,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
           include_pdfs: includePdfs,
           auto_dismiss_gates: true,
           staging,
+          ...profilePayload,
           ...advancedPayload,
           ...(applyPlanOnCrawlSeed && interactionPlan.length > 0
             ? { interaction_plan: interactionPlan.slice(0, INTERACTION_PLAN_MAX_STEPS_UI) }
@@ -543,9 +519,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
     includePdfs,
     interactionPlan,
     buildStaging,
-    useFormLogin,
-    formUserSel,
-    formPassSel,
+    stagingProfilePayload,
     recordHar,
     debugOnFailure,
     applyPlanOnCrawlSeed,
@@ -728,32 +702,69 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
         {stagingOpen ? (
           <div id="web-capture-staging-body" className="space-y-2 p-2 text-[11px] text-app-text">
             <p className="text-[10px] text-app-muted">
-              HTTP Basic auth covers gateway prompts. Form login fills HTML fields (no SSO/Okta magic links). Use extra
-              selectors to click cookie banners or expand/collapse regions before capture.
+              Credentials (HTTP Basic or HTML form login) live in uploaded project profiles only — never typed in the
+              browser. Use extra selectors below for cookie banners or expand/collapse regions before capture.
             </p>
-            <div className="grid gap-2 tablet:grid-cols-2">
+            <div className="grid gap-2 tablet:grid-cols-[1fr_auto]">
               <label>
-                <span className="text-[10px] font-semibold uppercase tracking-wide text-app-muted">Basic auth user</span>
-                <input
-                  value={basicUser}
-                  onChange={(e) => setBasicUser(e.target.value)}
+                <span className="text-[10px] font-semibold uppercase tracking-wide text-app-muted">Staging profile</span>
+                <select
+                  value={stagingProfileId}
+                  onChange={(e) => setStagingProfileId(e.target.value)}
                   className={inputCls}
-                  autoComplete="off"
-                  disabled={busy}
-                />
+                  disabled={busy || !stagingProfiles.length}
+                >
+                  <option value="">None</option>
+                  {stagingProfiles.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.title}
+                    </option>
+                  ))}
+                </select>
               </label>
-              <label>
-                <span className="text-[10px] font-semibold uppercase tracking-wide text-app-muted">Basic auth password</span>
+              <div className="flex flex-col justify-end gap-1">
                 <input
-                  type="password"
-                  value={basicPass}
-                  onChange={(e) => setBasicPass(e.target.value)}
-                  className={inputCls}
-                  autoComplete="new-password"
+                  ref={stagingUploadRef}
+                  type="file"
+                  accept=".json,application/json"
+                  className="hidden"
                   disabled={busy}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    e.target.value = '';
+                    if (!file) return;
+                    setStagingUploadMsg(null);
+                    try {
+                      const row = (await uploadProjectDocument(projectKey, file, 'web_capture_staging')) as {
+                        id?: string;
+                        title?: string;
+                      };
+                      const id = row?.id ? String(row.id) : '';
+                      const title = row?.title ? String(row.title) : file.name;
+                      if (id) {
+                        setStagingProfiles((prev) => [{ id, title }, ...prev.filter((p) => p.id !== id)]);
+                        setStagingProfileId(id);
+                      }
+                      setStagingUploadMsg(`Uploaded ${file.name}`);
+                    } catch (err) {
+                      setStagingUploadMsg(err instanceof Error ? err.message : String(err));
+                    }
+                  }}
                 />
-              </label>
+                <button
+                  type="button"
+                  className="rounded border border-app-border px-2 py-1 text-[10px] font-medium hover:bg-app-fill"
+                  disabled={busy}
+                  onClick={() => stagingUploadRef.current?.click()}
+                >
+                  Upload profile JSON
+                </button>
+              </div>
             </div>
+            {stagingUploadMsg ? <p className="text-[10px] text-app-muted">{stagingUploadMsg}</p> : null}
+            <p className="text-[10px] font-mono text-app-muted">
+              Profile JSON keys: <code>http_credentials</code>, <code>form_login</code> (merged server-side).
+            </p>
             <div className="flex flex-wrap items-end gap-3">
               <label>
                 <span className="text-[10px] font-semibold uppercase tracking-wide text-app-muted">Wait until</span>
@@ -826,77 +837,6 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
                 disabled={busy}
               />
             </label>
-
-            <div className="rounded border border-app-border/80 bg-app-fill/40 p-2">
-              <label className="flex cursor-pointer items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={useFormLogin}
-                  onChange={(e) => setUseFormLogin(e.target.checked)}
-                  disabled={busy || mode === 'crawl'}
-                />
-                <span className="font-medium">HTML form login before capture</span>
-                {mode === 'crawl' ? <span className="text-app-muted">(not used in crawl)</span> : null}
-              </label>
-              {useFormLogin && mode !== 'crawl' ? (
-                <div className="mt-2 space-y-2">
-                  <label>
-                    <span className="text-[10px] font-semibold uppercase tracking-wide text-app-muted">
-                      Login page URL (optional — defaults to main URL)
-                    </span>
-                    <input value={formLoginUrl} onChange={(e) => setFormLoginUrl(e.target.value)} className={inputCls} disabled={busy} />
-                  </label>
-                  <div className="grid gap-2 tablet:grid-cols-2">
-                    <label>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-app-muted">Username selector</span>
-                      <input value={formUserSel} onChange={(e) => setFormUserSel(e.target.value)} className={`${inputCls} font-mono`} disabled={busy} />
-                    </label>
-                    <label>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-app-muted">Password selector</span>
-                      <input value={formPassSel} onChange={(e) => setFormPassSel(e.target.value)} className={`${inputCls} font-mono`} disabled={busy} />
-                    </label>
-                  </div>
-                  <label>
-                    <span className="text-[10px] font-semibold uppercase tracking-wide text-app-muted">
-                      Submit selector (optional — Enter used if empty)
-                    </span>
-                    <input value={formSubmitSel} onChange={(e) => setFormSubmitSel(e.target.value)} className={`${inputCls} font-mono`} disabled={busy} />
-                  </label>
-                  <div className="grid gap-2 tablet:grid-cols-2">
-                    <label>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-app-muted">Login username</span>
-                      <input value={formUser} onChange={(e) => setFormUser(e.target.value)} className={inputCls} autoComplete="off" disabled={busy} />
-                    </label>
-                    <label>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-app-muted">Login password</span>
-                      <input type="password" value={formPass} onChange={(e) => setFormPass(e.target.value)} className={inputCls} autoComplete="new-password" disabled={busy} />
-                    </label>
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    <label>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-app-muted">After submit wait</span>
-                      <select value={formPostWait} onChange={(e) => setFormPostWait(e.target.value as WaitUntil)} disabled={busy} className={inputCls}>
-                        <option value="domcontentloaded">domcontentloaded</option>
-                        <option value="load">load</option>
-                        <option value="networkidle">networkidle</option>
-                      </select>
-                    </label>
-                    <label>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-app-muted">Post-submit delay ms</span>
-                      <input
-                        type="number"
-                        min={0}
-                        max={15000}
-                        value={formPostDelayMs}
-                        onChange={(e) => setFormPostDelayMs(Number(e.target.value))}
-                        disabled={busy}
-                        className={`${inputCls} w-28`}
-                      />
-                    </label>
-                  </div>
-                </div>
-              ) : null}
-            </div>
           </div>
         ) : null}
       </div>

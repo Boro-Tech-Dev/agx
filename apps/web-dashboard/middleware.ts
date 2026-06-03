@@ -56,12 +56,16 @@ export async function middleware(req: NextRequest) {
   }
 
   const token = req.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
-  if (!token) {
-    return redirectToLogin(req);
+  const sessionValid = token ? await verifyAccessToken(token) : false;
+
+  if (pathname === '/') {
+    if (sessionValid) {
+      return NextResponse.redirect(absolutePublicUrl(req, '/home'), 302);
+    }
+    return NextResponse.next();
   }
 
-  const ok = await verifyAccessToken(token);
-  if (!ok) {
+  if (!token || !sessionValid) {
     return redirectToLogin(req);
   }
 
@@ -74,4 +78,3 @@ function redirectToLogin(req: NextRequest) {
   login.searchParams.set('next', safeNextPath(path));
   return NextResponse.redirect(login);
 }
-

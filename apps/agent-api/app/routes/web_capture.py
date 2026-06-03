@@ -4,6 +4,8 @@ import httpx
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
+from ..services.web_capture_staging import merge_web_capture_payload
+
 router = APIRouter(prefix='/api/web', tags=['web-capture'])
 
 
@@ -47,9 +49,10 @@ async def _proxy_get(path: str, timeout: float) -> dict:
 
 async def _proxy_post(path: str, payload: dict, timeout: float) -> dict:
     url = f'{_browser_runner_url()}{path}'
+    merged = merge_web_capture_payload(payload)
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
-            res = await client.post(url, json=payload)
+            res = await client.post(url, json=merged)
     except httpx.RequestError as e:
         raise HTTPException(status_code=502, detail=f'browser-runner unreachable: {e}') from e
     try:
@@ -68,6 +71,7 @@ async def web_health():
 @router.post('/crawl-stream')
 async def web_crawl_stream(payload: dict):
     """NDJSON crawl progress + final `done` line (same payload as `/crawl`)."""
+    merged = merge_web_capture_payload(payload)
     url = f'{_browser_runner_url()}/tools/web/crawl-stream'
     sec = _proxy_timeout('WEB_PROXY_CRAWL_TIMEOUT_SEC', 900.0)
     timeout = httpx.Timeout(sec, connect=min(30.0, sec))
@@ -75,7 +79,7 @@ async def web_crawl_stream(payload: dict):
     async def stream():
         async with httpx.AsyncClient(timeout=timeout) as client:
             try:
-                async with client.stream('POST', url, json=payload) as r:
+                async with client.stream('POST', url, json=merged) as r:
                     if r.status_code >= 400:
                         body = (await r.aread()).decode('utf-8', errors='replace')[:4000]
                         raise HTTPException(r.status_code, f'browser-runner: {body}')

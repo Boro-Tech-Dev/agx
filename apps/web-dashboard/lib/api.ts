@@ -740,6 +740,12 @@ export type WebCaptureRequestFlags = {
   debug_on_failure?: boolean;
 };
 
+/** Server-side merge of credentials from project document kind `web_capture_staging`. */
+export type WebCaptureStagingProfileRef = {
+  project_key?: string;
+  staging_profile_document_id?: string;
+};
+
 export type WebScreenshotResponse = {
   url: string;
   final_url?: string;
@@ -806,7 +812,8 @@ export type WebCrawlResponse = {
   har_base64?: string;
 };
 
-export type WebCrawlRequestBody = WebCaptureRequestFlags & {
+export type WebCrawlRequestBody = WebCaptureStagingProfileRef &
+  WebCaptureRequestFlags & {
   url: string;
   max_depth?: number;
   max_pages?: number;
@@ -988,7 +995,8 @@ async function webCaptureJsonFetch<T>(path: string, body: unknown): Promise<T> {
 }
 
 export async function postWebScreenshot(
-  body: WebCaptureRequestFlags & {
+  body: WebCaptureStagingProfileRef &
+    WebCaptureRequestFlags & {
     url: string;
     full_page?: boolean;
     viewport_width?: number;

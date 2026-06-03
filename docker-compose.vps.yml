@@ -204,7 +204,6 @@ services:
     command:
     - start
     - --http-enabled=true
-    - --hostname-strict=false
     - --import-realm
     env_file:
     - path: .env
@@ -214,8 +213,12 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
       KC_HEALTH_ENABLED: 'true'
       KC_HTTP_RELATIVE_PATH: /
-    ports:
-    - 127.0.0.1:8180:8080
+      KC_HOSTNAME: auth.idea-impact.com
+      KC_HOSTNAME_STRICT: 'true'
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: 'true'
+    expose:
+    - '8080'
     volumes:
     - keycloak_data:/opt/keycloak/data
     - ./infra/keycloak/realm-platform.json:/opt/keycloak/data/import/realm-platform.json:ro

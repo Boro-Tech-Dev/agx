@@ -100,7 +100,7 @@ export function AppMobileNavDrawer({
             <div className="my-1.5 border-t border-app-border" />
             <AuthLogoutButton className={`${drawerLinkClass} w-full text-left`}>Logout</AuthLogoutButton>
             <Dialog.Close asChild>
-              <Link href="/" className={drawerLinkClass} onClick={close}>
+              <Link href="/home" className={drawerLinkClass} onClick={close}>
                 Dashboard
               </Link>
             </Dialog.Close>

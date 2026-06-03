@@ -24,3 +24,15 @@ services:
       - traefik.http.middlewares.ragtag-hstgr-redirect.redirectregex.regex=^https://srv1139701\.hstgr\.cloud/(.*)
       - traefik.http.middlewares.ragtag-hstgr-redirect.redirectregex.replacement=https://idea-impact.com/$${1}
       - traefik.http.middlewares.ragtag-hstgr-redirect.redirectregex.permanent=true
+  keycloak:
+    ports: []
+    expose:
+      - "8080"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ragtag-auth.rule=Host(`auth.idea-impact.com`)
+      - traefik.http.routers.ragtag-auth.entrypoints=websecure
+      - traefik.http.routers.ragtag-auth.tls=true
+      - traefik.http.routers.ragtag-auth.tls.certresolver=letsencrypt
+      - traefik.http.routers.ragtag-auth.service=ragtag-auth
+      - traefik.http.services.ragtag-auth.loadbalancer.server.port=8080

@@ -4,6 +4,7 @@ import '@fontsource/oswald/latin-400.css';
 import '@fontsource/oswald/latin-700.css';
 import { cookies } from 'next/headers';
 
+import '../../app/globals.css';
 import { ModelStatusRootProvider } from '../../components/model/ModelStatusRootProvider';
 import { NavShellPrefsProvider } from '../../components/NavShellPrefsProvider';
 import {
@@ -26,12 +27,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <NavShellPrefsProvider
-      initialAgentsExpanded={initialAgentsExpanded}
-      initialOpsExpanded={initialOpsExpanded}
-      initialToolsExpanded={initialToolsExpanded}
-    >
-      <ModelStatusRootProvider>{children}</ModelStatusRootProvider>
-    </NavShellPrefsProvider>
+    <div className="dark min-h-screen bg-app-canvas font-sans text-app-text antialiased">
+      <NavShellPrefsProvider
+        initialAgentsExpanded={initialAgentsExpanded}
+        initialOpsExpanded={initialOpsExpanded}
+        initialToolsExpanded={initialToolsExpanded}
+      >
+        <ModelStatusRootProvider>{children}</ModelStatusRootProvider>
+      </NavShellPrefsProvider>
+    </div>
   );
 }
