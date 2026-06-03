@@ -6,6 +6,11 @@ cd "$(dirname "$0")/.."
 
 export COMPOSE_FILE=docker-compose.vps.yml:docker-compose.traefik.yml
 
+if [[ -f .env ]] && grep -q '^KEYCLOAK_ISSUER=https://idea-impact.com/realms/platform' .env; then
+  sed -i.bak 's|^KEYCLOAK_ISSUER=https://idea-impact.com/realms/platform|KEYCLOAK_ISSUER=https://auth.idea-impact.com/realms/platform|' .env
+  echo "Migrated KEYCLOAK_ISSUER to auth.idea-impact.com in .env"
+fi
+
 sudo "$(dirname "$0")/setup-swap.sh"
 "$(dirname "$0")/generate-vps-compose.sh"
 

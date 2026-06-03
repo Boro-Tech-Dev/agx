@@ -16,6 +16,11 @@ fi
 
 export COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.vps.yml:docker-compose.traefik.yml:docker-compose.registry.yml}"
 
+if [[ -f .env ]] && grep -q '^KEYCLOAK_ISSUER=https://idea-impact.com/realms/platform' .env; then
+  sed -i.bak 's|^KEYCLOAK_ISSUER=https://idea-impact.com/realms/platform|KEYCLOAK_ISSUER=https://auth.idea-impact.com/realms/platform|' .env
+  echo "Migrated KEYCLOAK_ISSUER to auth.idea-impact.com in .env"
+fi
+
 "$(dirname "$0")/generate-vps-compose.sh"
 
 echo "Pulling images (IMAGE_TAG=${IMAGE_TAG})..."

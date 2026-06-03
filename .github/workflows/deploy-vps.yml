@@ -253,7 +253,7 @@ jobs:
         run: |
           # shellcheck source=/dev/null
           source ~/.ssh/ci-deploy-helpers.sh
-          printf '%s\n' "$VPS_DOTENV" | ssh_with_retry \
+          printf '%s\n' "$VPS_DOTENV" | sed 's|^KEYCLOAK_ISSUER=https://idea-impact.com/realms/platform|KEYCLOAK_ISSUER=https://auth.idea-impact.com/realms/platform|' | ssh_with_retry \
             "umask 077 && mkdir -p '${VPS_DEPLOY_PATH}' && cat > '${VPS_DEPLOY_PATH}/.env' && chmod 600 '${VPS_DEPLOY_PATH}/.env'"
 
       - name: Pull images and restart stack on VPS

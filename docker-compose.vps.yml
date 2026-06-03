@@ -204,6 +204,7 @@ services:
     command:
     - start
     - --http-enabled=true
+    - --hostname=https://auth.idea-impact.com
     - --import-realm
     env_file:
     - path: .env
@@ -213,10 +214,9 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
       KC_HEALTH_ENABLED: 'true'
       KC_HTTP_RELATIVE_PATH: /
-      # Public IdP URL — credentials must not POST to idea-impact.com (Netskope RBI).
-      KC_HOSTNAME: auth.idea-impact.com
-      KC_HOSTNAME_URL: https://auth.idea-impact.com
-      KC_HOSTNAME_STRICT: 'false'
+      # Full public URL required — hostname-only resolves scheme from proxy and yields http:// forms.
+      KC_HOSTNAME: https://auth.idea-impact.com
+      KC_HOSTNAME_STRICT: 'true'
       KC_PROXY_HEADERS: xforwarded
       KC_HTTP_ENABLED: 'true'
     expose:
