@@ -37,6 +37,9 @@ dist/
 .turbo/
 .vercel/
 
+# --- Local dev tools (gh CLI, etc.) ---
+.tools/
+
 # --- Archives & large binaries (use object storage / LFS if needed) ---
 *.zip
 *.tar
