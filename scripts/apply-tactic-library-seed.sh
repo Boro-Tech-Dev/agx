@@ -4,6 +4,9 @@
 # after pull or when /api/tactics returns no rows on an existing database.
 #
 # HappyGuy MAD rows only (smaller patch): see infra/postgres/seeds/005_happyguy_mad_tactics.sql
+# HappyGuy AASLD rows only (smaller patch): see infra/postgres/seeds/006_happyguy_aasld_tactics.sql
+# HappyGuy MPS website update rows only: see infra/postgres/seeds/007_happyguy_mps_website_tactics.sql
+# HappyGuy branded CRM email rows only: see infra/postgres/seeds/008_happyguy_branded_crm_email_tactics.sql
 #
 # Example:
 #   DATABASE_URL='postgresql://dd_agent:dd_agent_dev@localhost:5432/dd_agents' ./scripts/apply-tactic-library-seed.sh

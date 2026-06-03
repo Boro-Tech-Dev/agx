@@ -1,0 +1,350 @@
+{
+  "version": 1,
+  "label": "HappyGuy MPS website update (job 12506629 calibrated)",
+  "source": "12506629_Website_Updates.xlsx",
+  "steps": [
+    {
+      "id": "mps_web_site_markup",
+      "label": "Account marks up last approved site (MPS markup)",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Discovery — Excel row 3."
+    },
+    {
+      "id": "mps_web_kickoff",
+      "label": "Kickoff",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Discovery — Excel row 4."
+    },
+    {
+      "id": "mps_web_markup_to_xd_hold",
+      "label": "Hold — awaiting XD figma revisions",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Calendar gap — markup ends 2026-05-06; XD revisions start 2026-05-08."
+    },
+    {
+      "id": "mps_web_xd_figma_revisions",
+      "label": "XD revisions to figma files; pass to PM",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 7."
+    },
+    {
+      "id": "mps_web_xd_to_rekickoff_hold",
+      "label": "Hold — awaiting re-kickoff",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Calendar gap — XD revisions end 2026-05-08; re-kickoff starts 2026-05-12."
+    },
+    {
+      "id": "mps_web_rekickoff_wfw",
+      "label": "Re-kickoff WFW of existing figma layout",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 8."
+    },
+    {
+      "id": "mps_web_wfw_internal_approval",
+      "label": "Internal WFW approval; XD updates per MPS markup",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Creative — Excel row 9."
+    },
+    {
+      "id": "mps_web_art_review_night_edit",
+      "label": "Art review/XD revisions; send to night edit for CC",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 10."
+    },
+    {
+      "id": "mps_web_wfw_to_fc_hold",
+      "label": "Hold — awaiting FC route",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Calendar gap — art review ends 2026-05-15; FC route starts 2026-05-18."
+    },
+    {
+      "id": "mps_web_fc_route_clean",
+      "label": "FC routes to clean; send revised layouts to client",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 11."
+    },
+    {
+      "id": "mps_web_account_prep_submission",
+      "label": "Account to prep submission",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 — Excel row 14."
+    },
+    {
+      "id": "mps_web_submit_prc1",
+      "label": "Submit to PRC by 12PM",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 — Excel row 15 (same-day milestone)."
+    },
+    {
+      "id": "mps_web_prep_to_prc1_review_hold",
+      "label": "Hold — awaiting PRC #1 review window",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Calendar gap — submit ends 2026-05-21; PRC Review #1 starts 2026-05-26."
+    },
+    {
+      "id": "mps_web_prc1_review",
+      "label": "PRC Review #1",
+      "baseline_days": 5,
+      "min_days": 1,
+      "note": "PRC #1 — Excel row 17."
+    },
+    {
+      "id": "mps_web_prc1_approval_changes",
+      "label": "PRC approval with changes",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 — Excel row 18."
+    },
+    {
+      "id": "mps_web_account_markup_changes",
+      "label": "Account marks up PRC #1 changes",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 revisions — Excel row 20 (same-day milestone)."
+    },
+    {
+      "id": "mps_web_xd_revisions_prc1",
+      "label": "XD team revisions",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 revisions — Excel row 21."
+    },
+    {
+      "id": "mps_web_rtc_wip_share_client",
+      "label": "RTC/submit WIP ticket; share with client EOD",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 revisions — Excel row 22."
+    },
+    {
+      "id": "mps_web_client_approval_resubmit",
+      "label": "Client approval to re-submit",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 revisions — Excel row 23."
+    },
+    {
+      "id": "mps_web_submit_prc_final",
+      "label": "Submit as final",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Final PRC — Excel row 25 (same-day milestone)."
+    },
+    {
+      "id": "mps_web_final_prc_approval",
+      "label": "Final PRC approval",
+      "baseline_days": 4,
+      "min_days": 1,
+      "note": "Final PRC — Excel row 26."
+    },
+    {
+      "id": "mps_web_dev_development",
+      "label": "Development (hardcoded staging build)",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Dev/staging — Excel row 43; serialized (parallel in MS Project)."
+    },
+    {
+      "id": "mps_web_dev_brazil_screenshots",
+      "label": "Brazil Dev screenshots DT/Mobile; PM uploads",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Dev/staging — Excel row 44; serialized."
+    },
+    {
+      "id": "mps_web_dev_editorial_read_staging",
+      "label": "Editorial read: dev staging to Figma/PRC submission",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Dev/staging — Excel row 45; serialized."
+    },
+    {
+      "id": "mps_web_client_staging_review",
+      "label": "Client review of staging link",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Dev/staging — Excel row 47; serialized."
+    },
+    {
+      "id": "mps_web_staging_revise",
+      "label": "Revise as needed",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Dev/staging — Excel row 49; serialized."
+    },
+    {
+      "id": "mps_web_dev_screenshot_upload",
+      "label": "Dev screenshot; PM upload",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Dev/staging — Excel row 50; serialized."
+    },
+    {
+      "id": "mps_web_team_rtc",
+      "label": "Team RTC",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Dev/staging — Excel row 51; serialized."
+    },
+    {
+      "id": "mps_web_client_final_share",
+      "label": "Share with client as final approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Dev/staging — Excel row 52 (same-day milestone); serialized."
+    },
+    {
+      "id": "mps_web_opdp_copy_back_annos",
+      "label": "Copy to prep back annos",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 28."
+    },
+    {
+      "id": "mps_web_opdp_art_indesign",
+      "label": "Art creates InDesign file with annos",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 29."
+    },
+    {
+      "id": "mps_web_opdp_edit_fc_annos",
+      "label": "Edit FC front and back annos",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 30."
+    },
+    {
+      "id": "mps_web_opdp_route_fc_clean",
+      "label": "Route FC clean (front and back annos)",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 31."
+    },
+    {
+      "id": "mps_web_opdp_onscreen_qc_submit",
+      "label": "Onscreen/QC folder; send binder to Regulatory",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 32."
+    },
+    {
+      "id": "mps_web_opdp_madrigal_review",
+      "label": "Madrigal review binder",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 34."
+    },
+    {
+      "id": "mps_web_opdp_madrigal_submit",
+      "label": "Madrigal submit binder to OPDP",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 35."
+    },
+    {
+      "id": "mps_web_opdp_review",
+      "label": "OPDP review",
+      "baseline_days": 21,
+      "min_days": 1,
+      "note": "OPDP — Excel row 36."
+    },
+    {
+      "id": "mps_web_opdp_approval",
+      "label": "OPDP approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP — Excel row 37."
+    },
+    {
+      "id": "mps_web_fda_submission",
+      "label": "FDA submission",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "FDA — Excel row 39."
+    },
+    {
+      "id": "mps_web_fda_approval_period",
+      "label": "FDA approval",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "FDA — Excel row 40."
+    },
+    {
+      "id": "mps_web_client_final_to_production_hold",
+      "label": "Hold — awaiting production push window",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Calendar gap — tuned for deploy milestone; Excel R52→R53 parallel overlap flattened."
+    },
+    {
+      "id": "mps_web_production_push_approval",
+      "label": "Approval to push to production",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Deploy — Excel row 53."
+    },
+    {
+      "id": "mps_web_devops_deploy_request",
+      "label": "Confirm site ready; submit DevOps request",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Deploy — Excel row 55."
+    },
+    {
+      "id": "mps_web_move_to_production",
+      "label": "Move site to production",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Deploy — Excel row 56."
+    },
+    {
+      "id": "mps_web_live_site_bug_review",
+      "label": "Review live site and assign bugs",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post-launch QA — Excel row 58."
+    },
+    {
+      "id": "mps_web_tracking_verification",
+      "label": "Confirm tracking on live site",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post-launch QA — Excel row 59."
+    },
+    {
+      "id": "mps_web_live_site_team_review",
+      "label": "Route live site vs approved final file",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post-launch QA — Excel row 60."
+    },
+    {
+      "id": "mps_web_qa_analytics_until_clean",
+      "label": "QA/analytics updates until clean",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post-launch QA — Excel row 61."
+    },
+    {
+      "id": "mps_web_project_closeout",
+      "label": "Project close out",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post-launch QA — Excel row 62."
+    }
+  ]
+}

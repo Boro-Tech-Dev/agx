@@ -294,6 +294,10 @@ export function ScenarioPanel({
     () => libraryTactics.find((x) => String(x.id) === selectedLibraryTacticId),
     [libraryTactics, selectedLibraryTacticId],
   );
+  const catalogTacticKey = useMemo(() => {
+    const k = selectedLibraryRow?.key;
+    return typeof k === 'string' && k.trim() ? k.trim() : undefined;
+  }, [selectedLibraryRow]);
   const groupedLibrary = useMemo(() => {
     const m = new Map<string, Record<string, unknown>[]>();
     for (const t of libraryTactics) {
@@ -402,8 +406,8 @@ export function ScenarioPanel({
   /** Phases for checkbox toggles and needed-by milestone picker — matches worker linear planner for this profile. */
   const plannerPhaseSteps = useMemo(() => {
     if (libraryCadenceUnresolved) return [];
-    return getScenarioStepsOrdered(timingProfileEffective);
-  }, [libraryCadenceUnresolved, timingProfileEffective]);
+    return getScenarioStepsOrdered(timingProfileEffective, catalogTacticKey);
+  }, [libraryCadenceUnresolved, timingProfileEffective, catalogTacticKey]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -501,8 +505,8 @@ export function ScenarioPanel({
 
   const scenarioSpineLength = useMemo(() => {
     if (libraryCadenceUnresolved) return 0;
-    return getScenarioStepsOrdered(timingProfileEffective).length;
-  }, [libraryCadenceUnresolved, timingProfileEffective]);
+    return getScenarioStepsOrdered(timingProfileEffective, catalogTacticKey).length;
+  }, [libraryCadenceUnresolved, timingProfileEffective, catalogTacticKey]);
 
   /** Last index where working differs from last worker compute; suffix recompute pins `0..index`. */
   const recomputeFreezeAfterIndex = useMemo(() => {
@@ -574,6 +578,7 @@ export function ScenarioPanel({
           holidays: holidaysForApi,
           phaseAllowNonWorkingDays: phaseAllowNonWorking,
           activeModifierIds,
+          ...(catalogTacticKey ? { catalogTacticKey } : {}),
           ...(usesSkillArtsTieredPrbCadence(timingProfileForApi) ? { pageCount: skillArtsPageCount } : {}),
         };
         if (planningMode === 'kickoff') {
@@ -633,6 +638,7 @@ export function ScenarioPanel({
     phaseAllowNonWorking,
     activeModifierIds,
     skillArtsPageCount,
+    catalogTacticKey,
   ]);
 
   const payload = useMemo(() => {
@@ -759,6 +765,7 @@ export function ScenarioPanel({
         anchorStartIso: anchorIso,
         freezeAfterStepIndex: recomputeFreezeAfterIndex,
         pinnedPrefixSteps: prefix,
+        ...(catalogTacticKey ? { catalogTacticKey } : {}),
         ...(usesSkillArtsTieredPrbCadence(timingProfileForApi) ? { pageCount: skillArtsPageCount } : {}),
       };
       const result = await postComputeScenarioSteps(body);

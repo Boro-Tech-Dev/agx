@@ -113,6 +113,102 @@ function main() {
     happyguySpineCount += hg.steps.length;
   }
 
+  const aasldPickupPath = join(CFG, 'steps_happyguy_aasld_congress_print_pickup.json');
+  let aasldPickupCount = 0;
+  if (existsSync(aasldPickupPath)) {
+    const aasldData = readJson(aasldPickupPath);
+    if (aasldData.version !== 1) {
+      fail(`steps_happyguy_aasld_congress_print_pickup.json: expected version 1, got ${aasldData.version}`);
+    }
+    validateStepsArray(aasldData.steps, 'steps_happyguy_aasld_congress_print_pickup.json');
+    if (aasldData.steps.length !== 35) {
+      fail(
+        `steps_happyguy_aasld_congress_print_pickup.json: expected 35 steps, got ${aasldData.steps.length}`,
+      );
+    }
+    const first = aasldData.steps[0];
+    const last = aasldData.steps[aasldData.steps.length - 1];
+    if (first?.id !== 'aasld_pickup_discovery_update_timeline_egnyte') {
+      fail('steps_happyguy_aasld_congress_print_pickup.json: first step id must be aasld_pickup_discovery_update_timeline_egnyte');
+    }
+    if (last?.id !== 'aasld_pickup_project_closeout') {
+      fail('steps_happyguy_aasld_congress_print_pickup.json: last step id must be aasld_pickup_project_closeout');
+    }
+    aasldPickupCount = aasldData.steps.length;
+  }
+
+  const aasldWifiPath = join(CFG, 'steps_happyguy_aasld_congress_wifi_splash.json');
+  let aasldWifiCount = 0;
+  if (existsSync(aasldWifiPath)) {
+    const wifiData = readJson(aasldWifiPath);
+    if (wifiData.version !== 1) {
+      fail(`steps_happyguy_aasld_congress_wifi_splash.json: expected version 1, got ${wifiData.version}`);
+    }
+    validateStepsArray(wifiData.steps, 'steps_happyguy_aasld_congress_wifi_splash.json');
+    if (wifiData.steps.length !== 31) {
+      fail(
+        `steps_happyguy_aasld_congress_wifi_splash.json: expected 31 steps, got ${wifiData.steps.length}`,
+      );
+    }
+    const wifiFirst = wifiData.steps[0];
+    const wifiLast = wifiData.steps[wifiData.steps.length - 1];
+    if (wifiFirst?.id !== 'aasld_wifi_discovery_update_timeline_egnyte') {
+      fail('steps_happyguy_aasld_congress_wifi_splash.json: first step id must be aasld_wifi_discovery_update_timeline_egnyte');
+    }
+    if (wifiLast?.id !== 'aasld_wifi_project_closeout') {
+      fail('steps_happyguy_aasld_congress_wifi_splash.json: last step id must be aasld_wifi_project_closeout');
+    }
+    aasldWifiCount = wifiData.steps.length;
+  }
+
+  const mpsWebsitePath = join(CFG, 'steps_happyguy_mps_website_update.json');
+  let mpsWebsiteCount = 0;
+  if (existsSync(mpsWebsitePath)) {
+    const mpsData = readJson(mpsWebsitePath);
+    if (mpsData.version !== 1) {
+      fail(`steps_happyguy_mps_website_update.json: expected version 1, got ${mpsData.version}`);
+    }
+    validateStepsArray(mpsData.steps, 'steps_happyguy_mps_website_update.json');
+    if (mpsData.steps.length !== 49) {
+      fail(
+        `steps_happyguy_mps_website_update.json: expected 49 steps, got ${mpsData.steps.length}`,
+      );
+    }
+    const first = mpsData.steps[0];
+    const last = mpsData.steps[mpsData.steps.length - 1];
+    if (first?.id !== 'mps_web_site_markup') {
+      fail('steps_happyguy_mps_website_update.json: first step id must be mps_web_site_markup');
+    }
+    if (last?.id !== 'mps_web_project_closeout') {
+      fail('steps_happyguy_mps_website_update.json: last step id must be mps_web_project_closeout');
+    }
+    mpsWebsiteCount = mpsData.steps.length;
+  }
+
+  const brandedCrmEmailPath = join(CFG, 'steps_happyguy_branded_crm_email.json');
+  let brandedCrmEmailCount = 0;
+  if (existsSync(brandedCrmEmailPath)) {
+    const crmData = readJson(brandedCrmEmailPath);
+    if (crmData.version !== 1) {
+      fail(`steps_happyguy_branded_crm_email.json: expected version 1, got ${crmData.version}`);
+    }
+    validateStepsArray(crmData.steps, 'steps_happyguy_branded_crm_email.json');
+    if (crmData.steps.length !== 82) {
+      fail(
+        `steps_happyguy_branded_crm_email.json: expected 82 steps, got ${crmData.steps.length}`,
+      );
+    }
+    const first = crmData.steps[0];
+    const last = crmData.steps[crmData.steps.length - 1];
+    if (first?.id !== 'crm_email_discovery_brief_timeline') {
+      fail('steps_happyguy_branded_crm_email.json: first step id must be crm_email_discovery_brief_timeline');
+    }
+    if (last?.id !== 'crm_email_project_closeout') {
+      fail('steps_happyguy_branded_crm_email.json: last step id must be crm_email_project_closeout');
+    }
+    brandedCrmEmailCount = crmData.steps.length;
+  }
+
   const reg = readJson(regPath);
   const modList = reg.modifiers;
   if (!Array.isArray(modList)) fail('modifiers.json: modifiers must be an array');
@@ -230,7 +326,7 @@ function main() {
   }
 
   console.log(
-    `scenario_planner config OK (${steps.length} default steps${rteCount ? `, ${rteCount} SkillArts RTE steps` : ''}${happyguySpineCount ? `, ${happyguySpineCount} HappyGuy MLR spine steps (2 files)` : ''}${opdpCount ? `, ${opdpCount} OPDP binder steps` : ''}, ${modList.length} modifiers, ${tacticFiles.length} modifier bundle files, ${profiles.length} timing profiles).`,
+    `scenario_planner config OK (${steps.length} default steps${rteCount ? `, ${rteCount} SkillArts RTE steps` : ''}${happyguySpineCount ? `, ${happyguySpineCount} HappyGuy MLR spine steps (2 files)` : ''}${aasldPickupCount ? `, ${aasldPickupCount} AASLD congress print pick-up steps` : ''}${aasldWifiCount ? `, ${aasldWifiCount} AASLD congress wifi splash steps` : ''}${mpsWebsiteCount ? `, ${mpsWebsiteCount} MPS website update steps` : ''}${brandedCrmEmailCount ? `, ${brandedCrmEmailCount} branded CRM email steps` : ''}${opdpCount ? `, ${opdpCount} OPDP binder steps` : ''}, ${modList.length} modifiers, ${tacticFiles.length} modifier bundle files, ${profiles.length} timing profiles).`,
   );
 }
 

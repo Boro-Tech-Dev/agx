@@ -31,6 +31,7 @@ class FindLatestKickoffParams(TypedDict, total=False):
     activeModifierIds: list[str]
     pageCount: int
     searchWindowDays: int
+    catalogTacticKey: str
 
 
 class FindLatestOk(TypedDict):
@@ -93,6 +94,8 @@ def _forward_params(p: FindLatestKickoffParams, anchor_start_iso: str) -> Comput
         out['activeModifierIds'] = p['activeModifierIds']
     if 'pageCount' in p:
         out['pageCount'] = p['pageCount']
+    if 'catalogTacticKey' in p:
+        out['catalogTacticKey'] = p['catalogTacticKey']
     return out
 
 

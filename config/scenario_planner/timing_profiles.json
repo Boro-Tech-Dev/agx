@@ -518,6 +518,27 @@
       "client_family": "happyguy",
       "include_opdp_binder": false,
       "happyguy_spine": "thursday"
+    },
+    {
+      "id": "happyguy_aasld_congress_print_pickup",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {},
+      "client_family": "happyguy",
+      "include_opdp_binder": false
+    },
+    {
+      "id": "happyguy_mps_website_update",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {},
+      "client_family": "happyguy",
+      "include_opdp_binder": false
+    },
+    {
+      "id": "happyguy_branded_crm_email",
+      "prb_cadence": "linear",
+      "non_prb_multipliers": {},
+      "client_family": "happyguy",
+      "include_opdp_binder": false
     }
   ],
   "aliases": {

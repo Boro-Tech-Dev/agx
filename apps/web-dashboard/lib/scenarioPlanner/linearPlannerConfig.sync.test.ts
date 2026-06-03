@@ -54,4 +54,35 @@ describe('scenario planner config vs phase catalog', () => {
     expect(happyGuyMlrSpineWeekday('happyguy_mad_healthgrades_360_email')).toBe('thursday');
     expect(happyGuyMlrSpineWeekday('generic_tactic')).toBe('thursday');
   });
+
+  it('AASLD congress print pick-up spine has 35 custom steps', () => {
+    const steps = getScenarioStepsOrdered('happyguy_aasld_congress_print_pickup');
+    expect(steps.length).toBe(35);
+    expect(steps[0]!.id).toBe('aasld_pickup_discovery_update_timeline_egnyte');
+    expect(steps[steps.length - 1]!.id).toBe('aasld_pickup_project_closeout');
+  });
+
+  it('AASLD congress wifi splash spine has 31 custom steps when catalog tactic key is set', () => {
+    const steps = getScenarioStepsOrdered(
+      'happyguy_aasld_congress_print_pickup',
+      'happyguy_aasld_wifi_splash_page',
+    );
+    expect(steps.length).toBe(31);
+    expect(steps[0]!.id).toBe('aasld_wifi_discovery_update_timeline_egnyte');
+    expect(steps[steps.length - 1]!.id).toBe('aasld_wifi_project_closeout');
+  });
+
+  it('MPS website update spine has 49 custom steps', () => {
+    const steps = getScenarioStepsOrdered('happyguy_mps_website_update');
+    expect(steps.length).toBe(49);
+    expect(steps[0]!.id).toBe('mps_web_site_markup');
+    expect(steps[steps.length - 1]!.id).toBe('mps_web_project_closeout');
+  });
+
+  it('HappyGuy branded CRM email spine has 82 custom steps', () => {
+    const steps = getScenarioStepsOrdered('happyguy_branded_crm_email');
+    expect(steps.length).toBe(82);
+    expect(steps[0]!.id).toBe('crm_email_discovery_brief_timeline');
+    expect(steps[steps.length - 1]!.id).toBe('crm_email_project_closeout');
+  });
 });

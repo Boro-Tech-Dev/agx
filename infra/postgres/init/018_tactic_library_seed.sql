@@ -716,4 +716,57 @@ ON CONFLICT (key) DO UPDATE SET
   status = EXCLUDED.status,
   metadata = EXCLUDED.metadata,
   updated_at = now();
+INSERT INTO tactics (key, name, description, tactic_kind, channel, medium, format, tags, status, metadata)
+VALUES ('happyguy_aasld_hotel_key_cards', 'HappyGuy — AASLD Hotel Key Cards', 'Congress hotel key card pick-up/revise; AASLD review, FDA 2253, print release', 'owned', 'print', 'congress', 'hotel_key_card', '["happyguy","aasld","congress","print","hotel_key_cards"]'::jsonb, 'active', '{"timing_profile":"happyguy_aasld_congress_print_pickup"}'::jsonb)
+ON CONFLICT (key) DO UPDATE SET
+  name = EXCLUDED.name,
+  description = EXCLUDED.description,
+  tactic_kind = EXCLUDED.tactic_kind,
+  channel = EXCLUDED.channel,
+  medium = EXCLUDED.medium,
+  format = EXCLUDED.format,
+  tags = EXCLUDED.tags,
+  status = EXCLUDED.status,
+  metadata = EXCLUDED.metadata,
+  updated_at = now();
+INSERT INTO tactics (key, name, description, tactic_kind, channel, medium, format, tags, status, metadata)
+VALUES ('happyguy_aasld_wifi_splash_page', 'HappyGuy — AASLD Wifi Splash Page', 'Congress wifi splash page pick-up/revise; AASLD TENT review, file release, congress handoff', 'owned', 'digital', 'congress', 'wifi_splash', '["happyguy","aasld","congress","digital","wifi_splash"]'::jsonb, 'active', '{"timing_profile":"happyguy_aasld_congress_print_pickup"}'::jsonb)
+ON CONFLICT (key) DO UPDATE SET
+  name = EXCLUDED.name,
+  description = EXCLUDED.description,
+  tactic_kind = EXCLUDED.tactic_kind,
+  channel = EXCLUDED.channel,
+  medium = EXCLUDED.medium,
+  format = EXCLUDED.format,
+  tags = EXCLUDED.tags,
+  status = EXCLUDED.status,
+  metadata = EXCLUDED.metadata,
+  updated_at = now();
+INSERT INTO tactics (key, name, description, tactic_kind, channel, medium, format, tags, status, metadata)
+VALUES ('happyguy_mps_website_updates', 'HappyGuy — MPS Website Updates', 'Figma/PRC website update; extended OPDP, FDA, production deploy, post-launch QA', 'owned', 'digital', 'website', 'web', '["happyguy","mps","website","prc","opdp"]'::jsonb, 'active', '{"timing_profile":"happyguy_mps_website_update"}'::jsonb)
+ON CONFLICT (key) DO UPDATE SET
+  name = EXCLUDED.name,
+  description = EXCLUDED.description,
+  tactic_kind = EXCLUDED.tactic_kind,
+  channel = EXCLUDED.channel,
+  medium = EXCLUDED.medium,
+  format = EXCLUDED.format,
+  tags = EXCLUDED.tags,
+  status = EXCLUDED.status,
+  metadata = EXCLUDED.metadata,
+  updated_at = now();
+
+INSERT INTO tactics (key, name, description, tactic_kind, channel, medium, format, tags, status, metadata)
+VALUES ('happyguy_branded_crm_emails', 'HappyGuy — Branded CRM Email Updates', 'Branded CRM email update; 3 PRC rounds, OPDP binder, Martech test blasts, FDA 2253', 'owned', 'digital', 'email', 'html', '["happyguy","crm","email","prc","opdp","martech"]'::jsonb, 'active', '{"timing_profile":"happyguy_branded_crm_email"}'::jsonb)
+ON CONFLICT (key) DO UPDATE SET
+  name = EXCLUDED.name,
+  description = EXCLUDED.description,
+  tactic_kind = EXCLUDED.tactic_kind,
+  channel = EXCLUDED.channel,
+  medium = EXCLUDED.medium,
+  format = EXCLUDED.format,
+  tags = EXCLUDED.tags,
+  status = EXCLUDED.status,
+  metadata = EXCLUDED.metadata,
+  updated_at = now();
 COMMIT;

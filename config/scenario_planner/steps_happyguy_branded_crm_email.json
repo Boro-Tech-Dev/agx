@@ -1,0 +1,581 @@
+{
+  "version": 1,
+  "label": "HappyGuy branded CRM email (job 12487341 calibrated)",
+  "source": "12487341_Branded_CRM_Emails.xlsx",
+  "steps": [
+    {
+      "id": "crm_email_discovery_brief_timeline",
+      "label": "Brief and Timeline Creation",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Discovery — Excel row 3."
+    },
+    {
+      "id": "crm_email_discovery_egnyte_setup",
+      "label": "Update timeline/estimate and create job folder on Egnyte",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Discovery — Excel row 4."
+    },
+    {
+      "id": "crm_email_discovery_job_number",
+      "label": "Request job number creation and link job number to project",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Discovery — Excel row 5."
+    },
+    {
+      "id": "crm_email_discovery_client_brief_review",
+      "label": "Client Review of Project Brief and Timeline",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Discovery — Excel row 6."
+    },
+    {
+      "id": "crm_email_discovery_brief_approval",
+      "label": "Review brief with client and receive approval to kickoff",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Discovery — Excel row 7."
+    },
+    {
+      "id": "crm_email_brief_to_kickoff_hold",
+      "label": "Hold — awaiting kickoff window",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "Calendar gap — brief approval ends 2026-03-27; kickoff starts 2026-04-01."
+    },
+    {
+      "id": "crm_email_kickoff_meeting",
+      "label": "Kickoff meeting",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Agency kickoff — Excel row 9."
+    },
+    {
+      "id": "crm_email_regops_portal_setup",
+      "label": "Submit request to open job in client submission portal and add portal code",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Agency kickoff — Excel row 10."
+    },
+    {
+      "id": "crm_email_markup_prior_submission",
+      "label": "Mark up last approved submission with content changes",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 13."
+    },
+    {
+      "id": "crm_email_account_approve_markups",
+      "label": "Account to approve markups",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 14."
+    },
+    {
+      "id": "crm_email_copy_pull_references",
+      "label": "Copy to begin pulling reference pieces per new process",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 15."
+    },
+    {
+      "id": "crm_email_copy_revise_route_account",
+      "label": "Copy to revise, mark up if needed; route push to Account",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 16."
+    },
+    {
+      "id": "crm_email_art_update_layout",
+      "label": "Art to update layout for email; provide to PM for routing",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Creative — Excel row 21."
+    },
+    {
+      "id": "crm_email_pm_route_team_clean",
+      "label": "PM to route fairly clean through team",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Creative — Excel row 22."
+    },
+    {
+      "id": "crm_email_martech_brazil_signoff",
+      "label": "Martech and Brazil Digital sign-off on changes",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 23."
+    },
+    {
+      "id": "crm_email_account_share_client_submit",
+      "label": "Account to share with client for approval to submit",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 24."
+    },
+    {
+      "id": "crm_email_consistency_check_updates",
+      "label": "Updates from consistency check",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 25."
+    },
+    {
+      "id": "crm_email_revisions_route_clean",
+      "label": "Revisions/route to clean",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 26."
+    },
+    {
+      "id": "crm_email_client_review_updates",
+      "label": "Client review of email updates",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Creative — Excel row 28."
+    },
+    {
+      "id": "crm_email_client_approval_submit",
+      "label": "Client approval to submit emails",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Creative — Excel row 29."
+    },
+    {
+      "id": "crm_email_fact_check_annotations",
+      "label": "Add annotations for fact checking and provide reference materials",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Fact check — Excel row 31; serialized (parallel in MS Project)."
+    },
+    {
+      "id": "crm_email_fact_check_hold_client",
+      "label": "Fact check email; hold for client comments (if any)",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Fact check — Excel row 32; serialized."
+    },
+    {
+      "id": "crm_email_fact_check_revisions_route",
+      "label": "Revisions based on client feedback (if any); route clean",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Fact check — Excel row 33; serialized."
+    },
+    {
+      "id": "crm_email_markup_to_creative_hold",
+      "label": "Hold — awaiting creative markup start",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Calendar gap — portal setup ends 2026-04-02; markup starts 2026-04-01 (Excel parallel)."
+    },
+    {
+      "id": "crm_email_regops_wip_request",
+      "label": "Submit Reg Ops request for WIP review for portal routing",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 prep — Excel row 44."
+    },
+    {
+      "id": "crm_email_prc1_annotation_updates",
+      "label": "Email updates based on new PRC annotations plan",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 prep — Excel row 45."
+    },
+    {
+      "id": "crm_email_prc1_edit_route_clean",
+      "label": "Complete round of full edit for PRC #1 prep and route clean",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 prep — Excel row 46."
+    },
+    {
+      "id": "crm_email_prc1_client_approval_submit",
+      "label": "Send files to client for approval to submit for PRC #1",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 prep — Excel row 47."
+    },
+    {
+      "id": "crm_email_prc1_rtc_veeva_load",
+      "label": "RTC/RegOps WIP ticket/load into Veeva",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 prep — Excel row 48."
+    },
+    {
+      "id": "crm_email_prc1_regops_tag_link",
+      "label": "RegOps to tag and link",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 prep — Excel row 49."
+    },
+    {
+      "id": "crm_email_prc1_account_qc_client_approval",
+      "label": "Account to QC; receive client approval to submit",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 prep — Excel row 50."
+    },
+    {
+      "id": "crm_email_prc1_submit",
+      "label": "PRC #1 submission",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 — Excel row 52."
+    },
+    {
+      "id": "crm_email_prep_to_prc1_review_hold",
+      "label": "Hold — awaiting PRC #1 review window",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Calendar gap — submit ends 2026-05-05; PRC #1 review starts 2026-05-08."
+    },
+    {
+      "id": "crm_email_prc1_review_period",
+      "label": "PRC #1 review period",
+      "baseline_days": 5,
+      "min_days": 1,
+      "note": "PRC #1 — Excel row 53."
+    },
+    {
+      "id": "crm_email_prc1_approval",
+      "label": "PRC #1 review/approval expected",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #1 — Excel row 54."
+    },
+    {
+      "id": "crm_email_post_prc1_pull_comments",
+      "label": "Account to pull down PRC #1 comments/approval; place on server",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post–PRC #1 — Excel row 57."
+    },
+    {
+      "id": "crm_email_post_prc1_markup_qc",
+      "label": "Mark up PRC #1 updates; account to QC",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post–PRC #1 — Excel row 58."
+    },
+    {
+      "id": "crm_email_post_prc1_email_updates",
+      "label": "Email updates based on PRC #1 comments",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post–PRC #1 — Excel row 59."
+    },
+    {
+      "id": "crm_email_post_prc1_copy_annos_route",
+      "label": "Copy to add annos; route emails clean against backup and PRC",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Post–PRC #1 — Excel row 60."
+    },
+    {
+      "id": "crm_email_post_prc1_client_approval_prc2",
+      "label": "Send files to client for approval to submit for PRC #2",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post–PRC #1 — Excel row 61."
+    },
+    {
+      "id": "crm_email_post_prc1_client_load_approval",
+      "label": "Account to receive client approval to submit for PRC #2; load",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post–PRC #1 — Excel row 62."
+    },
+    {
+      "id": "crm_email_post_prc1_regops_tag_link",
+      "label": "RegOps to tag and link",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post–PRC #1 — Excel row 63."
+    },
+    {
+      "id": "crm_email_prc2_submit",
+      "label": "PRC #2 submission by account (EOD)",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #2 — Excel row 65."
+    },
+    {
+      "id": "crm_email_prep_to_prc2_review_hold",
+      "label": "Hold — awaiting PRC #2 review window",
+      "baseline_days": 5,
+      "min_days": 1,
+      "note": "Calendar gap — PRC #2 submit 2026-05-21; review starts 2026-05-28."
+    },
+    {
+      "id": "crm_email_prc2_review_period",
+      "label": "PRC #2 review period",
+      "baseline_days": 4,
+      "min_days": 1,
+      "note": "PRC #2 — Excel row 67."
+    },
+    {
+      "id": "crm_email_prc2_approval",
+      "label": "PRC #2 review/approval expected",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "PRC #2 — Excel row 68."
+    },
+    {
+      "id": "crm_email_post_prc2_pull_comments",
+      "label": "Account to pull down PRC #2 comments/approval; place on server",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post–PRC #2 — Excel row 69."
+    },
+    {
+      "id": "crm_email_post_prc2_markup_qc",
+      "label": "Mark up PRC #2 updates; account to QC",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post–PRC #2 — Excel row 70."
+    },
+    {
+      "id": "crm_email_post_prc2_email_updates",
+      "label": "Email updates based on PRC #2 comments",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post–PRC #2 — Excel row 71."
+    },
+    {
+      "id": "crm_email_post_prc2_copy_annos_route",
+      "label": "Copy to add annos; route emails clean against backup and PRC",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Post–PRC #2 — Excel row 72."
+    },
+    {
+      "id": "crm_email_post_prc2_client_approval_final",
+      "label": "Send files to client for approval to submit for final PRC",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post–PRC #2 — Excel row 73."
+    },
+    {
+      "id": "crm_email_final_prc_client_fyi",
+      "label": "Account to share with client as FYI — final approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Final PRC — Excel row 75."
+    },
+    {
+      "id": "crm_email_final_prc_regops_upload",
+      "label": "Submit Reg Ops request to upload final PRC submission file",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Final PRC — Excel row 76."
+    },
+    {
+      "id": "crm_email_final_prc_review_period",
+      "label": "Final PRC review period",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "Final PRC — Excel row 77."
+    },
+    {
+      "id": "crm_email_final_prc_approval",
+      "label": "Final PRC approval received",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Final PRC — Excel row 78."
+    },
+    {
+      "id": "crm_email_opdp_pm_binder_folder",
+      "label": "PM to creative binder folder in job folder",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 80; serialized (parallel in MS Project)."
+    },
+    {
+      "id": "crm_email_opdp_copy_back_annos",
+      "label": "Copy to create back annos",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 81."
+    },
+    {
+      "id": "crm_email_opdp_pm_route_annos",
+      "label": "PM to route back annos to edit and copy until clean",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 82."
+    },
+    {
+      "id": "crm_email_opdp_art_indesign_binder",
+      "label": "Art to create InDesign file with front and back annos",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 83."
+    },
+    {
+      "id": "crm_email_opdp_pm_route_binder_clean",
+      "label": "PM to route completed binder clean",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 84."
+    },
+    {
+      "id": "crm_email_opdp_onscreen_qc",
+      "label": "Onscreen to QC binder; PM to schedule",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 85."
+    },
+    {
+      "id": "crm_email_opdp_art_annotated_files",
+      "label": "Final art annotated and non-annotated files",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 86."
+    },
+    {
+      "id": "crm_email_opdp_account_review_binder",
+      "label": "Account to review binder before upload to client",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 87."
+    },
+    {
+      "id": "crm_email_opdp_client_binder_review",
+      "label": "Binder review by client",
+      "baseline_days": 6,
+      "min_days": 1,
+      "note": "OPDP binder — Excel row 88."
+    },
+    {
+      "id": "crm_email_opdp_submit",
+      "label": "OPDP binder submit",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP — Excel row 89."
+    },
+    {
+      "id": "crm_email_opdp_review",
+      "label": "OPDP binder review",
+      "baseline_days": 22,
+      "min_days": 1,
+      "note": "OPDP — Excel row 90."
+    },
+    {
+      "id": "crm_email_opdp_approval",
+      "label": "OPDP binder approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "OPDP — Excel row 91."
+    },
+    {
+      "id": "crm_email_dev_art_handoff",
+      "label": "Art to collect files for DEV handoff",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Email DEV — Excel row 93; serialized."
+    },
+    {
+      "id": "crm_email_dev_workfront_request",
+      "label": "PM to request DEV in WorkFront",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Email DEV — Excel row 94."
+    },
+    {
+      "id": "crm_email_dev_build_route",
+      "label": "DEV to develop email; provide to PM for route",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Email DEV — Excel row 95."
+    },
+    {
+      "id": "crm_email_dev_route_vs_final_prc",
+      "label": "PM to route DEV file against Final PRC approved file until clean",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Email DEV — Excel row 96."
+    },
+    {
+      "id": "crm_email_dev_martech_coordination",
+      "label": "Coordinate DEV handoff with Martech for test environment",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Email DEV — serialized gap between route and Martech handoff."
+    },
+    {
+      "id": "crm_email_dev_martech_handoff",
+      "label": "DEV to package for handoff to Martech",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Email DEV — Excel row 97."
+    },
+    {
+      "id": "crm_email_martech_handoff_seed_list",
+      "label": "Hand off files and seed list",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Martech test blasts — Excel row 102; serialized."
+    },
+    {
+      "id": "crm_email_martech_program_test_blasts",
+      "label": "Program for test blasts",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Martech test blasts — Excel row 103."
+    },
+    {
+      "id": "crm_email_martech_receive_route_qa",
+      "label": "Receive test blast and route files through team for QA",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Martech test blasts — Excel row 104."
+    },
+    {
+      "id": "crm_email_martech_qa_test_blast",
+      "label": "QA test blast",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Martech test blasts — Excel row 105."
+    },
+    {
+      "id": "crm_email_martech_deploy_approval_hold",
+      "label": "Hold — awaiting deployment approval window",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Calendar gap — tuned for deployment approval milestone."
+    },
+    {
+      "id": "crm_email_martech_deploy_approval",
+      "label": "Provide approval for deployment",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Martech deploy — Excel row 106."
+    },
+    {
+      "id": "crm_email_fda_client_submit_2253",
+      "label": "Client to submit for FDA 2253",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "FDA — Excel row 99."
+    },
+    {
+      "id": "crm_email_fda_filing_period",
+      "label": "FDA filing period",
+      "baseline_days": 5,
+      "min_days": 1,
+      "note": "FDA — Excel row 100."
+    },
+    {
+      "id": "crm_email_project_closeout",
+      "label": "Project close out",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Closeout — Excel row 107."
+    }
+  ]
+}

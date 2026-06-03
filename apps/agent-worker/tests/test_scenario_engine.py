@@ -375,6 +375,188 @@ class TestComputeScenarioSteps(unittest.TestCase):
                 self.assertEqual(steps[i]['id'], cat['phase_id'])
                 self.assertEqual(steps[i]['label'], cat['label'])
 
+    def test_aasld_congress_print_pickup_spine_and_excel_milestones(self) -> None:
+        steps = get_scenario_steps_ordered('happyguy_aasld_congress_print_pickup')
+        self.assertEqual(len(steps), 35)
+        self.assertEqual(steps[0]['id'], 'aasld_pickup_discovery_update_timeline_egnyte')
+        self.assertEqual(steps[-1]['id'], 'aasld_pickup_project_closeout')
+
+        r = compute_scenario_steps(
+            {
+                'timingProfile': 'happyguy_aasld_congress_print_pickup',
+                'anchorStartIso': '2026-04-29',
+                'holidays': frozenset(),
+            }
+        )
+        self.assertTrue(r['ok'])
+        assert r['ok'] is True
+        self.assertNotIn('opdp_binder_steps', r)
+        self.assertEqual(len(r['steps']), 35)
+
+        i_kickoff = _breakdown_index_for(r['breakdown'], 'aasld_pickup_kickoff')
+        i_m1_route = _breakdown_index_for(r['breakdown'], 'aasld_pickup_m1_route_team_clean')
+        i_client_send = _breakdown_index_for(r['breakdown'], 'aasld_pickup_client_send_approval')
+        i_print_proof = _breakdown_index_for(r['breakdown'], 'aasld_pickup_print_proof_route')
+        i_handoff = _breakdown_index_for(r['breakdown'], 'aasld_pickup_handoff_files_hardcode')
+        i_closeout = _breakdown_index_for(r['breakdown'], 'aasld_pickup_project_closeout')
+
+        self.assertEqual(r['steps'][i_kickoff]['start_date'], '2026-05-06')
+        self.assertEqual(r['steps'][i_m1_route]['end_date'], '2026-05-21')
+        self.assertEqual(r['steps'][i_client_send]['start_date'], '2026-06-03')
+        self.assertEqual(r['steps'][i_print_proof]['end_date'], '2026-07-20')
+        self.assertEqual(r['steps'][i_handoff]['start_date'], '2026-09-15')
+        self.assertEqual(r['steps'][i_closeout]['end_date'], '2026-09-17')
+
+        total_wd = inclusive_working_day_span(
+            r['steps'][0]['start_date'],
+            r['steps'][-1]['end_date'],
+            frozenset(),
+        )
+        self.assertEqual(total_wd, 102)
+
+    def test_aasld_congress_wifi_splash_spine_and_excel_milestones(self) -> None:
+        steps = get_scenario_steps_ordered(
+            'happyguy_aasld_congress_print_pickup',
+            'happyguy_aasld_wifi_splash_page',
+        )
+        self.assertEqual(len(steps), 31)
+        self.assertEqual(steps[0]['id'], 'aasld_wifi_discovery_update_timeline_egnyte')
+        self.assertEqual(steps[-1]['id'], 'aasld_wifi_project_closeout')
+
+        r = compute_scenario_steps(
+            {
+                'timingProfile': 'happyguy_aasld_congress_print_pickup',
+                'catalogTacticKey': 'happyguy_aasld_wifi_splash_page',
+                'anchorStartIso': '2026-04-29',
+                'holidays': frozenset(),
+            }
+        )
+        self.assertTrue(r['ok'])
+        assert r['ok'] is True
+        self.assertNotIn('opdp_binder_steps', r)
+        self.assertEqual(len(r['steps']), 31)
+
+        i_kickoff = _breakdown_index_for(r['breakdown'], 'aasld_wifi_kickoff')
+        i_markup = _breakdown_index_for(r['breakdown'], 'aasld_wifi_content_markup_files')
+        i_reko = _breakdown_index_for(r['breakdown'], 'aasld_wifi_rekickoff')
+        i_pickup = _breakdown_index_for(r['breakdown'], 'aasld_wifi_m1_pickup_revise_create')
+        i_route = _breakdown_index_for(r['breakdown'], 'aasld_wifi_d1_route_team_clean')
+        i_client_send = _breakdown_index_for(r['breakdown'], 'aasld_wifi_client_send_approval')
+        i_final_client = _breakdown_index_for(
+            r['breakdown'], 'aasld_wifi_final_client_receive_aasld_clearance'
+        )
+        i_aasld_final = _breakdown_index_for(r['breakdown'], 'aasld_wifi_aasld_final_approval')
+        i_file_release = _breakdown_index_for(r['breakdown'], 'aasld_wifi_file_release_submit')
+        i_handoff = _breakdown_index_for(r['breakdown'], 'aasld_wifi_handoff_files_hardcode')
+        i_closeout = _breakdown_index_for(r['breakdown'], 'aasld_wifi_project_closeout')
+
+        self.assertEqual(r['steps'][i_kickoff]['start_date'], '2026-05-06')
+        self.assertEqual(r['steps'][i_markup]['start_date'], '2026-05-11')
+        self.assertEqual(r['steps'][i_reko]['end_date'], '2026-05-18')
+        self.assertEqual(r['steps'][i_pickup]['end_date'], '2026-06-02')
+        self.assertEqual(r['steps'][i_route]['end_date'], '2026-06-03')
+        self.assertEqual(r['steps'][i_client_send]['start_date'], '2026-06-04')
+        self.assertEqual(r['steps'][i_final_client]['end_date'], '2026-06-16')
+        self.assertEqual(r['steps'][i_aasld_final]['end_date'], '2026-07-06')
+        self.assertEqual(r['steps'][i_file_release]['end_date'], '2026-07-09')
+        self.assertEqual(r['steps'][i_handoff]['start_date'], '2026-09-15')
+        self.assertEqual(r['steps'][i_closeout]['end_date'], '2026-09-17')
+
+        total_wd = inclusive_working_day_span(
+            r['steps'][0]['start_date'],
+            r['steps'][-1]['end_date'],
+            frozenset(),
+        )
+        self.assertEqual(total_wd, 102)
+
+    def test_mps_website_update_spine_and_excel_milestones(self) -> None:
+        steps = get_scenario_steps_ordered('happyguy_mps_website_update')
+        self.assertEqual(len(steps), 49)
+        self.assertEqual(steps[0]['id'], 'mps_web_site_markup')
+        self.assertEqual(steps[-1]['id'], 'mps_web_project_closeout')
+
+        r = compute_scenario_steps(
+            {
+                'timingProfile': 'happyguy_mps_website_update',
+                'anchorStartIso': '2026-05-06',
+                'holidays': frozenset(),
+            }
+        )
+        self.assertTrue(r['ok'])
+        assert r['ok'] is True
+        self.assertNotIn('opdp_binder_steps', r)
+        self.assertEqual(len(r['steps']), 49)
+
+        i_kickoff = _breakdown_index_for(r['breakdown'], 'mps_web_kickoff')
+        i_submit = _breakdown_index_for(r['breakdown'], 'mps_web_submit_prc1')
+        i_prc1 = _breakdown_index_for(r['breakdown'], 'mps_web_prc1_review')
+        i_final = _breakdown_index_for(r['breakdown'], 'mps_web_final_prc_approval')
+        i_opdp = _breakdown_index_for(r['breakdown'], 'mps_web_opdp_approval')
+        i_fda = _breakdown_index_for(r['breakdown'], 'mps_web_fda_approval_period')
+        i_move = _breakdown_index_for(r['breakdown'], 'mps_web_move_to_production')
+        i_closeout = _breakdown_index_for(r['breakdown'], 'mps_web_project_closeout')
+
+        self.assertEqual(r['steps'][i_kickoff]['start_date'], '2026-05-07')
+        self.assertEqual(r['steps'][i_submit]['start_date'], '2026-05-22')
+        self.assertEqual(r['steps'][i_prc1]['start_date'], '2026-05-26')
+        self.assertEqual(r['steps'][i_final]['end_date'], '2026-06-15')
+        self.assertEqual(r['steps'][i_opdp]['start_date'], '2026-08-12')
+        self.assertEqual(r['steps'][i_fda]['end_date'], '2026-08-18')
+        self.assertEqual(r['steps'][i_move]['start_date'], '2026-08-24')
+        self.assertEqual(r['steps'][i_closeout]['end_date'], '2026-08-31')
+
+        total_wd = inclusive_working_day_span(
+            r['steps'][0]['start_date'],
+            r['steps'][-1]['end_date'],
+            frozenset(),
+        )
+        self.assertEqual(total_wd, 84)
+
+    def test_branded_crm_email_spine_and_excel_milestones(self) -> None:
+        steps = get_scenario_steps_ordered('happyguy_branded_crm_email')
+        self.assertEqual(len(steps), 82)
+        self.assertEqual(steps[0]['id'], 'crm_email_discovery_brief_timeline')
+        self.assertEqual(steps[-1]['id'], 'crm_email_project_closeout')
+
+        r = compute_scenario_steps(
+            {
+                'timingProfile': 'happyguy_branded_crm_email',
+                'anchorStartIso': '2026-03-27',
+                'holidays': frozenset(),
+            }
+        )
+        self.assertTrue(r['ok'])
+        assert r['ok'] is True
+        self.assertNotIn('opdp_binder_steps', r)
+        self.assertEqual(len(r['steps']), 82)
+
+        i_kickoff = _breakdown_index_for(r['breakdown'], 'crm_email_kickoff_meeting')
+        i_submit = _breakdown_index_for(r['breakdown'], 'crm_email_prc1_submit')
+        i_prc1 = _breakdown_index_for(r['breakdown'], 'crm_email_prc1_approval')
+        i_prc2 = _breakdown_index_for(r['breakdown'], 'crm_email_prc2_submit')
+        i_final = _breakdown_index_for(r['breakdown'], 'crm_email_final_prc_approval')
+        i_opdp = _breakdown_index_for(r['breakdown'], 'crm_email_opdp_approval')
+        i_fda = _breakdown_index_for(r['breakdown'], 'crm_email_fda_filing_period')
+        i_deploy = _breakdown_index_for(r['breakdown'], 'crm_email_martech_deploy_approval')
+        i_closeout = _breakdown_index_for(r['breakdown'], 'crm_email_project_closeout')
+
+        self.assertEqual(r['steps'][i_kickoff]['start_date'], '2026-04-08')
+        self.assertEqual(r['steps'][i_submit]['start_date'], '2026-05-19')
+        self.assertEqual(r['steps'][i_prc1]['start_date'], '2026-05-29')
+        self.assertEqual(r['steps'][i_prc2]['start_date'], '2026-06-11')
+        self.assertEqual(r['steps'][i_final]['start_date'], '2026-07-13')
+        self.assertEqual(r['steps'][i_opdp]['start_date'], '2026-09-03')
+        self.assertEqual(r['steps'][i_fda]['end_date'], '2026-09-30')
+        self.assertEqual(r['steps'][i_deploy]['start_date'], '2026-09-22')
+        self.assertEqual(r['steps'][i_closeout]['end_date'], '2026-10-02')
+
+        total_wd = inclusive_working_day_span(
+            r['steps'][0]['start_date'],
+            r['steps'][-1]['end_date'],
+            frozenset(),
+        )
+        self.assertEqual(total_wd, 136)
+
     def test_happyguy_prb_review_snaps_forward_across_holiday_ideal(self) -> None:
         base = compute_scenario_steps(
             {

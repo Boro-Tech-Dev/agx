@@ -297,6 +297,12 @@ def run_scenario_engine_compute(body: dict[str, Any]) -> dict[str, Any]:
         except (TypeError, ValueError):
             return {'ok': False, 'error': 'pageCount must be an integer'}
 
+    ctk = body.get('catalogTacticKey')
+    if ctk is not None:
+        if not isinstance(ctk, str) or not ctk.strip():
+            return {'ok': False, 'error': 'catalogTacticKey must be a non-empty string if present'}
+        params['catalogTacticKey'] = ctk.strip()
+
     fz_raw = body.get('freezeAfterStepIndex')
     ps_raw = body.get('pinnedPrefixSteps')
     if fz_raw is not None or ps_raw is not None:
@@ -401,6 +407,12 @@ def run_scenario_engine_find_latest_kickoff(body: dict[str, Any]) -> dict[str, A
             params['searchWindowDays'] = int(body['searchWindowDays'])
         except (TypeError, ValueError):
             return {'ok': False, 'error': 'searchWindowDays must be an integer'}
+
+    ctk = body.get('catalogTacticKey')
+    if ctk is not None:
+        if not isinstance(ctk, str) or not ctk.strip():
+            return {'ok': False, 'error': 'catalogTacticKey must be a non-empty string if present'}
+        params['catalogTacticKey'] = ctk.strip()
 
     r = find_latest_kickoff_for_deadline(params)  # type: ignore[arg-type]
     if r['ok']:

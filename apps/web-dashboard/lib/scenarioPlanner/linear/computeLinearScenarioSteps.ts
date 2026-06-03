@@ -84,6 +84,8 @@ export type ComputeLinearScenarioParams = {
    */
   freezeAfterStepIndex?: number;
   pinnedPrefixSteps?: readonly HalTimelineStep[];
+  /** Tactic library catalog key; selects variant spines for shared timing profiles. */
+  catalogTacticKey?: string;
 };
 
 export type ComputeLinearScenarioResult =
@@ -116,7 +118,7 @@ export function computeLinearScenarioSteps(p: ComputeLinearScenarioParams): Comp
   }
 
   const ordered = filterScenarioStepsForPrbRounds(
-    getScenarioStepsOrdered(p.timingProfile),
+    getScenarioStepsOrdered(p.timingProfile, p.catalogTacticKey),
     prbRoundsForComplexity(complexity),
   );
 

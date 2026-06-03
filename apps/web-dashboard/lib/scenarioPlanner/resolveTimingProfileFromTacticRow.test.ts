@@ -90,5 +90,17 @@ describe('timingProfileFromCatalogTacticKey', () => {
     expect(timingProfileFromCatalogTacticKey('happyguy_mad_liver_brochure_training_blueprint')).toBe(
       'happyguy_mad_liver_brochure_training_blueprint',
     );
+    expect(timingProfileFromCatalogTacticKey('happyguy_aasld_hotel_key_cards')).toBe(
+      'happyguy_aasld_congress_print_pickup',
+    );
+    expect(timingProfileFromCatalogTacticKey('happyguy_aasld_wifi_splash_page')).toBe(
+      'happyguy_aasld_congress_print_pickup',
+    );
+    expect(timingProfileFromCatalogTacticKey('happyguy_mps_website_updates')).toBe(
+      'happyguy_mps_website_update',
+    );
+    expect(timingProfileFromCatalogTacticKey('happyguy_branded_crm_emails')).toBe(
+      'happyguy_branded_crm_email',
+    );
   });
 });

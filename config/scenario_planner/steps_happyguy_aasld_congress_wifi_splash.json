@@ -1,0 +1,224 @@
+{
+  "version": 1,
+  "label": "HappyGuy AASLD congress wifi splash (job 12509031 calibrated)",
+  "source": "12509031_Wifi_Splash_Page.xlsx",
+  "steps": [
+    {
+      "id": "aasld_wifi_discovery_update_timeline_egnyte",
+      "label": "Update timeline/estimate and create job folder on Egnyte",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Discovery — Excel row 4."
+    },
+    {
+      "id": "aasld_wifi_discovery_job_number",
+      "label": "Request job number creation and link job number to project",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Discovery — Excel row 5."
+    },
+    {
+      "id": "aasld_wifi_discovery_client_brief_review",
+      "label": "Review brief with client",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Discovery — Excel row 6."
+    },
+    {
+      "id": "aasld_wifi_discovery_brief_approval",
+      "label": "Receive brief approval to kickoff",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Discovery — Excel row 7."
+    },
+    {
+      "id": "aasld_wifi_kickoff",
+      "label": "Kickoff meeting",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Agency kickoff — Excel row 9; starts 2026-05-06 in job 12509031."
+    },
+    {
+      "id": "aasld_wifi_regulatory_portal_setup",
+      "label": "Submit request to open job in client submission portal and add portal code",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Agency kickoff — Excel row 10."
+    },
+    {
+      "id": "aasld_wifi_portal_to_content_hold",
+      "label": "Hold — awaiting content markup start",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Calendar gap — portal ends 2026-05-07; markup starts 2026-05-11."
+    },
+    {
+      "id": "aasld_wifi_content_markup_files",
+      "label": "Mark up files to be updated",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Ideation — Excel row 13."
+    },
+    {
+      "id": "aasld_wifi_content_complete_specs",
+      "label": "Complete specs",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Ideation — Excel row 14."
+    },
+    {
+      "id": "aasld_wifi_rekickoff",
+      "label": "Rekickoff",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "File revisions — Excel row 16; ends 2026-05-18 in job 12509031."
+    },
+    {
+      "id": "aasld_wifi_reko_to_pickup_hold",
+      "label": "Hold — awaiting M1 pickup start",
+      "baseline_days": 8,
+      "min_days": 1,
+      "note": "Calendar gap — Re-KO ends 2026-05-18; M1 pickup starts 2026-05-29."
+    },
+    {
+      "id": "aasld_wifi_m1_pickup_revise_create",
+      "label": "Submit Pick Up and Revise Request / Creation of M1",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "File revisions — Excel row 17; ends 2026-06-02 in job 12509031."
+    },
+    {
+      "id": "aasld_wifi_d1_route_team_clean",
+      "label": "Route D1 through team for review until clean",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "File revisions — Excel row 18; ends 2026-06-03 in job 12509031."
+    },
+    {
+      "id": "aasld_wifi_client_send_approval",
+      "label": "Send files to client for approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Client review — Excel row 20; starts 2026-06-04 in job 12509031."
+    },
+    {
+      "id": "aasld_wifi_client_receive_feedback",
+      "label": "Receive client feedback",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Client review — Excel row 21; markup comments follow after calendar gap (Jun 5–Jun 8)."
+    },
+    {
+      "id": "aasld_wifi_client_markup_comments",
+      "label": "Account to mark up client comments",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post client revisions — Excel row 23."
+    },
+    {
+      "id": "aasld_wifi_mechanical_route_clean",
+      "label": "Route mechanical through team until clean",
+      "baseline_days": 4,
+      "min_days": 1,
+      "note": "Post client revisions — Excel row 24; ends 2026-06-12 in job 12509031."
+    },
+    {
+      "id": "aasld_wifi_final_client_send_approval",
+      "label": "Send to client for final approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Final client review — Excel row 27."
+    },
+    {
+      "id": "aasld_wifi_final_client_receive_aasld_clearance",
+      "label": "Receive client final approval; approval to share with AASLD",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Final client review — Excel row 28; ends 2026-06-16 in job 12509031."
+    },
+    {
+      "id": "aasld_wifi_aasld_share",
+      "label": "Share with AASLD",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "AASLD review — Excel row 30."
+    },
+    {
+      "id": "aasld_wifi_aasld_review_comments",
+      "label": "AASLD review; TENT comments back",
+      "baseline_days": 5,
+      "min_days": 1,
+      "note": "AASLD review — Excel row 31."
+    },
+    {
+      "id": "aasld_wifi_aasld_tent_client_review",
+      "label": "TENT: revisions requested — account to review with client",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "AASLD review — Excel row 32."
+    },
+    {
+      "id": "aasld_wifi_aasld_tent_incorporate_route",
+      "label": "TENT: assumed approved changes incorporated; SRX Express to incorporate and route",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "AASLD review — Excel row 33."
+    },
+    {
+      "id": "aasld_wifi_aasld_tent_reshare",
+      "label": "TENT: account to re-share with AASLD and client for approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "AASLD review — Excel row 34."
+    },
+    {
+      "id": "aasld_wifi_aasld_final_approval",
+      "label": "Final approval received from AASLD",
+      "baseline_days": 4,
+      "min_days": 1,
+      "note": "AASLD review — Excel row 35; ends 2026-07-06 in job 12509031."
+    },
+    {
+      "id": "aasld_wifi_fr_submit_request",
+      "label": "Submit request for Final Round (FR)",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "File release — Excel row 37."
+    },
+    {
+      "id": "aasld_wifi_fr_route",
+      "label": "Route for FR and confirm release details in specs",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "File release — Excel rows 38–39 (parallel in MS Project; serialized here)."
+    },
+    {
+      "id": "aasld_wifi_file_release_submit",
+      "label": "Submit file release request; share full collect with Brand PM",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "File release — Excel row 40; ends 2026-07-09 in job 12509031."
+    },
+    {
+      "id": "aasld_wifi_congress_assets_hold",
+      "label": "Hold — awaiting congress asset handoff date",
+      "baseline_days": 47,
+      "min_days": 1,
+      "note": "Calendar gap — file release ends 2026-07-09; handoff hardcode starts 2026-09-15."
+    },
+    {
+      "id": "aasld_wifi_handoff_files_hardcode",
+      "label": "Handoff files hardcode",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Activation — Excel row 41; starts 2026-09-15 in job 12509031."
+    },
+    {
+      "id": "aasld_wifi_project_closeout",
+      "label": "PM to perform close out",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Activation — Excel row 42; ends 2026-09-17 in job 12509031."
+    }
+  ]
+}

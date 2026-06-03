@@ -726,6 +726,75 @@
         "training"
       ],
       "timing_profile": "happyguy_mad_liver_brochure_training_blueprint"
+    },
+    {
+      "key": "happyguy_aasld_hotel_key_cards",
+      "name": "HappyGuy — AASLD Hotel Key Cards",
+      "description": "Congress hotel key card pick-up/revise; AASLD review, FDA 2253, print release",
+      "tactic_kind": "owned",
+      "channel": "print",
+      "medium": "congress",
+      "format": "hotel_key_card",
+      "tags": [
+        "happyguy",
+        "aasld",
+        "congress",
+        "print",
+        "hotel_key_cards"
+      ],
+      "timing_profile": "happyguy_aasld_congress_print_pickup"
+    },
+    {
+      "key": "happyguy_aasld_wifi_splash_page",
+      "name": "HappyGuy — AASLD Wifi Splash Page",
+      "description": "Congress wifi splash page pick-up/revise; AASLD TENT review, file release, congress handoff",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "congress",
+      "format": "wifi_splash",
+      "tags": [
+        "happyguy",
+        "aasld",
+        "congress",
+        "digital",
+        "wifi_splash"
+      ],
+      "timing_profile": "happyguy_aasld_congress_print_pickup"
+    },
+    {
+      "key": "happyguy_mps_website_updates",
+      "name": "HappyGuy — MPS Website Updates",
+      "description": "Figma/PRC website update; extended OPDP, FDA, production deploy, post-launch QA",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "website",
+      "format": "web",
+      "tags": [
+        "happyguy",
+        "mps",
+        "website",
+        "prc",
+        "opdp"
+      ],
+      "timing_profile": "happyguy_mps_website_update"
+    },
+    {
+      "key": "happyguy_branded_crm_emails",
+      "name": "HappyGuy — Branded CRM Email Updates",
+      "description": "Branded CRM email update; 3 PRC rounds, OPDP binder, Martech test blasts, FDA 2253",
+      "tactic_kind": "owned",
+      "channel": "digital",
+      "medium": "email",
+      "format": "html",
+      "tags": [
+        "happyguy",
+        "crm",
+        "email",
+        "prc",
+        "opdp",
+        "martech"
+      ],
+      "timing_profile": "happyguy_branded_crm_email"
     }
   ]
 }

@@ -1,0 +1,252 @@
+{
+  "version": 1,
+  "label": "HappyGuy AASLD congress print pick-up (job 12509029 calibrated)",
+  "source": "12509029_Hotel_Key_Cards.xlsx",
+  "steps": [
+    {
+      "id": "aasld_pickup_discovery_update_timeline_egnyte",
+      "label": "Update timeline/estimate and create job folder on Egnyte",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Discovery — Excel row 4."
+    },
+    {
+      "id": "aasld_pickup_discovery_job_number",
+      "label": "Request job number creation and link job number to project",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Discovery — Excel row 5."
+    },
+    {
+      "id": "aasld_pickup_discovery_client_brief_approval",
+      "label": "Review brief with client and receive approval to kickoff",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Discovery — Excel row 7; includes scheduling gap before kickoff (May 1–May 5 in job 12509029)."
+    },
+    {
+      "id": "aasld_pickup_kickoff",
+      "label": "Kickoff meeting",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Agency kickoff — Excel row 9; anchor date 2026-05-06 in job 12509029."
+    },
+    {
+      "id": "aasld_pickup_regulatory_portal_setup",
+      "label": "Submit request to open job in client submission portal and add portal code",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Agency kickoff — Excel row 10."
+    },
+    {
+      "id": "aasld_pickup_portal_to_content_hold",
+      "label": "Hold — awaiting content markup start",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Calendar gap — portal ends 2026-05-07; markup starts 2026-05-11 (1 business day)."
+    },
+    {
+      "id": "aasld_pickup_content_markup_files",
+      "label": "Mark up files to be updated",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Ideation — Excel row 13."
+    },
+    {
+      "id": "aasld_pickup_content_complete_specs",
+      "label": "Complete specs",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Ideation — Excel row 14."
+    },
+    {
+      "id": "aasld_pickup_m1_pickup_revise_create",
+      "label": "Submit Pick Up and Revise Request / Creation of M1",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "File revisions — Excel row 16."
+    },
+    {
+      "id": "aasld_pickup_rekickoff",
+      "label": "Rekickoff",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "File revisions — Excel row 17."
+    },
+    {
+      "id": "aasld_pickup_m1_route_team_clean",
+      "label": "Route M1 through team for review until clean",
+      "baseline_days": 3,
+      "min_days": 1,
+      "note": "File revisions — Excel row 18; ends 2026-05-21 in job 12509029."
+    },
+    {
+      "id": "aasld_pickup_ideation_to_client_hold",
+      "label": "Hold — awaiting client review window",
+      "baseline_days": 8,
+      "min_days": 1,
+      "note": "Calendar gap — Route M1 ends 2026-05-21; Send to client starts 2026-06-03 (8 business days)."
+    },
+    {
+      "id": "aasld_pickup_client_send_approval",
+      "label": "Send files to client for approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Client review — Excel row 20; starts 2026-06-03 in job 12509029."
+    },
+    {
+      "id": "aasld_pickup_client_receive_feedback",
+      "label": "Receive client feedback",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Client review — Excel row 21."
+    },
+    {
+      "id": "aasld_pickup_client_markup_comments",
+      "label": "Account to mark up client comments",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Post client revisions — Excel row 23."
+    },
+    {
+      "id": "aasld_pickup_mechanical_route_clean",
+      "label": "Route mechanical through team until clean",
+      "baseline_days": 4,
+      "min_days": 1,
+      "note": "Post client revisions — Excel row 24."
+    },
+    {
+      "id": "aasld_pickup_final_client_send_approval",
+      "label": "Send to client for final approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Final client review — Excel row 27."
+    },
+    {
+      "id": "aasld_pickup_final_client_receive_aasld_clearance",
+      "label": "Receive client final approval; approval to share with AASLD",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Final client review — Excel row 28."
+    },
+    {
+      "id": "aasld_pickup_aasld_share",
+      "label": "Share with AASLD",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "AASLD review — Excel row 30."
+    },
+    {
+      "id": "aasld_pickup_aasld_review_comments",
+      "label": "AASLD review; TENT comments back",
+      "baseline_days": 5,
+      "min_days": 1,
+      "note": "AASLD review — Excel row 31."
+    },
+    {
+      "id": "aasld_pickup_aasld_tent_client_review",
+      "label": "TENT: revisions requested — account to review with client",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "AASLD review — Excel row 32."
+    },
+    {
+      "id": "aasld_pickup_aasld_tent_incorporate_route",
+      "label": "TENT: assumed approved changes incorporated; SRX Express to incorporate and route",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "AASLD review — Excel row 33."
+    },
+    {
+      "id": "aasld_pickup_aasld_tent_reshare",
+      "label": "TENT: account to re-share with AASLD and client for approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "AASLD review — Excel row 34."
+    },
+    {
+      "id": "aasld_pickup_aasld_final_approval",
+      "label": "Final approval received from AASLD",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "AASLD review — Excel row 35."
+    },
+    {
+      "id": "aasld_pickup_veeva_2253_load",
+      "label": "Account to load into Veeva for 2253 submission",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "FDA filing — Excel row 37."
+    },
+    {
+      "id": "aasld_pickup_fda_filing_period",
+      "label": "FDA filing period",
+      "baseline_days": 6,
+      "min_days": 1,
+      "note": "FDA filing — Excel row 38 (5d filing plus 1d release-schedule buffer before print proof)."
+    },
+    {
+      "id": "aasld_pickup_fr_submit_request",
+      "label": "Submit request for Final Round (FR)",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "File release — Excel row 40."
+    },
+    {
+      "id": "aasld_pickup_fr_route",
+      "label": "Route for FR",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "File release — Excel row 41."
+    },
+    {
+      "id": "aasld_pickup_release_confirm_specs",
+      "label": "Confirm release details in specs",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "File release — Excel row 42 (parallel with FR route in MS Project; serialized here)."
+    },
+    {
+      "id": "aasld_pickup_file_release_submit",
+      "label": "Submit file release request; share full collect with Brand PM",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "File release — Excel row 43."
+    },
+    {
+      "id": "aasld_pickup_print_proof_receive",
+      "label": "Receive printer proof",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Print proof review — Excel row 45."
+    },
+    {
+      "id": "aasld_pickup_print_proof_route",
+      "label": "Route printer proof for approval",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Print proof review — Excel row 46; ends 2026-07-20 in job 12509029."
+    },
+    {
+      "id": "aasld_pickup_congress_assets_hold",
+      "label": "Hold — awaiting congress asset handoff date",
+      "baseline_days": 40,
+      "min_days": 1,
+      "note": "Calendar gap — print proof ends 2026-07-20; Handoff Hardcode starts 2026-09-15 (38 business days after Jul 20 print proof)."
+    },
+    {
+      "id": "aasld_pickup_handoff_files_hardcode",
+      "label": "Handoff files hardcode",
+      "baseline_days": 1,
+      "min_days": 1,
+      "note": "Activation — Excel row 47; starts 2026-09-15 in job 12509029."
+    },
+    {
+      "id": "aasld_pickup_project_closeout",
+      "label": "PM to perform close out",
+      "baseline_days": 2,
+      "min_days": 1,
+      "note": "Activation — Excel row 48; ends 2026-09-17 in job 12509029."
+    }
+  ]
+}

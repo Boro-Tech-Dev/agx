@@ -37,6 +37,66 @@ Legacy ids `happyguy_submit_thursday` / `happyguy_submit_tuesday` remain; additi
 
 Milestone language for Submit Thursday vs Submit Tuesday is baked into spine `note` fields on `route_to_clean`, `share_client_approval_prb1`, `complete_fact_check`, and `client_review_3_submission_prep`. Legacy modifier bundles `happyguy_milestones_*` remain no-op placeholders for older presets.
 
+## `steps_happyguy_aasld_congress_print_pickup.json` (optional spine)
+
+Used when the timing profile is `happyguy_aasld_congress_print_pickup`. **Two variant spines** are selected by optional `catalogTacticKey` on compute requests (and tactic library attach in the dashboard):
+
+| Catalog tactic key | Spine file | Steps |
+| --- | --- | --- |
+| `happyguy_aasld_hotel_key_cards` (default) | `steps_happyguy_aasld_congress_print_pickup.json` | 35 (`aasld_pickup_*`) |
+| `happyguy_aasld_wifi_splash_page` | `steps_happyguy_aasld_congress_wifi_splash.json` | 31 (`aasld_wifi_*`) |
+
+Same step object shape as above; custom `id` values are **not** in `phaseCatalog.ts`.
+
+| Property | Value |
+| --- | --- |
+| Profile id | `happyguy_aasld_congress_print_pickup` |
+| `prb_cadence` | `linear` (sequential business days; no PRB anchor engine) |
+| PRB phases | None — no `submit_prb1` / PRB review rows |
+| OPDP binder | `include_opdp_binder: false` |
+| `non_prb_multipliers` | Must be `{}` — custom phase ids are not valid multiplier keys (validator only accepts `steps.json` ids) |
+| Hotel step count | 35 steps; 102 baseline business days (job 12509029; discovery anchor 2026-04-29) |
+| Wifi step count | 31 steps; 102 baseline business days (job 12509031; discovery anchor 2026-04-29) |
+| Calibration sources | `12509029_Hotel_Key_Cards.xlsx`, `12509031_Wifi_Splash_Page.xlsx` |
+
+**Hotel holds:** `aasld_pickup_portal_to_content_hold`, `aasld_pickup_ideation_to_client_hold`, `aasld_pickup_congress_assets_hold`.
+
+**Wifi holds:** `aasld_wifi_portal_to_content_hold`, `aasld_wifi_reko_to_pickup_hold`, `aasld_wifi_congress_assets_hold`. Wifi omits FDA 2253 and print-proof steps; Re-KO precedes M1 pickup; Excel FR route + confirm specs are merged into one serialized step so file release can end on 2026-07-09 after AASLD final approval on 2026-07-06. Post-client and post-mechanical calendar gaps are absorbed by `nextWorkingDay` placement (no named hold rows).
+
+## `steps_happyguy_mps_website_update.json` (optional spine)
+
+Used **only** when the timing profile is `happyguy_mps_website_update` (HappyGuy MPS website update / PRC workflows). Same step object shape as above; `id` values use the `mps_web_*` prefix and are **not** in `phaseCatalog.ts`.
+
+| Property | Value |
+| --- | --- |
+| Profile id | `happyguy_mps_website_update` |
+| `prb_cadence` | `linear` (sequential business days; PRC rounds use fixed spans, not `happyguy_week_aligned`) |
+| PRB / PRC phases | **Two rounds only** — PRC #1 + Final PRC; no PRB3 rows or labels |
+| OPDP binder | `include_opdp_binder: false` — extended OPDP (Madrigal + 21d review) is embedded in the main spine |
+| Parallel tracks | Dev/staging (Excel rows 43–52) is **serialized after Final PRC and before OPDP**; step `note` fields cite Excel parallel source |
+| `non_prb_multipliers` | Must be `{}` — custom phase ids are not valid multiplier keys (validator only accepts `steps.json` ids) |
+| Step count | 49 steps; 84 baseline business days after hold calibration (discovery anchor 2026-05-06) |
+| Calibration source | Job 12506629 Website Updates Excel (`12506629_Website_Updates.xlsx`) |
+
+Hold steps (`mps_web_markup_to_xd_hold`, `mps_web_xd_to_rekickoff_hold`, `mps_web_wfw_to_fc_hold`, `mps_web_prep_to_prc1_review_hold`, `mps_web_client_final_to_production_hold`) model MS Project calendar gaps. Because Excel runs OPDP and dev/staging in parallel, the linear spine calendar span is longer than the Excel finish date when all step durations are preserved; hold `baseline_days` are tuned to match key milestones where possible.
+
+## `steps_happyguy_branded_crm_email.json` (optional spine)
+
+Used **only** when the timing profile is `happyguy_branded_crm_email` (HappyGuy branded CRM email / PRC workflows). Same step object shape as above; `id` values use the `crm_email_*` prefix and are **not** in `phaseCatalog.ts`.
+
+| Property | Value |
+| --- | --- |
+| Profile id | `happyguy_branded_crm_email` |
+| `prb_cadence` | `linear` (sequential business days; PRC rounds use fixed spans, not `happyguy_week_aligned`) |
+| PRB / PRC phases | **Three rounds** — PRC #1, PRC #2, Final PRC; no PRB3 rows or labels |
+| OPDP binder | `include_opdp_binder: false` — 22d OPDP review is embedded in the main spine |
+| Parallel tracks | Fact check, OPDP, email DEV, and Martech test blasts (Excel parallel paths) are **serialized** into one linear spine; step `note` fields cite Excel row numbers only |
+| `non_prb_multipliers` | Must be `{}` — custom phase ids are not valid multiplier keys |
+| Step count | 82 steps (76 work + 6 hold steps); 136 baseline business days after hold calibration (discovery anchor 2026-03-27) |
+| Calibration source | Job 12487341 Branded CRM Emails Excel (`12487341_Branded_CRM_Emails.xlsx`) |
+
+Hold steps (`crm_email_brief_to_kickoff_hold`, `crm_email_markup_to_creative_hold`, `crm_email_prep_to_prc1_review_hold`, `crm_email_prep_to_prc2_review_hold`, `crm_email_martech_deploy_approval_hold`) model MS Project calendar gaps. Because Excel runs fact check, OPDP, email DEV, and Martech test blasts in parallel, the linear spine calendar span is longer than the Excel finish date (89 wd from anchor to closeout) when all step durations are preserved; hold `baseline_days` and `crm_email_opdp_client_binder_review` are tuned to match key milestones where possible.
+
 ## Timing profiles (`timing_profiles.json`)
 
 Defines **scheduling profiles** used by the linear scenario engine (dashboard + worker). Each profile has:

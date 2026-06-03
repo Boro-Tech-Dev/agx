@@ -52,6 +52,7 @@ function forwardParams(p: FindLatestKickoffParams, anchorStartIso: string): Comp
     phaseAllowNonWorkingDays: p.phaseAllowNonWorkingDays,
     activeModifierIds: p.activeModifierIds,
     pageCount: p.pageCount,
+    catalogTacticKey: p.catalogTacticKey,
   };
 }
 

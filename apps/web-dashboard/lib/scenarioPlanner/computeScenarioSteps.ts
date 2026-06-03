@@ -38,6 +38,8 @@ export type ComputeScenarioParams = {
   activeModifierIds?: readonly string[];
   /** Page count for SkillArts tiered PRB profile (`skillarts_generic`). */
   pageCount?: number;
+  /** Tactic library catalog key; selects variant spines for shared timing profiles (e.g. AASLD wifi splash). */
+  catalogTacticKey?: string;
   /** Suffix recompute: pin `0..freezeAfterStepIndex` from {@link pinnedPrefixSteps}, then place the rest. */
   freezeAfterStepIndex?: number;
   pinnedPrefixSteps?: readonly HalTimelineStep[];
@@ -75,6 +77,7 @@ export function computeScenarioSteps(p: ComputeScenarioParams): ComputeScenarioR
     pageCount: p.pageCount,
     freezeAfterStepIndex: p.freezeAfterStepIndex,
     pinnedPrefixSteps: p.pinnedPrefixSteps,
+    catalogTacticKey: p.catalogTacticKey,
   };
   const r = computeLinearScenarioSteps(linearParams);
   if (!r.ok) return r;

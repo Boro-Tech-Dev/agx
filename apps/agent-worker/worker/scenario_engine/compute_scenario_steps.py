@@ -47,6 +47,7 @@ class ComputeScenarioParams(TypedDict, total=False):
     pageCount: int
     freezeAfterStepIndex: int
     pinnedPrefixSteps: list[Any]
+    catalogTacticKey: str
 
 
 class ComputeOk(TypedDict, total=False):
@@ -146,6 +147,13 @@ def compute_scenario_steps(p: ComputeScenarioParams) -> ComputeScenarioResult:
         fz_out = fz_parsed
         pins_out = pins_parsed
 
+    catalog_tactic_key: str | None = None
+    raw_ctk = p.get('catalogTacticKey')
+    if raw_ctk is not None:
+        if not isinstance(raw_ctk, str) or not raw_ctk.strip():
+            return {'ok': False, 'error': 'catalogTacticKey must be a non-empty string if present'}
+        catalog_tactic_key = raw_ctk.strip()
+
     ok, steps, breakdown, err, opdp_binder = compute_linear_scenario_steps(
         anchor_start_iso=p['anchorStartIso'],
         timing_profile=tp,
@@ -157,6 +165,7 @@ def compute_scenario_steps(p: ComputeScenarioParams) -> ComputeScenarioResult:
         page_count=page_count,
         freeze_after_step_index=fz_out,
         pinned_prefix_steps=pins_out,
+        catalog_tactic_key=catalog_tactic_key,
     )
     if not ok or steps is None or breakdown is None:
         return {'ok': False, 'error': err or 'Planner error'}

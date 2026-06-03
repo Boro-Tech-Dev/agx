@@ -142,10 +142,51 @@ def _load_steps_happyguy_mlr(suffix: str) -> list[ScenarioStepDef]:
     return _parse_steps_rows(raw)
 
 
+def _load_steps_happyguy_aasld_congress_print_pickup() -> list[ScenarioStepDef]:
+    cfg, _ = _scenario_paths()
+    p = cfg / 'steps_happyguy_aasld_congress_print_pickup.json'
+    if not p.is_file():
+        raise FileNotFoundError(f'HappyGuy AASLD congress print pick-up steps missing: {p}')
+    raw = json.loads(p.read_text(encoding='utf-8'))
+    return _parse_steps_rows(raw)
+
+
+def _load_steps_happyguy_aasld_congress_wifi_splash() -> list[ScenarioStepDef]:
+    cfg, _ = _scenario_paths()
+    p = cfg / 'steps_happyguy_aasld_congress_wifi_splash.json'
+    if not p.is_file():
+        raise FileNotFoundError(f'HappyGuy AASLD congress wifi splash steps missing: {p}')
+    raw = json.loads(p.read_text(encoding='utf-8'))
+    return _parse_steps_rows(raw)
+
+
+def _load_steps_happyguy_mps_website_update() -> list[ScenarioStepDef]:
+    cfg, _ = _scenario_paths()
+    p = cfg / 'steps_happyguy_mps_website_update.json'
+    if not p.is_file():
+        raise FileNotFoundError(f'HappyGuy MPS website update steps missing: {p}')
+    raw = json.loads(p.read_text(encoding='utf-8'))
+    return _parse_steps_rows(raw)
+
+
+def _load_steps_happyguy_branded_crm_email() -> list[ScenarioStepDef]:
+    cfg, _ = _scenario_paths()
+    p = cfg / 'steps_happyguy_branded_crm_email.json'
+    if not p.is_file():
+        raise FileNotFoundError(f'HappyGuy branded CRM email steps missing: {p}')
+    raw = json.loads(p.read_text(encoding='utf-8'))
+    return _parse_steps_rows(raw)
+
+
 _STEPS_BY_PROFILE_KEY: dict[str, list[ScenarioStepDef]] = {}
 
+AASLD_WIFI_SPLASH_CATALOG_KEY = 'happyguy_aasld_wifi_splash_page'
 
-def get_scenario_steps_ordered(timing_profile: str | None = None) -> list[ScenarioStepDef]:
+
+def get_scenario_steps_ordered(
+    timing_profile: str | None = None,
+    catalog_tactic_key: str | None = None,
+) -> list[ScenarioStepDef]:
     from worker.scenario_engine.timing_profiles import (
         happyguy_mlr_spine_weekday,
         resolve_timing_profile_id,
@@ -158,6 +199,15 @@ def get_scenario_steps_ordered(timing_profile: str | None = None) -> list[Scenar
         rid = resolve_timing_profile_id(tp)
         if rid == 'skillarts_generic':
             key = 'skillarts_rte'
+        elif rid == 'happyguy_aasld_congress_print_pickup':
+            if (catalog_tactic_key or '').strip() == AASLD_WIFI_SPLASH_CATALOG_KEY:
+                key = 'happyguy_aasld_congress_wifi_splash'
+            else:
+                key = 'happyguy_aasld_congress_print_pickup'
+        elif rid == 'happyguy_mps_website_update':
+            key = 'happyguy_mps_website_update'
+        elif rid == 'happyguy_branded_crm_email':
+            key = 'happyguy_branded_crm_email'
         elif uses_happyguy_week_aligned_prb_cadence(rid):
             key = (
                 'happyguy_mlr_tuesday'
@@ -171,6 +221,14 @@ def get_scenario_steps_ordered(timing_profile: str | None = None) -> list[Scenar
             _STEPS_BY_PROFILE_KEY[key] = _load_steps_happyguy_mlr('thursday')
         elif key == 'happyguy_mlr_tuesday':
             _STEPS_BY_PROFILE_KEY[key] = _load_steps_happyguy_mlr('tuesday')
+        elif key == 'happyguy_aasld_congress_print_pickup':
+            _STEPS_BY_PROFILE_KEY[key] = _load_steps_happyguy_aasld_congress_print_pickup()
+        elif key == 'happyguy_aasld_congress_wifi_splash':
+            _STEPS_BY_PROFILE_KEY[key] = _load_steps_happyguy_aasld_congress_wifi_splash()
+        elif key == 'happyguy_mps_website_update':
+            _STEPS_BY_PROFILE_KEY[key] = _load_steps_happyguy_mps_website_update()
+        elif key == 'happyguy_branded_crm_email':
+            _STEPS_BY_PROFILE_KEY[key] = _load_steps_happyguy_branded_crm_email()
         else:
             _STEPS_BY_PROFILE_KEY[key] = _load_steps_default()
     return _STEPS_BY_PROFILE_KEY[key]
@@ -234,6 +292,7 @@ def compute_linear_scenario_steps(
     page_count: int | None = None,
     freeze_after_step_index: int | None = None,
     pinned_prefix_steps: list[HalTimelineStep] | None = None,
+    catalog_tactic_key: str | None = None,
 ) -> tuple[
     bool,
     list[HalTimelineStep] | None,
@@ -290,7 +349,8 @@ def compute_linear_scenario_steps(
 
     try:
         ordered = filter_scenario_steps_for_prb_rounds(
-            get_scenario_steps_ordered(timing_profile), prb_rounds_for_complexity(complexity)
+            get_scenario_steps_ordered(timing_profile, catalog_tactic_key),
+            prb_rounds_for_complexity(complexity),
         )
         fz = freeze_after_step_index
         pins = pinned_prefix_steps
