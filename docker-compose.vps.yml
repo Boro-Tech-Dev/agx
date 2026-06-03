@@ -213,7 +213,9 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
       KC_HEALTH_ENABLED: 'true'
       KC_HTTP_RELATIVE_PATH: /
-      KC_HOSTNAME: idea-impact.com
+      # Public IdP URL — credentials must not POST to idea-impact.com (Netskope RBI).
+      KC_HOSTNAME: auth.idea-impact.com
+      KC_HOSTNAME_URL: https://auth.idea-impact.com
       KC_HOSTNAME_STRICT: 'false'
       KC_PROXY_HEADERS: xforwarded
       KC_HTTP_ENABLED: 'true'
@@ -431,7 +433,7 @@ services:
       KEYCLOAK_REALM: ${KEYCLOAK_REALM:-platform}
       KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-web-dashboard}
       KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-web-dashboard-dev-secret}
-      KEYCLOAK_ISSUER: ${KEYCLOAK_ISSUER:-}
+      KEYCLOAK_ISSUER: ${KEYCLOAK_ISSUER:-https://auth.idea-impact.com/realms/platform}
     depends_on:
       keycloak:
         condition: service_healthy

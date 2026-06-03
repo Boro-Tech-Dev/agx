@@ -53,4 +53,4 @@ docker compose exec -T keycloak /opt/keycloak/bin/kcadm.sh update "clients/${CID
 }
 EOF
 
-echo "Done. Verify: curl -fsS https://idea-impact.com/realms/${REALM}/.well-known/openid-configuration"
+echo "Done. Verify: curl -fsS https://auth.idea-impact.com/realms/${REALM}/.well-known/openid-configuration | grep issuer"

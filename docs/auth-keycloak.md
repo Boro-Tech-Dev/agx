@@ -1,6 +1,8 @@
 # Keycloak authentication (web-dashboard)
 
-The Next.js dashboard (`web-dashboard`) authenticates operators via **Keycloak OIDC** (authorization code + PKCE). Passwords are entered on Keycloak at **`/realms/platform`** (Traefik routes `/realms/*` to Keycloak). Session tokens are stored in httpOnly cookies (`dd_access_token`, `dd_refresh_token`).
+The Next.js dashboard (`web-dashboard`) authenticates operators via **Keycloak OIDC** (authorization code + PKCE). Passwords are entered on **`https://auth.idea-impact.com`** (Keycloak IdP). The dashboard callback stays on **`https://idea-impact.com/api/auth/callback`**. Session tokens are stored in httpOnly cookies (`dd_access_token`, `dd_refresh_token`).
+
+**DNS:** `auth.idea-impact.com` must resolve to the VPS (A record, same IP as `idea-impact.com`). Traefik routes are in [`docker-compose.traefik.yml`](../docker-compose.traefik.yml).
 
 ## Defaults (realm import)
 
@@ -25,7 +27,7 @@ Set in `.env` (loaded by Compose `env_file` on `web-dashboard` and `keycloak`):
 | `KEYCLOAK_REALM` | Realm name (default `platform`) |
 | `KEYCLOAK_CLIENT_ID` | OAuth client (default `web-dashboard`) |
 | `KEYCLOAK_CLIENT_SECRET` | Must match the **Credentials** tab for `web-dashboard` in Keycloak |
-| `KEYCLOAK_ISSUER` | Public JWT issuer (production: `https://idea-impact.com/realms/platform`; local: `http://localhost:8180/realms/platform`) |
+| `KEYCLOAK_ISSUER` | Public JWT issuer (production: `https://auth.idea-impact.com/realms/platform`; local: `http://localhost:8180/realms/platform`) |
 
 **Important:** Never set `KEYCLOAK_CLIENT_SECRET=` with no value in `.env`. Docker Compose passes an empty string and overrides compose defaults, which breaks login.
 
@@ -33,13 +35,13 @@ Set in `.env` (loaded by Compose `env_file` on `web-dashboard` and `keycloak`):
 
 ## Login flow (OIDC + PKCE)
 
-Unauthenticated `GET /` redirects immediately to `/api/auth/login` (no login landing HTML). Keycloak runs at **`/realms/platform`** on the same host (Traefik routes `/realms/*` to Keycloak). After credentials, Keycloak returns to `/api/auth/callback`; the dashboard sets cookies and redirects to `next` (default `/home`).
+Unauthenticated `GET /` redirects immediately to `/api/auth/login` (no login landing HTML). The dashboard redirects to Keycloak on **`auth.idea-impact.com`**. After credentials, Keycloak returns to `/api/auth/callback` on `idea-impact.com`; the dashboard sets cookies and redirects to `next` (default `/home`).
 
 ```mermaid
 sequenceDiagram
   participant Browser
   participant Dashboard as idea-impact.com
-  participant KC as idea-impact.com/realms
+  participant KC as auth.idea-impact.com
   Browser->>Dashboard: GET /
   Dashboard->>Dashboard: 302 /api/auth/login
   Dashboard->>KC: 302 authorize (PKCE)
@@ -61,7 +63,7 @@ Implementation:
 **Password grant removed.** Automation uses Keycloak token endpoint directly (client credentials or service account):
 
 ```bash
-curl -sS -X POST 'https://idea-impact.com/realms/platform/protocol/openid-connect/token' \
+curl -sS -X POST 'https://auth.idea-impact.com/realms/platform/protocol/openid-connect/token' \
   -d 'grant_type=client_credentials' \
   -d 'client_id=<service-account-client>' \
   -d 'client_secret=<secret>'
@@ -125,7 +127,7 @@ grep KEYCLOAK .env
 # KEYCLOAK_CLIENT_SECRET=web-dashboard-dev-secret
 # KEYCLOAK_REALM=platform
 # KEYCLOAK_CLIENT_ID=web-dashboard
-# KEYCLOAK_ISSUER=https://idea-impact.com/realms/platform
+# KEYCLOAK_ISSUER=https://auth.idea-impact.com/realms/platform
 # APP_PUBLIC_ORIGIN=https://idea-impact.com
 
 # 2. Stop stack (no -v)
@@ -145,7 +147,7 @@ docker compose up -d keycloak    # wait healthy (~90s)
 docker compose up -d --build
 
 # 5. Verify OIDC discovery (production)
-curl -fsS 'https://idea-impact.com/realms/platform/.well-known/openid-configuration' | head -c 200
+curl -fsS 'https://auth.idea-impact.com/realms/platform/.well-known/openid-configuration' | head -c 200
 
 # Local Keycloak token (client credentials — password grant disabled)
 curl -sS -X POST 'http://127.0.0.1:8180/realms/platform/protocol/openid-connect/token' \

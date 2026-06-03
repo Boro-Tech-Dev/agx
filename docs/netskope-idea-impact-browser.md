@@ -13,7 +13,7 @@ Internal dashboard (`web-dashboard`) is served at **https://idea-impact.com** be
 | Mitigation | Detail |
 |------------|--------|
 | **No login landing page** | Unauthenticated `GET /` → 302 `/api/auth/login` — no HTML login page on idea-impact.com |
-| **Keycloak on `/realms/*`** | Traefik routes `idea-impact.com/realms/*` to Keycloak (not web-dashboard) — see [docker-compose.traefik.yml](../docker-compose.traefik.yml) |
+| **Keycloak on `auth.idea-impact.com`** | Traefik routes IdP host to Keycloak; dashboard domain has no password form |
 | **OIDC code + PKCE** | No password form or password grant on the dashboard app |
 | **Protected routes** | Client-fetched data at `/home`; per-tool lazy chunks |
 | **Web Capture** | Staging credentials via uploaded project profiles — no password inputs in browser |
@@ -31,7 +31,7 @@ Verify after deploy:
 ```bash
 ./scripts/verify-landing-auth.sh https://idea-impact.com
 curl -fsS https://idea-impact.com/health
-curl -fsS 'https://idea-impact.com/realms/platform/.well-known/openid-configuration' | head -c 200
+curl -fsS 'https://auth.idea-impact.com/realms/platform/.well-known/openid-configuration' | head -c 200
 ```
 
 **Corp browser (manual):**
