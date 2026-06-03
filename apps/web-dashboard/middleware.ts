@@ -22,6 +22,13 @@ export async function middleware(req: NextRequest) {
     });
   }
 
+  if (pathname === '/robots.txt') {
+    return new NextResponse('Not Found', {
+      status: 404,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    });
+  }
+
   if (isAuthDisabled()) {
     if (pathname === '/login') return nextWithLoginRouteHeader(req);
     return NextResponse.next();
@@ -46,11 +53,13 @@ export async function middleware(req: NextRequest) {
 
   const token = req.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
   if (!token) {
+    if (pathname === '/') return rewriteToLogin(req);
     return redirectToLogin(req);
   }
 
   const ok = await verifyAccessToken(token);
   if (!ok) {
+    if (pathname === '/') return rewriteToLogin(req);
     return redirectToLogin(req);
   }
 
@@ -68,4 +77,12 @@ function nextWithLoginRouteHeader(req: NextRequest): NextResponse {
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set(LOGIN_ROUTE_HEADER, '1');
   return NextResponse.next({ request: { headers: requestHeaders } });
+}
+
+function rewriteToLogin(req: NextRequest) {
+  const url = req.nextUrl.clone();
+  url.pathname = '/login';
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set(LOGIN_ROUTE_HEADER, '1');
+  return NextResponse.rewrite(url, { request: { headers: requestHeaders } });
 }

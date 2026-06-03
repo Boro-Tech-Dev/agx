@@ -152,11 +152,15 @@ docker volume rm <project>_keycloak_data <project>_postgres_data ...  # keep oll
 
 ## Production security headers (Netskope / SWG)
 
-The dashboard sets HTTP headers on all routes via [`apps/web-dashboard/next.config.js`](../apps/web-dashboard/next.config.js) and [`apps/web-dashboard/lib/securityHeaders.js`](../apps/web-dashboard/lib/securityHeaders.js). Posture matches **problematticsolutions.com** on measurable signals: `HSTS`, `X-Content-Type-Options`, `X-XSS-Protection`, plus `X-Frame-Options` and `Referrer-Policy` on idea-impact. There is **no** `Content-Security-Policy` or `Permissions-Policy`. Typography loads from `fonts.googleapis.com` (Oswald + JetBrains Mono) instead of self-hosted `next/font` woff2. `X-Powered-By` is disabled. The external Problemattic Solutions footer link is not rendered on any route (login or authenticated shell).
+The dashboard sets HTTP headers on all routes via [`apps/web-dashboard/next.config.js`](../apps/web-dashboard/next.config.js) and [`apps/web-dashboard/lib/securityHeaders.js`](../apps/web-dashboard/lib/securityHeaders.js). Posture matches **problematticsolutions.com** on measurable signals: `HSTS`, `X-Content-Type-Options`, `X-XSS-Protection`, plus `X-Frame-Options` and `Referrer-Policy` on idea-impact. There is **no** `Content-Security-Policy` or `Permissions-Policy`. Typography is self-hosted via `@fontsource/oswald` and `@fontsource/jetbrains-mono` (no `fonts.googleapis.com` on login). `X-Powered-By` is disabled. The external Problemattic Solutions footer link is not rendered on any route (login or authenticated shell).
 
 After each `web-dashboard` deploy to idea-impact.com, verify from any host:
 
 ```bash
+# Unauthenticated root: 200 login HTML at / (rewrite), not 307 to /login
+curl -sSI https://idea-impact.com/ | grep -iE '^HTTP/|^location:|^content-type:'
+# Expect: HTTP/2 200, content-type: text/html; must NOT see location: /login
+
 # Headers: HSTS and hardening present; no CSP / Permissions-Policy (match problematticsolutions.com)
 curl -sSI https://idea-impact.com/login | grep -iE 'strict-transport|content-security|x-frame|x-content-type|referrer-policy|permissions-policy|x-powered-by|x-xss'
 # Expect: strict-transport-security, x-frame-options, x-content-type-options, referrer-policy, x-xss-protection
@@ -165,11 +169,10 @@ curl -sSI https://idea-impact.com/login | grep -iE 'strict-transport|content-sec
 curl -sSI https://idea-impact.com/login | grep -iE 'content-security|permissions-policy'
 # Expect: no output
 
-curl -sS https://idea-impact.com/login | grep -oE 'fonts\.googleapis\.com[^"'\'' ]*' | head
-# Expect: fonts.googleapis.com/css2?... (via bundled CSS @import)
-
-curl -sS https://idea-impact.com/login | grep -c '/_next/static/media/.*woff2' || true
-# Expect: 0 (next/font self-host removed)
+# No Google Fonts in bundled CSS (pick href from /login HTML)
+CSS=$(curl -sS https://idea-impact.com/login | grep -oE '/_next/static/css/[^"'\'' ]+\.css' | head -1)
+curl -sS "https://idea-impact.com${CSS}" | grep -c fonts.googleapis.com || true
+# Expect: 0
 ```
 
 Confirm login HTML has no `problematticsolutions.com` link:
@@ -181,13 +184,20 @@ curl -sS https://idea-impact.com/login | grep -c problematticsolutions.com || tr
 
 Authenticated pages are mostly client-rendered; after signing in, confirm in browser DevTools (Elements) on `/` or any tool page: no `problematticsolutions.com`, and Web Search results use copy/open controls instead of `<a href="https://…">` for result URLs.
 
-Confirm manifest probes do not return login HTML (404 plain text instead):
+Scanner probe paths must return plain 404, not login HTML or redirects:
 
 ```bash
-curl -sSI https://idea-impact.com/site.webmanifest | grep -iE 'HTTP/|content-type|location'
-curl -sS https://idea-impact.com/site.webmanifest
-# Expect: HTTP 404, Content-Type: text/plain; charset=utf-8, body "Not Found"
+for p in /site.webmanifest /manifest.json /robots.txt; do
+  echo "=== $p ==="
+  curl -sSI "https://idea-impact.com${p}" | grep -iE '^HTTP/|^content-type:|^location:'
+  curl -sS "https://idea-impact.com${p}"
+  echo
+done
+# Expect each: HTTP 404, Content-Type: text/plain; charset=utf-8, body "Not Found"
 # Must NOT see: Location: /login or Content-Type: text/html
+
+curl -sSI https://idea-impact.com/favicon.ico | grep -iE '^HTTP/|^content-type:'
+# Expect: HTTP/2 200 (or 304), image/* — not 404 HTML
 ```
 
 If corporate Netskope still blocks after headers are present, use **Skope IT → URL Lookup** for `idea-impact.com`. Request recategorization or a tenant allow policy if the domain is stuck as Uncategorized / Newly Observed Domain despite being in production use.

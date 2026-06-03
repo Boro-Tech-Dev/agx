@@ -8,9 +8,12 @@ describe('isWebManifestProbe', () => {
     expect(isWebManifestProbe('/foo/bar.webmanifest')).toBe(true);
   });
 
-  it('does not match app routes or other manifest filenames', () => {
+  it('matches /manifest.json', () => {
+    expect(isWebManifestProbe('/manifest.json')).toBe(true);
+  });
+
+  it('does not match app routes', () => {
     expect(isWebManifestProbe('/login')).toBe(false);
     expect(isWebManifestProbe('/')).toBe(false);
-    expect(isWebManifestProbe('/manifest.json')).toBe(false);
   });
 });

@@ -1,4 +1,6 @@
 import type React from 'react';
+import '@fontsource/jetbrains-mono/latin.css';
+import '@fontsource/oswald/latin.css';
 import { cookies, headers } from 'next/headers';
 import { ModelStatusRootProvider } from '../components/model/ModelStatusRootProvider';
 import { NavShellPrefsProvider } from '../components/NavShellPrefsProvider';
