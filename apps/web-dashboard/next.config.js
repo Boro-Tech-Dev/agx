@@ -8,7 +8,14 @@ module.exports = {
     formats: ['image/webp'],
   },
   experimental: {
-    optimizePackageImports: ['lucide-react', 'recharts', '@xyflow/react', 'mermaid'],
+    optimizePackageImports: [
+      'lucide-react',
+      'recharts',
+      '@xyflow/react',
+      'mermaid',
+      '@fontsource/oswald',
+      '@fontsource/jetbrains-mono',
+    ],
   },
   // Do not use rewrites to agent-api: they are resolved at *build* time, so production
   // often pointed at the wrong host after redeploy. Use runtime proxy instead:

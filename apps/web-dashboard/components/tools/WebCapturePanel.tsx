@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { PanelChevron } from '../workspaces/PanelChevron';
 import {
@@ -23,6 +23,20 @@ import {
 import { base64ToBlob, downloadBase64File, objectUrlFromBase64 } from '../../lib/downloadBase64';
 
 type Mode = 'screenshot' | 'extract' | 'crawl';
+
+function stripScreenshotForState(res: WebScreenshotResponse): WebScreenshotResponse {
+  return { ...res, image_base64: '' };
+}
+
+function stripCrawlForState(res: WebCrawlResponse): WebCrawlResponse {
+  return {
+    ...res,
+    pages: res.pages.map((page) => {
+      const { pdf_base64: _pdf, ...rest } = page;
+      return rest;
+    }),
+  };
+}
 
 function crawlPagePdfFilename(page: { url: string; title?: string }, index: number): string {
   const base = (page.title || page.url || `page-${index}`)
@@ -142,7 +156,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
   const [maxPages, setMaxPages] = useState(15);
   const [sameSiteOnly, setSameSiteOnly] = useState(true);
   const [interPageDelayMs, setInterPageDelayMs] = useState(2000);
-  const [includeFullText, setIncludeFullText] = useState(true);
+  const [includeFullText, setIncludeFullText] = useState(false);
   const [includeInteractives, setIncludeInteractives] = useState(false);
   const [includePdfs, setIncludePdfs] = useState(false);
   const [crawlPagesCap, setCrawlPagesCap] = useState(FALLBACK_CRAWL_PAGES_CAP);
@@ -296,16 +310,27 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
 
   const [previewSrc, setPreviewSrc] = useState<string | null>(null);
   const [errScreenshotSrc, setErrScreenshotSrc] = useState<string | null>(null);
+  const previewSrcRef = useRef<string | null>(null);
+  const pdfBase64ByPageRef = useRef<Map<number, string>>(new Map());
+
+  const applyScreenshotResult = useCallback((res: WebScreenshotResponse) => {
+    if (previewSrcRef.current) URL.revokeObjectURL(previewSrcRef.current);
+    if (res.image_base64) {
+      const url = objectUrlFromBase64(res.image_base64, 'image/png');
+      previewSrcRef.current = url;
+      setPreviewSrc(url);
+    } else {
+      previewSrcRef.current = null;
+      setPreviewSrc(null);
+    }
+    setShot(stripScreenshotForState(res));
+  }, []);
 
   useEffect(() => {
-    if (!shot?.image_base64) {
-      setPreviewSrc(null);
-      return;
-    }
-    const url = objectUrlFromBase64(shot.image_base64, 'image/png');
-    setPreviewSrc(url);
-    return () => URL.revokeObjectURL(url);
-  }, [shot?.image_base64]);
+    return () => {
+      if (previewSrcRef.current) URL.revokeObjectURL(previewSrcRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (!errDebug?.screenshot_base64) {
@@ -361,6 +386,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
     setSaveErr(null);
     if (mode === 'crawl') {
       setCrawl(null);
+      pdfBase64ByPageRef.current = new Map();
       setInteractionPlan([]);
       setPlanPageIndex(0);
       setCrawlLogLines([]);
@@ -431,7 +457,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
           ...planPayload,
           ...advancedPayload,
         });
-        setShot(res);
+        applyScreenshotResult(res);
       } else if (mode === 'extract') {
         const res = await postWebExtract({
           url: u,
@@ -460,16 +486,30 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
             : {}),
         };
         try {
+          const storeCrawlResult = (result: WebCrawlResponse) => {
+            const pdfs = new Map<number, string>();
+            result.pages.forEach((p, i) => {
+              if (p.pdf_base64) pdfs.set(i, p.pdf_base64);
+            });
+            pdfBase64ByPageRef.current = pdfs;
+            setCrawl(stripCrawlForState(result));
+          };
           let result: WebCrawlResponse | null = await tryPostWebCrawlStream(crawlBody, (line) => {
             setCrawlLogLines((prev) => (prev.length >= 500 ? [...prev.slice(-450), line] : [...prev, line]));
           });
           if (!result) {
             result = await postWebCrawl(crawlBody);
           }
-          setCrawl(result);
+          storeCrawlResult(result);
         } catch (streamErr) {
           try {
-            setCrawl(await postWebCrawl(crawlBody));
+            const result = await postWebCrawl(crawlBody);
+            const pdfs = new Map<number, string>();
+            result.pages.forEach((p, i) => {
+              if (p.pdf_base64) pdfs.set(i, p.pdf_base64);
+            });
+            pdfBase64ByPageRef.current = pdfs;
+            setCrawl(stripCrawlForState(result));
           } catch {
             setErr(streamErr instanceof Error ? streamErr.message : String(streamErr));
           }
@@ -509,6 +549,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
     recordHar,
     debugOnFailure,
     applyPlanOnCrawlSeed,
+    applyScreenshotResult,
     extraHeadersText,
   ]);
 
@@ -521,8 +562,8 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
     }
     const slug = stampSlug();
     try {
-      if (shot?.image_base64) {
-        const blob = base64ToBlob(shot.image_base64, 'image/png');
+      if (previewSrc && shot) {
+        const blob = await fetch(previewSrc).then((r) => r.blob());
         const file = new File([blob], `web-capture-${slug}.png`, { type: 'image/png' });
         await uploadProjectDocument(projectKey.trim(), file, 'general');
         setSaveMsg(`Saved PNG to project (${file.name}).`);
@@ -552,8 +593,9 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
         let pdfCount = 0;
         for (let i = 0; i < crawl.pages.length; i++) {
           const p = crawl.pages[i]!;
-          if (!p.pdf_base64 || p.error) continue;
-          const pdfBlob = base64ToBlob(p.pdf_base64, 'application/pdf');
+          const pdfB64 = pdfBase64ByPageRef.current.get(i);
+          if (!pdfB64 || p.error) continue;
+          const pdfBlob = base64ToBlob(pdfB64, 'application/pdf');
           const pdfFile = new File([pdfBlob], crawlPagePdfFilename(p, i), { type: 'application/pdf' });
           await uploadProjectDocument(projectKey.trim(), pdfFile, 'general');
           pdfCount += 1;
@@ -569,7 +611,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
     } catch (e: unknown) {
       setSaveErr(e instanceof Error ? e.message : String(e));
     }
-  }, [canSave, projectKey, shot, extracted, crawl]);
+  }, [canSave, projectKey, shot, extracted, crawl, previewSrc]);
 
   const inputCls =
     'mt-1 w-full rounded-md border border-app-border bg-app-fill p-1.5 text-xs text-app-text outline-none focus:border-indigo-400 focus:bg-app-surface dark:focus:border-indigo-500';
@@ -636,7 +678,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
             The server is opening a browser context per page (up to <strong>{maxPages}</strong> pages, depth ≤{' '}
             <strong>{maxDepth}</strong>
             {sameSiteOnly ? ', same site only' : ''}). {interPageDelayMs > 0 ? `Delay between pages: ${interPageDelayMs} ms. ` : ''}
-            {includeFullText ? 'Full article text is extracted per page (capped server-side). ' : ''}
+            {includeFullText ? 'Full article text is extracted per page (capped server-side). ' : 'Full article text is off by default (enable below to add index payload). '}
             {includePdfs
               ? 'Each page is printed to PDF (no PNG screenshots). '
               : 'PDF export is off by default (enable below to reduce response size). '}
@@ -1148,7 +1190,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
               onChange={(e) => setIncludeFullText(e.target.checked)}
               disabled={busy}
             />
-            Include full article text per page (index payload; capped server-side)
+            Include full article text per page (opt-in; increases crawl JSON size)
           </label>
           <label className="flex cursor-pointer items-center gap-2">
             <input
@@ -1157,7 +1199,7 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
               onChange={(e) => setIncludePdfs(e.target.checked)}
               disabled={busy}
             />
-            Include print-to-PDF per page (download below; not PNG screenshots)
+            Include print-to-PDF per page (opt-in; large JSON — enable only when needed)
           </label>
         </div>
       ) : null}
@@ -1336,17 +1378,15 @@ export function WebCapturePanel({ projectKey }: { projectKey: string }) {
                   {p.interactives && p.interactives.length > 0 ? (
                     <InteractivesDetails items={p.interactives} serverTruncated={p.interactives_truncated} />
                   ) : null}
-                  {p.pdf_base64 ? (
+                  {pdfBase64ByPageRef.current.has(pageIdx) ? (
                     <button
                       type="button"
                       className="mt-0.5 block text-[10px] font-semibold text-indigo-600 underline dark:text-indigo-400"
-                      onClick={() =>
-                        downloadBase64File(
-                          p.pdf_base64!,
-                          'application/pdf',
-                          crawlPagePdfFilename(p, pageIdx),
-                        )
-                      }
+                      onClick={() => {
+                        const pdfB64 = pdfBase64ByPageRef.current.get(pageIdx);
+                        if (!pdfB64) return;
+                        downloadBase64File(pdfB64, 'application/pdf', crawlPagePdfFilename(p, pageIdx));
+                      }}
                     >
                       Download PDF{p.pdf_truncated ? ' (truncated)' : ''}
                     </button>

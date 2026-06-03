@@ -6,7 +6,7 @@ Internal dashboard (`web-dashboard`) is served at **https://idea-impact.com** be
 
 **Out of scope for this document:** SSH deploy to `srv1139701.hstgr.cloud`, `ghcr.io` image pulls, and GitHub Actions runners. Those use different hostnames; see [ci-cd.md](ci-cd.md) if those paths need separate policies.
 
-Application mitigations in-repo: lazy tool bundles, smaller hero WebP, Web Capture PDFs off by default. NetOps must still apply tenant policies below for full relief.
+Application mitigations in-repo: isolated `/login` layout (no dashboard fonts/providers), client-fetched home data (no large RSC JSON in `/` HTML), per-tool lazy chunks, Web Capture full-text and PDFs off by default with base64 stripped from React state, hero WebP under `public/brand/`. NetOps may still apply tenant policies below for edge cases.
 
 ---
 
@@ -77,11 +77,12 @@ curl -sSI https://idea-impact.com/icon.svg | grep -iE '^HTTP/|^content-type:'
 
 **Corp browser (manual):**
 
-1. Load `/login` — no hung `/_next/static/*.js` in DevTools Network.
+1. Load `/login` — Network tab should show only framework + login page chunks (no dashboard shell `7614` / hero `8893` chunks, no `@fontsource` woff2 storm).
 2. Sign in — redirects stay on `idea-impact.com` (never `http://localhost:3000`).
-3. Open `/tools/web-capture` — run screenshot only; chunks load on demand.
-4. Crawl with default settings (PDFs off) — response renders without silent drop.
-5. Enable PDFs only when needed — larger JSON; may still need DLP waiver.
+3. On `/` — initial HTML is small (skeleton); six `/api/...` calls load after paint; shell/hero/hub chunks load on demand.
+4. Open `/tools/web-capture` — only the web-capture panel chunk + hub shell; not every tool panel.
+5. Crawl with default settings (full article text off, PDFs off) — response renders without silent drop.
+6. Enable full text or PDFs only when needed — larger JSON; may still need DLP waiver.
 
 ---
 

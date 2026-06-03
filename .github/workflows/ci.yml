@@ -24,6 +24,7 @@ jobs:
           cache: npm
           cache-dependency-path: apps/web-dashboard/package-lock.json
       - run: npm ci
+      - run: test -f public/brand/ragtag-stack.webp
       - run: npm run typecheck
       - run: npm run test
 

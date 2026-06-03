@@ -2,7 +2,6 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { isAuthDisabled } from './lib/auth/env';
-import { LOGIN_ROUTE_HEADER } from './lib/auth/loginRedirect';
 import { safeNextPath } from './lib/auth/safeNextPath';
 import { verifyAccessToken } from './lib/auth/verifyAccessToken';
 import { ACCESS_TOKEN_COOKIE } from './lib/auth/constants';
@@ -36,12 +35,11 @@ export async function middleware(req: NextRequest) {
   }
 
   if (isAuthDisabled()) {
-    if (pathname === '/login') return nextWithLoginRouteHeader(req);
     return NextResponse.next();
   }
 
   if (pathname === '/login') {
-    return nextWithLoginRouteHeader(req);
+    return NextResponse.next();
   }
 
   if (pathname.startsWith('/api/auth/')) {
@@ -77,8 +75,3 @@ function redirectToLogin(req: NextRequest) {
   return NextResponse.redirect(login);
 }
 
-function nextWithLoginRouteHeader(req: NextRequest): NextResponse {
-  const requestHeaders = new Headers(req.headers);
-  requestHeaders.set(LOGIN_ROUTE_HEADER, '1');
-  return NextResponse.next({ request: { headers: requestHeaders } });
-}

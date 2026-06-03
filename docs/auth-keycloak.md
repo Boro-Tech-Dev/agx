@@ -53,7 +53,7 @@ sequenceDiagram
 
 Implementation:
 
-- [`apps/web-dashboard/app/login/page.tsx`](../apps/web-dashboard/app/login/page.tsx) — HTML form
+- [`apps/web-dashboard/app/(auth)/login/page.tsx`](../apps/web-dashboard/app/(auth)/login/page.tsx) — HTML form
 - [`apps/web-dashboard/app/api/auth/login/route.ts`](../apps/web-dashboard/app/api/auth/login/route.ts) — grant + cookies
 - [`apps/web-dashboard/lib/auth/loginRedirect.ts`](../apps/web-dashboard/lib/auth/loginRedirect.ts) — HTML vs JSON responses
 - [`apps/web-dashboard/lib/server/keycloakPasswordGrant.ts`](../apps/web-dashboard/lib/server/keycloakPasswordGrant.ts)
