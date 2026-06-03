@@ -9,7 +9,7 @@ export type KeycloakRefreshGrantResult =
   | { ok: true; data: KeycloakRefreshTokenResponse }
   | { ok: false; status: number; bodyText: string };
 
-/** Refresh grant to Keycloak; client credentials match `keycloakPasswordGrant`. */
+/** Refresh grant to Keycloak; client credentials match OIDC code exchange. */
 export async function keycloakRefreshGrant(refreshToken: string): Promise<KeycloakRefreshGrantResult> {
   const base = keycloakBaseUrl();
   const realm = keycloakRealm();

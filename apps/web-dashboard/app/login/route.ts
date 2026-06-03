@@ -8,10 +8,10 @@ export const dynamic = 'force-dynamic';
 
 /** Public entry: redirect to OIDC login (no HTML credential form). */
 export async function GET(req: NextRequest) {
-  const next = safeNextPath(req.nextUrl.searchParams.get('next'));
   const login = absolutePublicUrl(req, '/api/auth/login');
-  if (req.nextUrl.searchParams.get('next')) {
-    login.searchParams.set('next', next);
+  const rawNext = req.nextUrl.searchParams.get('next');
+  if (rawNext != null && rawNext !== '') {
+    login.searchParams.set('next', safeNextPath(rawNext));
   }
   return NextResponse.redirect(login, 302);
 }
