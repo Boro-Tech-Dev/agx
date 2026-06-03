@@ -36,3 +36,10 @@ services:
       - traefik.http.routers.ragtag-auth.tls.certresolver=letsencrypt
       - traefik.http.routers.ragtag-auth.service=ragtag-auth
       - traefik.http.services.ragtag-auth.loadbalancer.server.port=8080
+      # Keycloak OIDC on main domain — /realms/* must reach Keycloak, not web-dashboard
+      - traefik.http.routers.ragtag-kc-realms.rule=(Host(`idea-impact.com`) || Host(`www.idea-impact.com`)) && PathPrefix(`/realms`)
+      - traefik.http.routers.ragtag-kc-realms.entrypoints=websecure
+      - traefik.http.routers.ragtag-kc-realms.tls=true
+      - traefik.http.routers.ragtag-kc-realms.tls.certresolver=letsencrypt
+      - traefik.http.routers.ragtag-kc-realms.priority=100
+      - traefik.http.routers.ragtag-kc-realms.service=ragtag-auth

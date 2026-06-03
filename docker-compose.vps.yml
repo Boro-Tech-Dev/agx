@@ -213,8 +213,8 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
       KC_HEALTH_ENABLED: 'true'
       KC_HTTP_RELATIVE_PATH: /
-      KC_HOSTNAME: auth.idea-impact.com
-      KC_HOSTNAME_STRICT: 'true'
+      KC_HOSTNAME: idea-impact.com
+      KC_HOSTNAME_STRICT: 'false'
       KC_PROXY_HEADERS: xforwarded
       KC_HTTP_ENABLED: 'true'
     expose:

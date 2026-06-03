@@ -40,6 +40,7 @@ export function isIssuerTrusted(issRaw: string): boolean {
 
   // Docker Compose service name, local dev, loopbacks
   if (host === 'keycloak') return true;
+  if (host === 'idea-impact.com' || host === 'www.idea-impact.com') return true;
   if (host === 'auth.idea-impact.com') return true;
   if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return true;
 

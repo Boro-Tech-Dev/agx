@@ -1,6 +1,6 @@
 # Keycloak authentication (web-dashboard)
 
-The Next.js dashboard (`web-dashboard`) authenticates operators via **Keycloak OIDC** (authorization code + PKCE). Passwords are entered on **auth.idea-impact.com** only. Session tokens are stored in httpOnly cookies (`dd_access_token`, `dd_refresh_token`).
+The Next.js dashboard (`web-dashboard`) authenticates operators via **Keycloak OIDC** (authorization code + PKCE). Passwords are entered on Keycloak at **`/realms/platform`** (Traefik routes `/realms/*` to Keycloak). Session tokens are stored in httpOnly cookies (`dd_access_token`, `dd_refresh_token`).
 
 ## Defaults (realm import)
 
@@ -25,7 +25,7 @@ Set in `.env` (loaded by Compose `env_file` on `web-dashboard` and `keycloak`):
 | `KEYCLOAK_REALM` | Realm name (default `platform`) |
 | `KEYCLOAK_CLIENT_ID` | OAuth client (default `web-dashboard`) |
 | `KEYCLOAK_CLIENT_SECRET` | Must match the **Credentials** tab for `web-dashboard` in Keycloak |
-| `KEYCLOAK_ISSUER` | Public JWT issuer (production: `https://auth.idea-impact.com/realms/platform`; local: `http://localhost:8180/realms/platform`) |
+| `KEYCLOAK_ISSUER` | Public JWT issuer (production: `https://idea-impact.com/realms/platform`; local: `http://localhost:8180/realms/platform`) |
 
 **Important:** Never set `KEYCLOAK_CLIENT_SECRET=` with no value in `.env`. Docker Compose passes an empty string and overrides compose defaults, which breaks login.
 
@@ -33,15 +33,15 @@ Set in `.env` (loaded by Compose `env_file` on `web-dashboard` and `keycloak`):
 
 ## Login flow (OIDC + PKCE)
 
-Public landing at `/` is **plain HTML** (Route Handler — no React, no `/_next/static` on first load). **Continue to RagTag** → `/api/auth/login` → redirect to Keycloak at **auth.idea-impact.com**. After credentials, Keycloak returns to `/api/auth/callback`; the dashboard sets cookies and redirects to `next` (default `/home`).
+Unauthenticated `GET /` redirects immediately to `/api/auth/login` (no login landing HTML). Keycloak runs at **`/realms/platform`** on the same host (Traefik routes `/realms/*` to Keycloak). After credentials, Keycloak returns to `/api/auth/callback`; the dashboard sets cookies and redirects to `next` (default `/home`).
 
 ```mermaid
 sequenceDiagram
   participant Browser
   participant Dashboard as idea-impact.com
-  participant KC as auth.idea-impact.com
+  participant KC as idea-impact.com/realms
   Browser->>Dashboard: GET /
-  Browser->>Dashboard: GET /api/auth/login
+  Dashboard->>Dashboard: 302 /api/auth/login
   Dashboard->>KC: 302 authorize (PKCE)
   Browser->>KC: Enter credentials
   KC->>Dashboard: 302 /api/auth/callback?code=
@@ -51,8 +51,7 @@ sequenceDiagram
 
 Implementation:
 
-- [`apps/web-dashboard/app/route.ts`](../apps/web-dashboard/app/route.ts) — static HTML landing (zero-JS)
-- [`apps/web-dashboard/lib/public/landingPage.ts`](../apps/web-dashboard/lib/public/landingPage.ts) — landing HTML builder
+- [`apps/web-dashboard/middleware.ts`](../apps/web-dashboard/middleware.ts) — unauthenticated `/` → `/api/auth/login`
 - [`apps/web-dashboard/app/login/route.ts`](../apps/web-dashboard/app/login/route.ts) — redirect to OIDC start (middleware `?next=` entry)
 - [`apps/web-dashboard/app/api/auth/login/route.ts`](../apps/web-dashboard/app/api/auth/login/route.ts) — PKCE authorize redirect
 - [`apps/web-dashboard/app/api/auth/callback/route.ts`](../apps/web-dashboard/app/api/auth/callback/route.ts) — code exchange + cookies
@@ -62,13 +61,13 @@ Implementation:
 **Password grant removed.** Automation uses Keycloak token endpoint directly (client credentials or service account):
 
 ```bash
-curl -sS -X POST 'https://auth.idea-impact.com/realms/platform/protocol/openid-connect/token' \
+curl -sS -X POST 'https://idea-impact.com/realms/platform/protocol/openid-connect/token' \
   -d 'grant_type=client_credentials' \
   -d 'client_id=<service-account-client>' \
   -d 'client_secret=<secret>'
 ```
 
-**Failed browser login:** callback redirects to `/?signin=failed` (generic message only — no raw OAuth or password-related text in the URL).
+**Failed browser login:** callback redirects back to `/api/auth/login` (retry OIDC — no error landing page).
 
 Post-deploy smoke test:
 
@@ -130,7 +129,7 @@ grep KEYCLOAK .env
 # KEYCLOAK_CLIENT_SECRET=web-dashboard-dev-secret
 # KEYCLOAK_REALM=platform
 # KEYCLOAK_CLIENT_ID=web-dashboard
-# KEYCLOAK_ISSUER=https://auth.idea-impact.com/realms/platform
+# KEYCLOAK_ISSUER=https://idea-impact.com/realms/platform
 # APP_PUBLIC_ORIGIN=https://idea-impact.com
 
 # 2. Stop stack (no -v)
@@ -150,7 +149,7 @@ docker compose up -d keycloak    # wait healthy (~90s)
 docker compose up -d --build
 
 # 5. Verify OIDC discovery (production)
-curl -fsS 'https://auth.idea-impact.com/realms/platform/.well-known/openid-configuration' | head -c 200
+curl -fsS 'https://idea-impact.com/realms/platform/.well-known/openid-configuration' | head -c 200
 
 # Local Keycloak token (client credentials — password grant disabled)
 curl -sS -X POST 'http://127.0.0.1:8180/realms/platform/protocol/openid-connect/token' \
@@ -180,18 +179,15 @@ The dashboard sets HTTP headers on all routes via [`apps/web-dashboard/next.conf
 After each `web-dashboard` deploy to idea-impact.com, verify from any host:
 
 ```bash
-# Unauthenticated root → plain HTML landing (no _next/static, no redirect to login)
-curl -sSI https://idea-impact.com/ | grep -iE '^HTTP/|^location:|^content-type:'
-curl -sS https://idea-impact.com/ | grep -c '_next/static' || true
-curl -sS https://idea-impact.com/ | grep -ci 'type="password"' || true
-# Expect: HTTP 200, 0 _next/static references, 0 password fields
+# Unauthenticated root → immediate OIDC redirect (no login HTML)
+curl -sSI https://idea-impact.com/ | grep -iE '^HTTP/|^location:'
+# Expect: HTTP 302, Location contains /api/auth/login
 
-# Or run the full smoke suite:
 ./scripts/verify-landing-auth.sh https://idea-impact.com
 
-# Login starts OIDC on auth subdomain
+# Login starts OIDC on Keycloak /realms
 curl -sSI 'https://idea-impact.com/login' | grep -i location
-# Expect: Location contains auth.idea-impact.com
+# Expect: Location contains /api/auth/login, then authorize URL contains /realms/
 # Expect: strict-transport-security, x-frame-options, x-content-type-options, referrer-policy, x-xss-protection
 # Must NOT see: content-security-policy, permissions-policy, x-powered-by
 

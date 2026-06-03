@@ -62,7 +62,7 @@ export async function middleware(req: NextRequest) {
     if (sessionValid) {
       return NextResponse.redirect(absolutePublicUrl(req, '/home'), 302);
     }
-    return NextResponse.next();
+    return NextResponse.redirect(absolutePublicUrl(req, '/api/auth/login'), 302);
   }
 
   if (!token || !sessionValid) {

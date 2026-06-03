@@ -6,13 +6,6 @@ import { safeNextPath } from './safeNextPath';
 
 const MAX_ERROR_LEN = 280;
 
-/** Public landing sign-in failure — never embed raw OAuth or password-related text in the URL. */
-export function landingSigninFailedUrl(origin: string): URL {
-  const url = new URL('/', origin);
-  url.searchParams.set('signin', 'failed');
-  return url;
-}
-
 export function capLoginErrorMessage(message: string): string {
   const t = message.trim();
   if (!t) return 'Sign-in failed.';

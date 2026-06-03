@@ -9,10 +9,9 @@ import {
   OIDC_VERIFIER_COOKIE,
 } from '../auth/oidcConstants';
 import { keycloakIssuer } from '../auth/env';
-import { landingSigninFailedUrl } from '../auth/loginRedirect';
 import { safeNextPath } from '../auth/safeNextPath';
 import { cookieSecureForRequest } from './authCookies';
-import { absolutePublicUrl, requestPublicOrigin } from './requestPublicOrigin';
+import { absolutePublicUrl } from './requestPublicOrigin';
 
 export type OidcTokenResponse = {
   access_token: string;
@@ -83,31 +82,16 @@ function clearOidcFlowCookies(res: NextResponse, req: Pick<NextRequest, 'headers
   res.cookies.set(OIDC_NEXT_COOKIE, '', base);
 }
 
-/** True when KEYCLOAK_ISSUER would send users to Keycloak on the app host (broken + RBI risk). */
-export function issuerHostMatchesAppHost(issuer: string, appOrigin: string): boolean {
-  try {
-    return new URL(issuer).hostname === new URL(appOrigin).hostname;
-  } catch {
-    return false;
-  }
-}
-
-function redirectLandingSigninFailed(req: NextRequest): NextResponse {
-  return NextResponse.redirect(landingSigninFailedUrl(requestPublicOrigin(req)), 302);
+function redirectOidcRetry(req: NextRequest): NextResponse {
+  return NextResponse.redirect(absolutePublicUrl(req, '/api/auth/login'), 302);
 }
 
 /** Start OIDC authorization code flow with PKCE; redirect to Keycloak. */
 export function buildAuthorizeRedirect(req: NextRequest, nextPath: string): NextResponse {
   const issuer = keycloakIssuer();
   if (!issuer) {
-    return redirectLandingSigninFailed(req);
-  }
-
-  if (issuerHostMatchesAppHost(issuer, requestPublicOrigin(req))) {
-    console.error(
-      '[oidc] KEYCLOAK_ISSUER hostname must differ from APP_PUBLIC_ORIGIN — fix env and redeploy',
-    );
-    return redirectLandingSigninFailed(req);
+    console.error('[oidc] KEYCLOAK_ISSUER is not configured');
+    return redirectOidcRetry(req);
   }
 
   const next = safeNextPath(nextPath);
