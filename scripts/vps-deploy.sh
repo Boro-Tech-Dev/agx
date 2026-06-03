@@ -13,4 +13,9 @@ if [[ "$#" -eq 0 ]]; then
   set -- -d --build
 fi
 "$(dirname "$0")/compose-up.sh" "$@"
+if docker compose ps keycloak --status running --quiet 2>/dev/null | grep -q .; then
+  "$(dirname "$0")/keycloak-enable-oidc.sh" || {
+    echo "WARN: keycloak-enable-oidc.sh failed; web-dashboard redirectUris may still be wrong in Keycloak" >&2
+  }
+fi
 "$(dirname "$0")/apply-retrieval-seeds.sh"

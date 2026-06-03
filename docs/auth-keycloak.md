@@ -77,13 +77,9 @@ Post-deploy smoke test:
 
 ### Existing Keycloak volume (OIDC migration)
 
-Realm import runs once. After deploy, run on VPS:
+Realm import runs once. [`scripts/vps-deploy.sh`](../scripts/vps-deploy.sh) and [`scripts/vps-deploy-registry.sh`](../scripts/vps-deploy-registry.sh) run [`scripts/keycloak-enable-oidc.sh`](../scripts/keycloak-enable-oidc.sh) automatically after `compose up` when Keycloak is running (idempotent; warns on failure without blocking deploy).
 
-```bash
-COMPOSE_FILE=docker-compose.vps.yml:docker-compose.traefik.yml ./scripts/keycloak-enable-oidc.sh
-```
-
-Or update client `web-dashboard` manually: standard flow on, direct access grants off, redirect URI `https://idea-impact.com/api/auth/callback`, PKCE S256.
+If login still shows **Invalid parameter: redirect_uri**, re-run [`scripts/keycloak-enable-oidc.sh`](../scripts/keycloak-enable-oidc.sh) on the host (or set client `web-dashboard` in Keycloak admin: standard flow on, direct access grants off, redirect URI `https://idea-impact.com/api/auth/callback`, PKCE S256).
 
 ## Common error: Invalid Keycloak client secret
 
