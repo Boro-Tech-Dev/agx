@@ -93,7 +93,7 @@ KEYCLOAK_REALM=platform
 KEYCLOAK_CLIENT_ID=web-dashboard
 KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
 KEYCLOAK_BASE_URL=http://keycloak:8080
-KEYCLOAK_ISSUER=https://idea-impact.com/realms/platform
+KEYCLOAK_ISSUER=https://auth.idea-impact.com/realms/platform
 
 COLBERT_WITH_ML=1
 COLBERT_FORCE_STUB=0

@@ -4,10 +4,14 @@ import { NextResponse } from 'next/server';
 import { requestPublicOrigin } from '../server/requestPublicOrigin';
 import { safeNextPath } from './safeNextPath';
 
-/** Set by middleware on GET /login so root layout skips dashboard client providers. */
-export const LOGIN_ROUTE_HEADER = 'x-ragtag-login-route';
-
 const MAX_ERROR_LEN = 280;
+
+/** Public landing sign-in failure — never embed raw OAuth or password-related text in the URL. */
+export function landingSigninFailedUrl(origin: string): URL {
+  const url = new URL('/', origin);
+  url.searchParams.set('signin', 'failed');
+  return url;
+}
 
 export function capLoginErrorMessage(message: string): string {
   const t = message.trim();

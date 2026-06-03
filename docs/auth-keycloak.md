@@ -33,7 +33,7 @@ Set in `.env` (loaded by Compose `env_file` on `web-dashboard` and `keycloak`):
 
 ## Login flow (OIDC + PKCE)
 
-Public landing at `/` has no password fields. **Sign in** → `/login` → `/api/auth/login` → redirect to Keycloak at **auth.idea-impact.com**. After credentials, Keycloak returns to `/api/auth/callback`; the dashboard sets cookies and redirects to `next` (default `/home`).
+Public landing at `/` is **plain HTML** (Route Handler — no React, no `/_next/static` on first load). **Continue to RagTag** → `/api/auth/login` → redirect to Keycloak at **auth.idea-impact.com**. After credentials, Keycloak returns to `/api/auth/callback`; the dashboard sets cookies and redirects to `next` (default `/home`).
 
 ```mermaid
 sequenceDiagram
@@ -41,7 +41,7 @@ sequenceDiagram
   participant Dashboard as idea-impact.com
   participant KC as auth.idea-impact.com
   Browser->>Dashboard: GET /
-  Browser->>Dashboard: GET /login
+  Browser->>Dashboard: GET /api/auth/login
   Dashboard->>KC: 302 authorize (PKCE)
   Browser->>KC: Enter credentials
   KC->>Dashboard: 302 /api/auth/callback?code=
@@ -51,8 +51,9 @@ sequenceDiagram
 
 Implementation:
 
-- [`apps/web-dashboard/app/(public)/page.tsx`](../apps/web-dashboard/app/(public)/page.tsx) — public landing
-- [`apps/web-dashboard/app/login/route.ts`](../apps/web-dashboard/app/login/route.ts) — redirect to OIDC start
+- [`apps/web-dashboard/app/route.ts`](../apps/web-dashboard/app/route.ts) — static HTML landing (zero-JS)
+- [`apps/web-dashboard/lib/public/landingPage.ts`](../apps/web-dashboard/lib/public/landingPage.ts) — landing HTML builder
+- [`apps/web-dashboard/app/login/route.ts`](../apps/web-dashboard/app/login/route.ts) — redirect to OIDC start (middleware `?next=` entry)
 - [`apps/web-dashboard/app/api/auth/login/route.ts`](../apps/web-dashboard/app/api/auth/login/route.ts) — PKCE authorize redirect
 - [`apps/web-dashboard/app/api/auth/callback/route.ts`](../apps/web-dashboard/app/api/auth/callback/route.ts) — code exchange + cookies
 - [`apps/web-dashboard/lib/server/keycloakOidc.ts`](../apps/web-dashboard/lib/server/keycloakOidc.ts)
@@ -67,7 +68,13 @@ curl -sS -X POST 'https://auth.idea-impact.com/realms/platform/protocol/openid-c
   -d 'client_secret=<secret>'
 ```
 
-**Failed browser login:** callback redirects to `/?error=<message>` (message capped).
+**Failed browser login:** callback redirects to `/?signin=failed` (generic message only — no raw OAuth or password-related text in the URL).
+
+Post-deploy smoke test:
+
+```bash
+./scripts/verify-landing-auth.sh https://idea-impact.com
+```
 
 ### Existing Keycloak volume (OIDC migration)
 
@@ -173,10 +180,14 @@ The dashboard sets HTTP headers on all routes via [`apps/web-dashboard/next.conf
 After each `web-dashboard` deploy to idea-impact.com, verify from any host:
 
 ```bash
-# Unauthenticated root → public landing (no redirect to login)
+# Unauthenticated root → plain HTML landing (no _next/static, no redirect to login)
 curl -sSI https://idea-impact.com/ | grep -iE '^HTTP/|^location:|^content-type:'
+curl -sS https://idea-impact.com/ | grep -c '_next/static' || true
 curl -sS https://idea-impact.com/ | grep -ci 'type="password"' || true
-# Expect: HTTP 200, 0 password fields
+# Expect: HTTP 200, 0 _next/static references, 0 password fields
+
+# Or run the full smoke suite:
+./scripts/verify-landing-auth.sh https://idea-impact.com
 
 # Login starts OIDC on auth subdomain
 curl -sSI 'https://idea-impact.com/login' | grep -i location

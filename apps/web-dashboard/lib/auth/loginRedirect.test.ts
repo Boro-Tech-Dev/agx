@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildLoginErrorUrl,
   capLoginErrorMessage,
+  landingSigninFailedUrl,
   wantsJsonLoginResponse,
 } from './loginRedirect';
 
@@ -30,5 +31,13 @@ describe('loginRedirect', () => {
   it('capLoginErrorMessage trims and caps length', () => {
     expect(capLoginErrorMessage('  oops  ')).toBe('oops');
     expect(capLoginErrorMessage('x'.repeat(400)).length).toBeLessThanOrEqual(281);
+  });
+
+  it('landingSigninFailedUrl uses signin=failed only (no raw error text)', () => {
+    const url = landingSigninFailedUrl('https://idea-impact.com');
+    expect(url.pathname).toBe('/');
+    expect(url.searchParams.get('signin')).toBe('failed');
+    expect(url.searchParams.get('error')).toBeNull();
+    expect(url.href).not.toContain('password');
   });
 });

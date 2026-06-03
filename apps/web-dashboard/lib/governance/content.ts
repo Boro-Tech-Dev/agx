@@ -48,7 +48,7 @@ const GOVERNANCE_DOC: GovernanceDoc = {
       id: 'access-control',
       title: 'Access control and session security',
       paragraphs: [
-        'Public landing at `/` and OIDC login on auth.idea-impact.com (no password form on the dashboard domain). Protected routes under `/home`, `/tools`, etc. Tokens live in httpOnly cookies dd_access_token and dd_refresh_token.',
+        'Plain HTML landing at `/` (zero-JS Route Handler) and OIDC login on auth.idea-impact.com (no password form on the dashboard domain). Protected routes under `/home`, `/tools`, etc. Tokens live in httpOnly cookies dd_access_token and dd_refresh_token.',
         'Same-origin /api/* requests are proxied to agent-api only after resolveDashboardSession validates the access JWT or refreshes via Keycloak.',
       ],
       bullets: [
