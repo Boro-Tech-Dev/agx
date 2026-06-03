@@ -114,12 +114,13 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keygen -y -f ~/.ssh/deploy_key >/dev/null
           echo "Deploy key fingerprint: $(ssh-keygen -lf ~/.ssh/deploy_key | awk '{print $2}')"
-          ssh-keyscan -p "${SSH_PORT}" -H "${VPS_HOST}" >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh-keyscan -4 -p "${SSH_PORT}" -H "${VPS_HOST}" >> ~/.ssh/known_hosts 2>/dev/null || true
           {
             echo 'Host vps-deploy'
             echo "  HostName ${VPS_HOST}"
             echo "  User ${VPS_USER}"
             echo "  Port ${SSH_PORT}"
+            echo '  AddressFamily inet'
             echo '  IdentityFile ~/.ssh/deploy_key'
             echo '  IdentitiesOnly yes'
             echo '  StrictHostKeyChecking yes'
