@@ -283,3 +283,9 @@ jobs:
         run: |
           base="${VPS_PUBLIC_URL%/}"
           curl -fsS --retry 5 --retry-delay 10 --retry-all-errors "${base}/health"
+
+      - name: Verify OIDC auth (HTTPS issuer, no http form POST)
+        run: |
+          base="${VPS_PUBLIC_URL:-https://idea-impact.com}"
+          chmod +x ./scripts/verify-landing-auth.sh
+          ./scripts/verify-landing-auth.sh "${base%/}"

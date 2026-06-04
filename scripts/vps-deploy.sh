@@ -18,6 +18,8 @@ if [[ "$#" -eq 0 ]]; then
   set -- -d --build
 fi
 "$(dirname "$0")/compose-up.sh" "$@"
+echo "Recreating keycloak + web-dashboard to apply hostname/issuer env..."
+docker compose up -d --force-recreate keycloak web-dashboard
 if docker compose ps keycloak --status running --quiet 2>/dev/null | grep -q .; then
   "$(dirname "$0")/keycloak-enable-oidc.sh" || {
     echo "WARN: keycloak-enable-oidc.sh failed; web-dashboard redirectUris may still be wrong in Keycloak" >&2
