@@ -45,7 +45,17 @@ CB_LOC="$(curl -sSI "${BASE}/api/auth/callback?error=access_denied" | tr -d '\r'
 echo "$CB_LOC" | grep -q '/api/auth/login' || fail "callback OAuth error must retry /api/auth/login (got: ${CB_LOC})"
 echo "  OK: GET /api/auth/callback?error= → /api/auth/login"
 
-DISCOVERY="$(curl -fsS "${AUTH_BASE}/realms/platform/.well-known/openid-configuration" 2>/dev/null || true)"
+DISCOVERY=""
+for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+  DISCOVERY="$(curl -fsS "${AUTH_BASE}/realms/platform/.well-known/openid-configuration" 2>/dev/null || true)"
+  if echo "$DISCOVERY" | grep -q '"issuer"[[:space:]]*:[[:space:]]*"https://'; then
+    break
+  fi
+  if [[ "$attempt" -lt 12 ]]; then
+    echo "  waiting for Keycloak https issuer (attempt ${attempt}/12)..."
+    sleep 10
+  fi
+done
 [[ -n "$DISCOVERY" ]] || fail "OIDC discovery must be reachable at ${AUTH_BASE}/realms/platform"
 echo "$DISCOVERY" | grep -q '"issuer"[[:space:]]*:[[:space:]]*"https://' || fail "Keycloak issuer must be https (got non-https issuer)"
 echo "$DISCOVERY" | grep -q "\"issuer\".*${AUTH_HOST}" || fail "Keycloak issuer must use ${AUTH_HOST}"

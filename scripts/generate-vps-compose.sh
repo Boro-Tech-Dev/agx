@@ -34,10 +34,33 @@ if "minio" in base["services"]:
     if isinstance(env, dict):
         env["MINIO_ROOT_PASSWORD"] = "${MINIO_SECRET_KEY:-minioadmin-dev-only}"
 
+# Keycloak: public HTTPS URL on auth subdomain (survives regen; required for Netskope / form POST).
+kc = base["services"].get("keycloak", {})
+kc["command"] = [
+    "start",
+    "--http-enabled=true",
+    "--hostname=https://auth.idea-impact.com",
+    "--import-realm",
+]
+kc_env = kc.setdefault("environment", {})
+if isinstance(kc_env, dict):
+    kc_env.update({
+        "KC_HOSTNAME": "https://auth.idea-impact.com",
+        "KC_HOSTNAME_STRICT": "true",
+        "KC_PROXY_HEADERS": "xforwarded",
+        "KC_HTTP_ENABLED": "true",
+    })
+kc.pop("ports", None)
+kc["expose"] = ["8080"]
+
 # web-dashboard: Traefik terminates TLS; no host port publish
 wd = base["services"].get("web-dashboard", {})
 wd.pop("ports", None)
 wd["expose"] = ["3000"]
+wd_env = wd.setdefault("environment", {})
+if isinstance(wd_env, dict):
+    wd_env["APP_PUBLIC_ORIGIN"] = "${APP_PUBLIC_ORIGIN:-${VPS_PUBLIC_URL:-https://idea-impact.com}}"
+    wd_env["KEYCLOAK_ISSUER"] = "${KEYCLOAK_ISSUER:-https://auth.idea-impact.com/realms/platform}"
 labels = traefik["services"]["web-dashboard"].get("labels", [])
 if labels:
     wd["labels"] = labels

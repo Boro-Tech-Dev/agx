@@ -28,6 +28,16 @@ services:
     ports: []
     expose:
       - "8080"
+    command:
+      - start
+      - --http-enabled=true
+      - --hostname=https://auth.idea-impact.com
+      - --import-realm
+    environment:
+      KC_HOSTNAME: https://auth.idea-impact.com
+      KC_HOSTNAME_STRICT: "true"
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: "true"
     labels:
       - traefik.enable=true
       - traefik.http.routers.ragtag-auth.rule=Host(`auth.idea-impact.com`)

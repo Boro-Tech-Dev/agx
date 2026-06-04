@@ -214,13 +214,10 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
       KC_HEALTH_ENABLED: 'true'
       KC_HTTP_RELATIVE_PATH: /
-      # Full public URL required — hostname-only resolves scheme from proxy and yields http:// forms.
       KC_HOSTNAME: https://auth.idea-impact.com
       KC_HOSTNAME_STRICT: 'true'
       KC_PROXY_HEADERS: xforwarded
       KC_HTTP_ENABLED: 'true'
-    expose:
-    - '8080'
     volumes:
     - keycloak_data:/opt/keycloak/data
     - ./infra/keycloak/realm-platform.json:/opt/keycloak/data/import/realm-platform.json:ro
@@ -233,6 +230,8 @@ services:
       retries: 30
       start_period: 90s
     restart: unless-stopped
+    expose:
+    - '8080'
   agent-api:
     build:
       context: .
